@@ -10,4 +10,5 @@ public interface PersonService {
     Person savePerson(Person person);
     Person updatePerson(Person person);
     void deletePerson(Long id);
+    Person getPersonByPhone(String phone);
 }

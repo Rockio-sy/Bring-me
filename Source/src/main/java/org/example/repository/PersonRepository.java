@@ -12,4 +12,5 @@ public interface PersonRepository {
     int savePerson(Person person);
     int updatePerson(Person person);
     void deleteById(Long id);
+    Person getPersonByPhone(String phone);
 }

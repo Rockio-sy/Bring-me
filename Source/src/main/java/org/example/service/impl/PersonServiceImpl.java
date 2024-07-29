@@ -38,11 +38,19 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Person updatePerson(Person person) {
-        int rowAffected = personRepository.updatePerson(person);
-        if(rowAffected > 0){
-            return person;
+        Person foundedPerson = personRepository.getPersonByPhone(person.getPhone());
+        if (foundedPerson != null) {
+            int rowAffected = personRepository.updatePerson(foundedPerson);
+            if(rowAffected > 0){
+                return person;
+            }
         }
         return null;
+    }
+
+    @Override
+    public Person getPersonByPhone(String phone){
+        return personRepository.getPersonByPhone(phone);
     }
 
     @Override

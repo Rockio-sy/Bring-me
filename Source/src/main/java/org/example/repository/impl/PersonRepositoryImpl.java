@@ -2,6 +2,7 @@ package org.example.repository.impl;
 
 import org.example.model.Person;
 import org.example.repository.PersonRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -37,8 +38,12 @@ public class PersonRepositoryImpl implements PersonRepository {
     @Override
     public int savePerson(Person person) {
         String sql = "INSERT INTO persons (first_name, last_name, address, email, phone) VALUES (?, ?, ?, ?, ?)";
-        return jdbcTemplate.update(sql, person.getFirstName(), person.getLastName(), person.getAddress()
-                , person.getEmail(), person.getPhone());
+        return jdbcTemplate.update(sql,
+                person.getFirstName(),
+                person.getLastName(),
+                person.getAddress(),
+                person.getEmail(),
+                person.getPhone());
     }
 
     @Override
@@ -54,6 +59,17 @@ public class PersonRepositoryImpl implements PersonRepository {
         jdbcTemplate.update(sql, id);
     }
 
+    @Override
+    public Person getPersonByPhone(String phone){
+        String sql = "SELECT * FROM persons WHERE phone = ?";
+
+        try{
+            return jdbcTemplate.queryForObject(sql, new PersonRowMapper(), phone);
+        }catch (EmptyResultDataAccessException e){
+            return null;
+        }
+    }
+
     private static final class PersonRowMapper implements RowMapper<Person> {
         @Override
         public Person mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -67,4 +83,5 @@ public class PersonRepositoryImpl implements PersonRepository {
             return newPerson;
         }
     }
+
 }

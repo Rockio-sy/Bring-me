@@ -1,7 +1,7 @@
-package org.example.repository.impl;
+package org.bringme.repository.impl;
 
-import org.example.model.Person;
-import org.example.repository.PersonRepository;
+import org.bringme.model.Person;
+import org.bringme.repository.PersonRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -60,14 +60,11 @@ public class PersonRepositoryImpl implements PersonRepository {
     }
 
     @Override
-    public Person getPersonByPhone(String phone){
+    public Optional<Person> getPersonByPhone(String phone){
         String sql = "SELECT * FROM persons WHERE phone = ?";
-
-        try{
-            return jdbcTemplate.queryForObject(sql, new PersonRowMapper(), phone);
-        }catch (EmptyResultDataAccessException e){
-            return null;
-        }
+        return jdbcTemplate.query(sql, new PersonRowMapper(), phone)
+                .stream()
+                .findFirst();
     }
 
     private static final class PersonRowMapper implements RowMapper<Person> {

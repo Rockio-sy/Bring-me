@@ -1,7 +1,7 @@
-package org.example.controller;
+package org.bringme.controller;
 
-import org.example.model.Person;
-import org.example.service.PersonService;
+import org.bringme.model.Person;
+import org.bringme.service.PersonService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +18,7 @@ public class PersonController {
         this.personService = personService;
     }
 
-//    List<Person> getAllPersons();
-//    Person getPersonById(Long id);
-//    Person savePerson(Person person);
-//    Person updatePerson(Person person);
-//    void deletePerson(Long id);
+    //Deprecated
     @GetMapping("/all")
     public ResponseEntity<List<Person>> listAll(){
         List<Person> persons = personService.getAllPersons();
@@ -43,9 +39,7 @@ public class PersonController {
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 
-    // Should i change /me ?? what to set (update||account), cus no one will change the DB status!
-    // What if user wants to change their address or phone?
-    // What is the best practice to fetch user if i do not have their ID ?
+    //Deprecated
     @PutMapping("/me")
     public ResponseEntity<Person> updatePerson(@RequestBody Person person){
         Person updatedPerson = personService.updatePerson(person);
@@ -55,7 +49,7 @@ public class PersonController {
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 
-    // Should i add a condition to tell that user doesn't exist ?
+    //Deprecated
     @DeleteMapping("/delete")
     public void deletePerson(@RequestParam Long id){
         personService.deletePerson(id);

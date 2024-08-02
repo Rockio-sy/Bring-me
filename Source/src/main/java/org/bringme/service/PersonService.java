@@ -1,6 +1,6 @@
-package org.example.service;
+package org.bringme.service;
 
-import org.example.model.Person;
+import org.bringme.model.Person;
 
 import java.util.List;
 

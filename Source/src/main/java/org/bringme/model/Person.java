@@ -1,4 +1,4 @@
-package org.example.model;
+package org.bringme.model;
 
 public class Person {
     private Long id;

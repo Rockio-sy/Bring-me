@@ -1,6 +1,6 @@
-package org.example.repository;
+package org.bringme.repository;
 
-import org.example.model.Person;
+import org.bringme.model.Person;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,5 +12,5 @@ public interface PersonRepository {
     int savePerson(Person person);
     int updatePerson(Person person);
     void deleteById(Long id);
-    Person getPersonByPhone(String phone);
+    Optional<Person> getPersonByPhone(String phone);
 }

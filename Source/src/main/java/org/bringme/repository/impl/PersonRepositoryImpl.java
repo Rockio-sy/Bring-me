@@ -59,6 +59,7 @@ public class PersonRepositoryImpl implements PersonRepository {
         jdbcTemplate.update(sql, id);
     }
 
+    // Check SQL injections in Docs JDBCTemplate
     @Override
     public Optional<Person> getPersonByPhone(String phone){
         String sql = "SELECT * FROM persons WHERE phone = ?";

@@ -14,7 +14,8 @@ import java.util.Optional;
 
 @Repository
 public class RequestRepositoryImpl implements RequestRepository {
-    
+
+    //Fix the repository and handel Exceptions
     private final JdbcTemplate jdbcTemplate;
 
     public RequestRepositoryImpl(JdbcTemplate jdbcTemplate) {
@@ -39,11 +40,11 @@ public class RequestRepositoryImpl implements RequestRepository {
     @Override
     public Optional<Request> getRequestById(Long id) {
         String sql = "SELECT * FROM requests WHERE id = ?";
+
             return jdbcTemplate.query(sql, new requestRowMapper(), id)
                     .stream()
                     .findFirst();
     }
-
 
     public static final class requestRowMapper implements RowMapper<Request> {
         @Override

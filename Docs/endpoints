@@ -1,0 +1,72 @@
+createNewItem:
+Type request : POST
+API: /items/new
+Input type:Reuqest Body :JSON
+	EX:	{
+			"name" : "item1",
+			"hight" : "0.2 m",
+			"long" : "0.1 m",
+			"weight" : "0.3 kg",
+			"comments" : "keep it far of water",
+			"origin_id" : "+7",
+			"destination" : "+963",
+			"detailed origin address" : "Izmaylovesky avu, 75/A"
+			"photo" : "PHOTO_URL"
+		}
+
+output type :JSON
+	EX:	{
+			"status": "success 201",
+			"message": "Item cerated successfully",
+			"item_id" : 123,
+			"item": {
+				"name" : "item1",
+				"hight" : "0.2 m",
+				"long" : "0.1 m",
+				"weight" : "0.3 kg",
+				"comments" : "keep it far of water",
+				"origin" : "Russia",
+				"destination" : "Syria",
+				"detailed origin address" : "Izmaylovesky avu, 75/A"
+				"photo" : "PHOTO_URL"
+			}
+		}
+Comments: status code should be 201 with message "Item created successfully"
+expected errors might be like :
+	"field ### is requierd", (499 Field is requierd)
+		
+browsePhoto:
+Type request : POST
+API /items/new/upload-photo
+Input : RequestParam("photo")
+	EX: 
+		------WebKitFromBoundryyXyXyXyXy
+		Content-Disposition: form-data; name="photo", filename="example-photo.jpg"
+		Content-Type: image/jpeg
+		<binary photo data>
+		------WebKitFromBoundryyXyXyXyXy
+Output type: JSON
+	EX: 
+	{
+		"status": "success",
+		"message": "Photo uploaded successfully"
+		"photo_url": "/uploads/photos/example-photo.jpg:"
+	}
+Comments:
+Status code is 200, message "photo uploaded successfully"
+expected errors:
+	"photo size is bigger than suppose", (413 content large)
+	"photo type is not correct", (415 unsupported media)
+
+
+getCountriesDropDownList:
+Type request: GET
+input: No Input
+Output:
+	EX:
+	[
+		{ "id" : 1, "name" : "united states"}, 
+		{ "id" : #, "name" : "example country"}, 
+	[
+comments : status code 200
+

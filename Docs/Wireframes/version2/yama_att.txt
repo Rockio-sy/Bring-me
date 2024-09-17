@@ -1,0 +1,32 @@
+In "main page",
+{ 
+	add login name for the person or person data
+	"" What do u want to do: 1_ i want to send ian item, 3_i want to take an item (am a traveller)""
+	last operatoins
+	Add copy rights at the end of page!
+}
+In Create new item
+{
+	Long=\= length
+	Create button redirect to flights list
+}
+
+In Items list page
+{
+	Item list =\= latest items posted by otehr people
+}
+
+In flights list page
+{
+	closest mathcing flights to send your item
+}
+
+In flight show page and Item show page
+{
+	add button to send request to the passenger (rememeberthere is 2 ways)
+}
+
+
+
+Add the scenario !!!
+

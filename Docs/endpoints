@@ -1,17 +1,19 @@
+add description for every endpoint
+
 createNewItem:
 Type request : POST
 API: /items/new
 Input type:Reuqest Body :JSON
 	EX:	{
 			"name" : "item1",
-			"hight" : "0.2 m",
-			"long" : "0.1 m",
-			"weight" : "0.3 kg",
+			"hight" : 0.2,
+			"long" : 0.1,
+			"weight" : 0.3,
 			"comments" : "keep it far of water",
-			"origin_id" : "7",
-			"destination" : "963",
-			"detailed origin address" : "Izmaylovesky avu, 75/A"
-			"photo" : "PHOTO_URL"
+			"origin_id" : 7,
+			"destination" : 963,
+			"detailed origin address" : "Izmaylovesky avu, 75/A",
+			"photo" : "PHOTO_NAME.format"
 		}
 
 output type :JSON
@@ -21,19 +23,27 @@ output type :JSON
 			"item_id" : 123,
 			"item": {
 				"name" : "item1",
-				"hight" : "0.2 m",
-				"long" : "0.1 m",
-				"weight" : "0.3 kg",
+				"hight" : 0.2,
+				"long" : 0.1,
+				"weight" : 0.3 kg,
 				"comments" : "keep it far of water",
 				"origin" : "Russia",
 				"destination" : "Syria",
 				"detailed origin address" : "Izmaylovesky avu, 75/A"
-				"photo" : "PHOTO_URL"
+				"photo" : "PHOTO_NAME.format"
 			}
 		}
-Comments: status code should be 201 with message "Item created successfully"
+Comments:
+	status code should be 201 with message "Item created successfully"
+	Check for every field and data type of it with ranges
+	0 < Long,Hight < 200 cm
+	0 < weight < 20 Kg
+	Countries should be differents
+	detaild address shouldn't be empty or spaces
+
 expected errors might be like :
 	"field ### is requierd", (499 Field is requierd)
+	"Invalid value or input error", (422 Unprocessable Entity)
 		
 browsePhoto:
 Type request : POST
@@ -50,13 +60,15 @@ Output type: JSON
 	{
 		"status": "success",
 		"message": "Photo uploaded successfully"
-		"photo_url": "/uploads/photos/example-photo.jpg:"
+		"photo_name": "/uploads/photos/example-photo.jpg:"
 	}
 Comments:
+valid format jpg, Png
 Status code is 200, message "photo uploaded successfully"
 expected errors:
 	"photo size is bigger than suppose", (413 content large)
 	"photo type is not correct", (415 unsupported media)
+	"photo size more than 1 byte", (414 too short)
 
 
 getCountriesDropDownList:
@@ -109,10 +121,10 @@ expected errors:
 	"field ### is requierd", (499 Field is requierd)
 
 
-getFlgihtsList:
+getFlgihtsList+filters:
 API : /flights/list
 Type request: GET
-input: JSON or no input
+input: JSON query parameters or no input
 	EX:
 		{
 			"origin" : "7",
@@ -124,15 +136,16 @@ output: JSON
 		"status": "success 200",
 		"list":{
 				[
-				{"flight-owner-id":"421","id":"31","origin" : "7","destination" : "963","airport": "Damascus-Airport""available_weight" : "2.3 KG","departure-time" : "15:34","arrival-time" : "18:50","comments" : "about 20 min for check-in operation","transit" : "True"}
+				{"flight-owner-id":"421","id":"31","origin" : "7","destination" : "963"}
 				]
 			}
 		}
 Comments: Status message is 200
+	**For me: add the time stamp(keeps the same in back, front change)**
 
 
 showFlight:
-API : /flights/spec
+API : /flights/{id}
 type request: GET
 input: No input
 output:
@@ -153,6 +166,7 @@ output:
 			}
 		}
 Comments: status message is 200
+Check the id
 
 
 showItem:
@@ -205,7 +219,7 @@ Comments: Status message is 200
 
 
 showRequest:
-API: /requests/all
+API: me/requests/all
 type request: GET
 input: JSON
 	EX:
@@ -230,7 +244,7 @@ Comments: status message is 200
 
 
 showMyRequests:
-API: /requests/all
+API: me/requests/all
 input: no input
 output:
 	EX:
@@ -243,7 +257,7 @@ output:
 Comments: status message is 200
 	
 showAccount:
-API: /account/me
+API: user/account/
 type request: GET
 input: no input
 output: JSON
@@ -255,14 +269,13 @@ output: JSON
 			"address" : "Monaco, jojo st., 43A",
 			"email" : "asdtest@gmail.com",
 			"rate-average" : "25/100",
-			"password" : "P@ssowd"
 			
 		}
 Comments: status message is 200
 
 
 showAccount:
-API: /account/me
+API: user/{id}/account/
 type request: GET
 input: JSON
 	EX:
@@ -284,7 +297,7 @@ Comments: status message is 200
 	
 	
 showRateList:
-API: /rate/list
+API: user/{id}/rate/list
 Type request: GET
 input: JSON
 	EX:
@@ -302,14 +315,14 @@ Comments: status message is 200
 
 
 resetPassword:
-API: /account/reset
+API: me/account/reset
 Type request: POST
 input: JSON
 	EX:
 		{
 			"old-password" : "passwordtest",
-			"re-old-password" : "passwordtest",
-			"new-password" : "newPasswordTest"
+			"new-password" : "passwordtest",
+			"retype-new-password" : "newPasswordTest"
 		}
 
 		

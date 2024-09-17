@@ -1,12 +1,14 @@
 add description for every endpoint
 
 createNewItem:
+Description:
+Create new item 
 Type request : POST
-API: /items/new
+API: bring-me/items/new
 Input type:Reuqest Body :JSON
 	EX:	{
 			"name" : "item1",
-			"hight" : 0.2,
+			"height" : 0.2,
 			"long" : 0.1,
 			"weight" : 0.3,
 			"comments" : "keep it far of water",
@@ -19,17 +21,17 @@ Input type:Reuqest Body :JSON
 output type :JSON
 	EX:	{
 			"status": "success 201",
-			"message": "Item cerated successfully",
+			"message": "Item created successfully",
 			"item_id" : 123,
 			"item": {
 				"name" : "item1",
-				"hight" : 0.2,
 				"long" : 0.1,
-				"weight" : 0.3 kg,
+				"height" : 0.2,
+				"weight" : 0.3,
 				"comments" : "keep it far of water",
-				"origin" : "Russia",
-				"destination" : "Syria",
-				"detailed origin address" : "Izmaylovesky avu, 75/A"
+				"origin" : 7,
+				"destination" : 963,
+				"detailed origin address" : "Izmaylovesky avu, 75/A",
 				"photo" : "PHOTO_NAME.format"
 			}
 		}
@@ -46,8 +48,9 @@ expected errors might be like :
 	"Invalid value or input error", (422 Unprocessable Entity)
 		
 browsePhoto:
+Description: Allows user to upload photo to the server
 Type request : POST
-API /items/new/upload-photo
+API bring-me/items/new/upload-photo
 Input : RequestParam("photo")
 	EX: 
 		------WebKitFromBoundryyXyXyXyXy
@@ -59,8 +62,8 @@ Output type: JSON
 	EX: 
 	{
 		"status": "success",
-		"message": "Photo uploaded successfully"
-		"photo_name": "/uploads/photos/example-photo.jpg:"
+		"message": "Photo uploaded successfully",
+		"photo_name": "userName_itemName/uploads/photos/example-photo.jpg:"
 	}
 Comments:
 valid format jpg, Png
@@ -72,7 +75,8 @@ expected errors:
 
 
 getCountriesDropDownList:
-API: /bringme/getCountriesList
+Descriptoin: Show the list that has countries to choose
+API: /bring-me/countries
 Type request: GET
 input: No Input
 Output:
@@ -85,15 +89,16 @@ comments : status code 200
 
 	
 createNewFlight:
-API: /flight/new
+Descriptoin : Create new flight
+API: bring-me/flight/new
 Type request: POST
 input type: JSON
 	EX:
 		{
-		"origin" : "7",
-		"destination" : "963",
-		"airport": "Damascus-Airport"
-		"available_weight" : "2.3 KG",
+		"origin" : 7,
+		"destination" : 963,
+		"airport": "Damascus-Airport",
+		"available_weight" : 2.3,
 		"departure-time" : "15:34",
 		"arrival-time" : "18:50",
 		"comments" : "about 20 min for check-in operation",
@@ -108,7 +113,7 @@ output type: JSON
 		"flight":{
 				"origin" : "7",
 				"destination" : "963",
-				"airport": "Damascus-Airport"
+				"airport": "Damascus-Airport",
 				"available_weight" : "2.3 KG",
 				"departure-time" : "15:34",
 				"arrival-time" : "18:50",
@@ -119,16 +124,18 @@ output type: JSON
 comments: Status code is 201 Created, with message "Flgiht created successfully"
 expected errors:
 	"field ### is requierd", (499 Field is requierd)
+	Check the logic of every opeartoin (available weight lower than 20 Kg)
 
 
 getFlgihtsList+filters:
-API : /flights/list
+Descriptoin: List all flights depends on user's filtration
+API : bring-me/flights//{from}/{to}
 Type request: GET
 input: JSON query parameters or no input
 	EX:
 		{
-			"origin" : "7",
-			"destination" : "963"
+			"origin" : 7,
+			"destination" : 963
 		}
 output: JSON
 	EX:
@@ -136,7 +143,7 @@ output: JSON
 		"status": "success 200",
 		"list":{
 				[
-				{"flight-owner-id":"421","id":"31","origin" : "7","destination" : "963"}
+				{"flight-owner-id":421,"id":31,"origin" : 7,"destination" : 963}
 				]
 			}
 		}
@@ -145,7 +152,8 @@ Comments: Status message is 200
 
 
 showFlight:
-API : /flights/{id}
+Descriptoin: Show the flight info
+API : bring-me/flights/show{id}
 type request: GET
 input: No input
 output:
@@ -154,11 +162,11 @@ output:
 		"status": "success 201",
 		"flight_id" : 135,
 		"flight":{
-				"flight-owner-id":"421",
-				"origin" : "7",
-				"destination" : "963",
-				"airport": "Damascus-Airport"
-				"available_weight" : "2.3 KG",
+				"flight-owner-id":421,
+				"origin" : 7,
+				"destination" : 963,
+				"airport": "Damascus-Airport",
+				"available_weight" : 2.3,
 				"departure-time" : "15:34",
 				"arrival-time" : "18:50",
 				"comments" : "about 20 min for check-in operation",
@@ -170,7 +178,8 @@ Check the id
 
 
 showItem:
-API : items/spec
+Descriptoin: Show specific item
+API : bring-me/items/show{id}
 type request: GET
 input: No input
 output: JSON
@@ -178,16 +187,16 @@ output: JSON
 			"status": "success 201",
 			"item_id" : 123,
 			"item": {
-					"item-owner-id" : "312",
+					"item-owner-id" : 312,
 					"name" : "item1",
-					"hight" : "0.2 m",
-					"long" : "0.1 m",
-					"weight" : "0.3 kg",
+					"hight" : 0.2,
+					"long" : 0.1,
+					"weight" : 0.3,
 					"comments" : "keep it far of water",
-					"origin" : "Russia",
-					"destination" : "Syria",
-					"detailed origin address" : "Izmaylovesky avu, 75/A"
-					"photo" : "PHOTO_URL"
+					"origin" : 7,
+					"destination" : 963,
+					"detailed origin address" : "Izmaylovesky avu, 75/A",
+					"photo" : "PHOTO_ID"
 				}
 			}
 Comments: status message is 200
@@ -195,7 +204,8 @@ Comments: status message is 200
 
 
 getItemsList:
-API: items/list
+Descriptoin: list all items depends on user's filtratoin.
+API: bring-me/items/list/{from}/{to}
 Type request: GET
 input: JSON or no input
 output: JSON
@@ -210,7 +220,7 @@ output: JSON
 		"status": "success 200",
 		"list":{
 				[
-			{"item-id":"123","item-owner-id":"312","name" : "item1","hight" : "0.2 m","long" : "0.1 m","weight" : "0.3 kg","comments" : "keep it far of water","origin" : "Russia","destination" : "Syria","detailed origin address" : "Izmaylovesky avu, 75/A","photo" : "PHOTO_URL"}
+			{"item-id":123, "origin" : 7,"destination" : 963}
 			}
 				]
 		}	
@@ -219,7 +229,8 @@ Comments: Status message is 200
 
 
 showRequest:
-API: me/requests/all
+Descriptoin: Show the request info
+API: bring-me/me/requests/{id}
 type request: GET
 input: JSON
 	EX:
@@ -231,12 +242,12 @@ output: JSON
 			"status": "success 201",
 			"request_id" : 421,
 			"request": {
-					"requester-id" : "312",
-					"requested-id" : "312",
-					"origin" : "Russia",
-					"destination" : "Syria",
-					"item-id" : "123",
-					"flight-id" : "412",
+					"requester-id" : 312,
+					"requested-id" : 312,
+					"origin" : 7,
+					"destination" : 963,
+					"item-id" : 123,
+					"flight-id" : 412,
 					"comments" : "keep it far of water",
 				   }
 		}
@@ -244,20 +255,22 @@ Comments: status message is 200
 
 
 showMyRequests:
-API: me/requests/all
+description: List the reuqests that user has, with filtratoin.
+API: bring-me/me/requests/{filter}
 input: no input
 output:
 	EX:
 		"status": "success 201",
-		"reqeusts":{
+		"requests":{
 				[
-				{"request-id":"421","requester-id" : "312","requested-id" : "312","origin" : "Russia","destination" : "Syria","item-id" : "123","flight-id" : "412","comments" : "keep it far of water"}
+				{"request-id":421,"origin" : 7,"destination" : 963}
 				]
 			}
 Comments: status message is 200
 	
 showAccount:
-API: user/account/
+Description: Check the user data (rate, name, address), with not contact info if there is no accepted request!!
+API: bring-me/user/account/{id}
 type request: GET
 input: no input
 output: JSON
@@ -268,19 +281,20 @@ output: JSON
 			"phone" : "+1 9986653247",
 			"address" : "Monaco, jojo st., 43A",
 			"email" : "asdtest@gmail.com",
-			"rate-average" : "25/100",
+			"rate-average" : 25/100,
 			
 		}
 Comments: status message is 200
 
 
-showAccount:
-API: user/{id}/account/
+showMyAccount:
+Description: Show the user's account data
+API: bring-me/me/account
 type request: GET
 input: JSON
 	EX:
 		{
-			"id":"23"
+			"id":23
 		}
 output: JSON (maybe some data will be hidden)
 	EX:
@@ -289,20 +303,20 @@ output: JSON (maybe some data will be hidden)
 			"last-name" : "Johnict",
 			"phone" : "+1 9986653247",
 			"address" : "Monaco, jojo st., 43A",
-			"rate-average" : "25/100",
-			
+			"rate-average" : 25/100,
 		}
 Comments: status message is 200
 
 	
 	
 showRateList:
-API: user/{id}/rate/list
+Description: Show the rate list of specific user
+API: bring-me/user/account/{id}/rate/list
 Type request: GET
 input: JSON
 	EX:
 		{
-			"id":"24"
+			"id":24
 		}
 output: JSON
 	EX:
@@ -315,7 +329,7 @@ Comments: status message is 200
 
 
 resetPassword:
-API: me/account/reset
+API: bring-m/me/account/reset
 Type request: POST
 input: JSON
 	EX:

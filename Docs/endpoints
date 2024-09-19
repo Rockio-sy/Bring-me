@@ -47,7 +47,7 @@ expected errors might be like :
 	"field ### is requierd", (499 Field is requierd)
 	"Invalid value or input error", (422 Unprocessable Entity)
 		
-browsePhoto:
+browsePhoto: It is better to save the data in the front end as JSON and show teh user, then get the id and send to the server-side!
 Description: Allows user to upload photo to the server
 Type request : POST
 API bring-me/items/new/upload-photo

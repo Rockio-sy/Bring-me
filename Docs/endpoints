@@ -1,5 +1,3 @@
-add description for every endpoint
-
 createNewItem:
 Description:
 Create new item 
@@ -47,19 +45,19 @@ expected errors might be like :
 	"field ### is requierd", (499 Field is requierd)
 	"Invalid value or input error", (422 Unprocessable Entity)
 		
-browsePhoto: It is better to save the data in the front end as JSON and show teh user, then get the id and send to the server-side!
+browsePhoto: 
 Description: Allows user to upload photo to the server
 Type request : POST
 API bring-me/items/new/upload-photo
 Input : RequestParam("photo")
-	EX: 
+	EX:
 		------WebKitFromBoundryyXyXyXyXy
 		Content-Disposition: form-data; name="photo", filename="example-photo.jpg"
 		Content-Type: image/jpeg
 		<binary photo data>
 		------WebKitFromBoundryyXyXyXyXy
 Output type: JSON
-	EX: 
+	EX:
 	{
 		"status": "success",
 		"message": "Photo uploaded successfully",
@@ -74,7 +72,7 @@ expected errors:
 	"photo size more than 1 byte", (414 too short)
 
 
-getCountriesDropDownList:
+getCountriesDropDownList: It is better to save the data in the front end as JSON and show the user, then get the id and send to the server-side!
 Descriptoin: Show the list that has countries to choose
 API: /bring-me/countries
 Type request: GET
@@ -87,7 +85,7 @@ Output:
 	[
 comments : status code 200
 
-	
+
 createNewFlight:
 Descriptoin : Create new flight
 API: bring-me/flight/new

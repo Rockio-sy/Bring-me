@@ -1,7 +1,7 @@
-package org.bringme.model;
+package org.bringme.dto;
 
-public class Item {
-    private Long id;
+public class ItemDTO {
+
     private String name;
     private int origin;
     private int destination;
@@ -13,11 +13,11 @@ public class Item {
     private String photo;
     private Long user_id;
 
-    public Item() {}
+    // Self constructor
+    public ItemDTO(){}
 
-    public Item(Long id, String name, int origin, int destination, float weight, float height,
-                float length, String comments, String detailedOriginAddress, String photo, Long user_id) {
-        this.id = id;
+    // CreateNewItem constructor
+    public ItemDTO(String name, int origin, int destination, float weight, float height, float length, String comments, String detailedOriginAddress, String photo, Long user_id) {
         this.name = name;
         this.origin = origin;
         this.destination = destination;
@@ -30,12 +30,30 @@ public class Item {
         this.user_id = user_id;
     }
 
-    public Long getUser_id() {
-        return user_id;
+
+    // Getters & Setters
+    public String getName() {
+        return name;
     }
 
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(int origin) {
+        this.origin = origin;
+    }
+
+    public int getDestination() {
+        return destination;
+    }
+
+    public void setDestination(int destination) {
+        this.destination = destination;
     }
 
     public float getWeight() {
@@ -86,37 +104,11 @@ public class Item {
         this.photo = photo;
     }
 
-    public Long getId() {
-        return id;
+    public Long getUser_id() {
+        return user_id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getOrigin() {
-        return origin;
-    }
-
-    public void setOrigin(int origin) {
-        this.origin = origin;
-    }
-
-    public int getDestination() {
-        return destination;
-    }
-
-    public void setDestination(int destination) {
-        this.destination = destination;
-    }
-
-
 }

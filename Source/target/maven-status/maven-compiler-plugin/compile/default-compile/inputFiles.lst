@@ -2,6 +2,7 @@
 /home/rockio/Bring-me/Source/src/main/java/org/bringme/controller/ItemController.java
 /home/rockio/Bring-me/Source/src/main/java/org/bringme/controller/PersonController.java
 /home/rockio/Bring-me/Source/src/main/java/org/bringme/controller/RequestController.java
+/home/rockio/Bring-me/Source/src/main/java/org/bringme/dto/ItemDTO.java
 /home/rockio/Bring-me/Source/src/main/java/org/bringme/model/Item.java
 /home/rockio/Bring-me/Source/src/main/java/org/bringme/model/Person.java
 /home/rockio/Bring-me/Source/src/main/java/org/bringme/model/Request.java

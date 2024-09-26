@@ -5,6 +5,7 @@ Type request : POST
 API: bring-me/items/new
 Input type:Reuqest Body :JSON
 	EX:	{
+	        "owner_id" : 21,
 			"name" : "item1",
 			"height" : 0.2,
 			"long" : 0.1,
@@ -23,6 +24,7 @@ output type :JSON
 			"item_id" : 123,
 			"item": {
 				"name" : "item1",
+				"owner_id" : 21,
 				"long" : 0.1,
 				"height" : 0.2,
 				"weight" : 0.3,
@@ -39,7 +41,6 @@ Comments:
 	0 < Long,Hight < 200 cm
 	0 < weight < 20 Kg
 	Countries should be differents
-	detaild address shouldn't be empty or spaces
 
 expected errors might be like :
 	"field ### is requierd", (499 Field is requierd)

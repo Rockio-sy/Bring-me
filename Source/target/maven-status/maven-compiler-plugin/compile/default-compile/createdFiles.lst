@@ -1,6 +1,5 @@
 org/bringme/repository/RequestRepository.class
 org/bringme/model/Request.class
-org/bringme/repository/impl/PersonRepositoryImpl$1.class
 org/bringme/service/impl/PersonServiceImpl.class
 org/bringme/model/Person.class
 org/bringme/repository/impl/PersonRepositoryImpl.class
@@ -19,5 +18,6 @@ org/bringme/repository/impl/ItemRepositoryImpl$ItemRowMapper.class
 org/bringme/service/PersonService.class
 org/bringme/controller/ItemController.class
 org/bringme/App.class
+org/bringme/dto/ItemDTO.class
 org/bringme/service/impl/ItemServiceImpl.class
 org/bringme/repository/ItemRepository.class

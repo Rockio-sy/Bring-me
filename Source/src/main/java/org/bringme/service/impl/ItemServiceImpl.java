@@ -1,5 +1,6 @@
 package org.bringme.service.impl;
 
+import org.bringme.dto.ItemDTO;
 import org.bringme.model.Item;
 import org.bringme.repository.ItemRepository;
 import org.bringme.service.ItemService;
@@ -29,8 +30,21 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item saveItem(Item item) {
-        int rowAffected = itemRepository.saveItem(item);
-        return (rowAffected > 0) ? item : null;
+    public Long saveItem(ItemDTO itemDTO) {
+        System.out.println("DEBUG:\n In Service:\n\t function : saveItem.");
+        Item newItem = new Item(
+                null,
+                itemDTO.getName(),
+                itemDTO.getOrigin(),
+                itemDTO.getDestination(),
+                itemDTO.getWeight(),
+                itemDTO.getHeight(),
+                itemDTO.getLength(),
+                itemDTO.getComments(),
+                itemDTO.getDetailedOriginAddress(),
+                itemDTO.getPhoto(),
+                itemDTO.getUser_id()
+        );
+        return itemRepository.saveItem(newItem);
     }
 }

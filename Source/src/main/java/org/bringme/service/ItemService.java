@@ -1,5 +1,6 @@
 package org.bringme.service;
 
+import org.bringme.dto.ItemDTO;
 import org.bringme.model.Item;
 
 import java.util.List;
@@ -7,5 +8,5 @@ import java.util.List;
 public interface ItemService {
     List<Item> getAll();
     Item getItemById(Long id);
-    Item saveItem(Item item);
+    Long saveItem(ItemDTO itemDTO);
 }

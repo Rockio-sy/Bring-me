@@ -118,5 +118,20 @@ public class Item {
         this.destination = destination;
     }
 
-
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", origin=" + origin +
+                ", destination=" + destination +
+                ", weight=" + weight +
+                ", height=" + height +
+                ", length=" + length +
+                ", comments='" + comments + '\'' +
+                ", detailedOriginAddress='" + detailedOriginAddress + '\'' +
+                ", photo='" + photo + '\'' +
+                ", user_id=" + user_id +
+                '}';
+    }
 }

@@ -1,22 +1,51 @@
 package org.bringme.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class ItemDTO {
 
+    private Long id;
+    @NotBlank
     private String name;
+    @NotNull
     private int origin;
+    @NotNull
     private int destination;
+    @NotNull
     private float weight;
+    @NotNull
     private float height;
+    @NotNull
     private float length;
+    @NotBlank
     private String comments;
+    @NotBlank
     private String detailedOriginAddress;
+    @NotBlank
     private String photo;
+    @NotNull
     private Long user_id;
 
     // Self constructor
     public ItemDTO(){}
 
-    // CreateNewItem constructor
+    // Response CreateNewItem constructor
+    public ItemDTO(Long id, String name, int origin, int destination, float weight, float height, float length, String comments, String detailedOriginAddress, String photo, Long user_id) {
+        this.id = id;
+        this.name = name;
+        this.origin = origin;
+        this.destination = destination;
+        this.weight = weight;
+        this.height = height;
+        this.length = length;
+        this.comments = comments;
+        this.detailedOriginAddress = detailedOriginAddress;
+        this.photo = photo;
+        this.user_id = user_id;
+    }
+
+    // Request CreateNewUser constructor
     public ItemDTO(String name, int origin, int destination, float weight, float height, float length, String comments, String detailedOriginAddress, String photo, Long user_id) {
         this.name = name;
         this.origin = origin;
@@ -32,6 +61,14 @@ public class ItemDTO {
 
 
     // Getters & Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId( Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }

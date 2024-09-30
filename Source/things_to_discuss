@@ -1,0 +1,14 @@
+Map(
+    number --> new task
+    #      --> suggestion
+    $      --> implemented
+    0      --> changes
+)
+
+1_ I cannot perform the user to upload hte photo then create the item, why ?
+    1_ I have to save the photo with the item id and user's id, and i cannot take the item id without saving it in the database
+    #_ I can do it by saving the photo temporary and wait till the user finishes then i can save it (this approach will take long time and will complicate the process)
+    $_ Best practice, allow the user to upload the photo and check it type or if it is empty then return a temp_name to the client-side, client-side will set the temp_name in JSON request and photo will be saved in the createNewItem function(endpoint).
+    0_ I have to set a mechanism to clean the temp files if the user did not send the createNewItem request.
+2_ Should i add function to check if the photo exists in the data base, since i encode the name with currentTimeMiles?
+3_ Do i need to set teh user_id in the photo filename ?? (i save the file name in database, and the column is in the item table, so i can simply get the name and add the path, then get the file!

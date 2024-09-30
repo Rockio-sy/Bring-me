@@ -1,7 +1,0 @@
-ALTER TABLE requests ADD COLUMN trip_id INTEGER NOT NULL;
-ALTER TABLE requests ADD COLUMN origin INT NOT NULL;
-ALTER TABLE requests ADD COLUMN destination INT NOT NULL;
-ALTER TABLE requests ADD COLUMN comments VARCHAR(200);
-ALTER TABLE requests ADD COLUMN approvement_statue BOOLEAN NOT NULL;
-ALTER TABLE requests ADD COLUMN price FLOAT DEFAULT 0;
-ALTER TABLE requests ADD CONSTRAINT trip_id_fkey FOREIGN KEY (trip_id) REFERENCES trips(id);

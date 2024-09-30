@@ -40,7 +40,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Long saveItem(Item item) {
-        System.out.println("DEBUG:\n In Repository:\n\t function : saveItem.");
+//        System.out.println("DEBUG:\n In Repository:\n\t function : saveItem.");
         String sql = "INSERT INTO items" +
                 " (name, origin, destination, user_id, weight, length, height, full_address, comments, photo)" +
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

@@ -1,2 +1,0 @@
-ALTER TABLE persons ADD COLUMN password VARCHAR(255) NOT NULL;
-ALTER TABLE persons ADD COLUMN account_status INT NOT NULL;

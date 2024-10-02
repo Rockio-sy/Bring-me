@@ -111,12 +111,21 @@ public class ItemController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Item>> getAll() {
-        List<Item> items = itemService.getAll();
-        if (items.isEmpty()) {
-            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    public ResponseEntity<HashMap<String, Object>> getAll() {
+        HashMap<String, Object> responseMap = new HashMap<>();
+        List<ItemDTO> responseList = itemService.getAll();
+
+        if (responseList.isEmpty()) {
+            responseMap.put("Status", "200");
+            responseMap.put("Message", "List of items returned successfully.");
+            responseMap.put("Count of items", responseList.size());
+            responseMap.put("Items", responseList);
+            return new ResponseEntity<>(responseMap, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(items, HttpStatus.OK);
+            responseMap.put("Status", "404");
+            responseMap.put("Message", "No contnet");
+            responseMap.put("Items", null);
+            return new ResponseEntity<>(responseMap, HttpStatus.NO_CONTENT);
         }
     }
 

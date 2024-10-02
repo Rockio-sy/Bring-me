@@ -32,8 +32,30 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getAll() {
-        return itemRepository.getAll();
+    public List<ItemDTO> getAll() {
+        // Get from database
+        List<Item> dataBaseList = itemRepository.getAll();
+        if(dataBaseList.isEmpty()){
+            return null;
+        }
+
+        List<ItemDTO> responseList = new ArrayList<>();
+        for(Item dataBaseItem : dataBaseList){
+            ItemDTO responseItem = new ItemDTO();
+            responseItem.setId(dataBaseItem.getId());
+            responseItem.setName(dataBaseItem.getName());
+            responseItem.setOrigin(dataBaseItem.getOrigin());
+            responseItem.setDestination(dataBaseItem.getDestination());
+            responseItem.setWeight(dataBaseItem.getWeight());
+            responseItem.setHeight(dataBaseItem.getHeight());
+            responseItem.setLength(dataBaseItem.getLength());
+            responseItem.setComments(dataBaseItem.getComments());
+            responseItem.setDetailedOriginAddress(dataBaseItem.getDetailedOriginAddress());
+            responseItem.setPhoto(dataBaseItem.getPhoto());
+            responseItem.setUser_id(dataBaseItem.getUser_id());
+            responseList.add(responseItem);
+        }
+        return responseList;
     }
 
     @Override

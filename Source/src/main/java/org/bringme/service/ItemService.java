@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface ItemService {
-    List<Item> getAll();
+    List<ItemDTO> getAll();
     ItemDTO getItemById(Long id);
     ItemDTO saveItem(ItemDTO itemDTO);
     String saveTempFile(MultipartFile image);

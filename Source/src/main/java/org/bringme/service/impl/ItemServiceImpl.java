@@ -37,9 +37,30 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item getItemById(Long id) {
-        Optional<Item> newItem = itemRepository.getById(id);
-        return newItem.orElse(null);
+    public ItemDTO getItemById(Long id) {
+        // Check if item exists
+        Optional<Item> dataBaseItem = itemRepository.getById(id);
+        if(dataBaseItem.isEmpty()) {
+            return null;
+        }
+
+        System.out.println(dataBaseItem);
+
+        // Create DTO item
+        Item switchItem = dataBaseItem.get();
+        ItemDTO responseItem = new ItemDTO();
+        responseItem.setId(switchItem.getId());
+        responseItem.setName(switchItem.getName());
+        responseItem.setOrigin(switchItem.getOrigin());
+        responseItem.setDestination(switchItem.getDestination());
+        responseItem.setWeight(switchItem.getWeight());
+        responseItem.setHeight(switchItem.getHeight());
+        responseItem.setLength(switchItem.getLength());
+        responseItem.setComments(switchItem.getComments());
+        responseItem.setDetailedOriginAddress(switchItem.getDetailedOriginAddress());
+        responseItem.setPhoto(switchItem.getPhoto());
+        responseItem.setUser_id(switchItem.getUser_id());
+        return responseItem;
     }
 
     @Override

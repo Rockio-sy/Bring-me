@@ -1,0 +1,17 @@
+# Build and jAR files
+/target/
+/build/
+
+# Logs
+*.logs
+
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+*.idea/
+
+#Sensetive data
+#application.properties

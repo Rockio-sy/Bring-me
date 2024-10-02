@@ -1,4 +1,4 @@
-createNewItem:
+createNewItem:DONE
 Description:
 Create new item 
 Type request : POST
@@ -46,11 +46,11 @@ expected errors might be like :
 	"field ### is requierd", (499 Field is requierd)
 	"Invalid value or input error", (422 Unprocessable Entity)
 		
-browsePhoto: 
+browsePhoto: DONE
 Description: Allows user to upload photo to the server
 Type request : POST
 API bring-me/items/new/upload-photo
-Input : RequestParam("photo")
+Input : RequestParam("photo") MediaType.MULTIPART_FORM_DATA_VALUE
 	EX:
 		------WebKitFromBoundryyXyXyXyXy
 		Content-Disposition: form-data; name="photo", filename="example-photo.jpg"
@@ -62,7 +62,7 @@ Output type: JSON
 	{
 		"status": "success",
 		"message": "Photo uploaded successfully",
-		"photo_name": "userName_itemName/uploads/photos/example-photo.jpg:"
+		"photo_name": "/uploads/photos/example-photo.jpg:"
 	}
 Comments:
 valid format jpg, Png

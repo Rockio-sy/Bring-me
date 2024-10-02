@@ -25,7 +25,7 @@ public class ItemController {
         this.itemService = itemService;
     }
 
-    // Needs fix for the photo!
+
     @PostMapping("/new")
     public ResponseEntity<HashMap<String, Object>> createNewItem(@Valid @RequestBody ItemDTO itemDTO) {
         // multi value map
@@ -120,11 +120,18 @@ public class ItemController {
         }
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity<Item> getItemById(@PathVariable Long id) {
-        Item item = itemService.getItemById(id);
-        if (item != null) {
-            return new ResponseEntity<>(item, HttpStatus.OK);
+    @GetMapping("/show/{id}")
+    public ResponseEntity<HashMap<String, Object>> getItemById(@PathVariable Long id) {
+        // Response map
+        HashMap<String, Object> responseMap = new HashMap<>();
+
+        // Creating response
+        ItemDTO responseItem = itemService.getItemById(id);
+        if (responseItem != null) {
+            responseMap.put("Status", "200");
+            responseMap.put("Message", "Item returned successfully.");
+            responseMap.put("Item", responseItem);
+            return new ResponseEntity<>(responseMap, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }

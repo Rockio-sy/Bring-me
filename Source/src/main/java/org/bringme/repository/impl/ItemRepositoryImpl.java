@@ -80,6 +80,13 @@ public class ItemRepositoryImpl implements ItemRepository {
             newItem.setName(rs.getString("name"));
             newItem.setOrigin(rs.getInt("origin"));
             newItem.setDestination(rs.getInt("destination"));
+            newItem.setWeight(rs.getFloat("weight"));
+            newItem.setHeight(rs.getFloat("height"));
+            newItem.setLength(rs.getFloat("length"));
+            newItem.setDetailedOriginAddress(rs.getString("full_address"));
+            newItem.setComments(rs.getString("comments"));
+            newItem.setPhoto(rs.getString("photo"));
+            newItem.setUser_id(Integer.toUnsignedLong(rs.getInt("user_id")));
             return newItem;
         }
     }

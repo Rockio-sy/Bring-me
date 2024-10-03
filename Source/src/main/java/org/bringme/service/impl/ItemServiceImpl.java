@@ -35,12 +35,15 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDTO> getAll() {
         // Get from database
         List<Item> dataBaseList = itemRepository.getAll();
+
         if(dataBaseList.isEmpty()){
+            System.out.println("EMPTY!");
             return null;
         }
 
         List<ItemDTO> responseList = new ArrayList<>();
         for(Item dataBaseItem : dataBaseList){
+//            System.out.println(dataBaseItem);
             ItemDTO responseItem = new ItemDTO();
             responseItem.setId(dataBaseItem.getId());
             responseItem.setName(dataBaseItem.getName());

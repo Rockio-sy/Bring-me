@@ -148,4 +148,21 @@ public class ItemDTO {
     public void setUser_id(Long user_id) {
         this.user_id = user_id;
     }
+
+    @Override
+    public String toString() {
+        return "ItemDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", origin=" + origin +
+                ", destination=" + destination +
+                ", weight=" + weight +
+                ", height=" + height +
+                ", length=" + length +
+                ", comments='" + comments + '\'' +
+                ", detailedOriginAddress='" + detailedOriginAddress + '\'' +
+                ", photo='" + photo + '\'' +
+                ", user_id=" + user_id +
+                '}';
+    }
 }

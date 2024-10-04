@@ -7,6 +7,8 @@ import org.bringme.service.TripService;
 import org.bringme.utils.Converter;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class TripServiceImpl implements TripService {
 
@@ -34,4 +36,13 @@ public class TripServiceImpl implements TripService {
         return responseTrip;
     }
 
+    @Override
+    public TripDTO getById(Long id) {
+        // Get trip from database
+        Optional<Trip> savedTrip = tripRepository.getById(id);
+
+        System.out.println(savedTrip.get());
+        // Convert to DTO and return
+        return savedTrip.map(converter::tripToDTO).orElse(null);
+    }
 }

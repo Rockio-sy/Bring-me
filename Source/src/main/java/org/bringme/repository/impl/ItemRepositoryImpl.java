@@ -64,7 +64,6 @@ public class ItemRepositoryImpl implements ItemRepository {
             }, keyHolder);
 
             // Retrieve and return the generated ID
-            System.out.println("USER_ID IS " + keyHolder.getKey());
             return Objects.requireNonNull(keyHolder.getKey()).longValue();
         } catch (Exception e) {
             System.out.println(e.getMessage());

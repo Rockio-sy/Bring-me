@@ -13,3 +13,4 @@ Map(
 2_ Should i add function to check if the photo exists in the data base, since i encode the name with currentTimeMiles?
 3_ Do i need to set teh user_id in the photo filename ?? (i save the file name in database, and the column is in the item table, so i can simply get the name and add the path, then get the file!
 4_ I save the photo in folder cus i cannot use Cloud memo, but when the user asks for an item, should i send him the encoded path for the photo, or the decoded path?, and why if this or this ?
+5_ should i set NULL as return data if the request got fail ?

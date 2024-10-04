@@ -27,30 +27,34 @@ public class ItemController {
 
 
     @PostMapping("/new")
-    public ResponseEntity<HashMap<String, Object>> createNewItem(@Valid @RequestBody ItemDTO itemDTO) {
+    public ResponseEntity<HashMap<String, Object>> createNewItem(@Valid @RequestBody ItemDTO requestItem) {
         // multi value map
         HashMap<String, Object> responseMap = new HashMap<>();
 
         // Data checking
-        if (itemDTO.getLength() <= 0 || itemDTO.getWeight() <= 0 || itemDTO.getHeight() <= 0
-                || itemDTO.getLength() >= 2 || itemDTO.getWeight() >= 5 || itemDTO.getHeight() >= 2
-                || itemDTO.getOrigin() == itemDTO.getDestination() || itemDTO.getUser_id() == 0) {
+        if (requestItem.getLength() <= 0 || requestItem.getWeight() <= 0 || requestItem.getHeight() <= 0
+                || requestItem.getLength() >= 2 || requestItem.getWeight() >= 5 || requestItem.getHeight() >= 2
+                || requestItem.getOrigin() == requestItem.getDestination() || requestItem.getUser_id() == 0
+                || requestItem.getOrigin() == 0 || requestItem.getDestination() == 0) {
             responseMap.put("Status", "422");
             responseMap.put("Error message", "Invalid data");
             return new ResponseEntity<>(responseMap, HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
-        // Getting item id
-        ItemDTO responseDTO = itemService.saveItem(itemDTO);
-        if (responseDTO.getId() != null) {
-            responseMap.put("Status", "201");
-            responseMap.put("Item", responseDTO);
-            responseMap.put("Message", "Item created successfully.");
-
-            return new ResponseEntity<>(responseMap, HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        // Saving item and return id
+        ItemDTO responseDTO = itemService.saveItem(requestItem);
+        if (responseDTO.getId() == null) {
+            responseMap.put("Status", "500");
+            responseMap.put("Message", "Unknown error");
+            return new ResponseEntity<>(responseMap, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        responseMap.put("Item", responseDTO);
+        responseMap.put("Status", "201");
+        responseMap.put("Message", "Item created successfully.");
+
+        return new ResponseEntity<>(responseMap, HttpStatus.CREATED);
+
     }
 
 
@@ -119,7 +123,6 @@ public class ItemController {
         if (responseList.isEmpty()) {
             responseMap.put("Status", "404");
             responseMap.put("Message", "No content");
-            responseMap.put("Items", null);
             return new ResponseEntity<>(responseMap, HttpStatus.NO_CONTENT);
         } else {
             responseMap.put("Status", "200");

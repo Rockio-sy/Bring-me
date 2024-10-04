@@ -7,6 +7,8 @@ import org.bringme.service.TripService;
 import org.bringme.utils.Converter;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,8 +43,27 @@ public class TripServiceImpl implements TripService {
         // Get trip from database
         Optional<Trip> savedTrip = tripRepository.getById(id);
 
-        System.out.println(savedTrip.get());
         // Convert to DTO and return
         return savedTrip.map(converter::tripToDTO).orElse(null);
+    }
+
+    @Override
+    public List<TripDTO> getAllTrips(){
+        // Get list from database
+        List<Trip> savedList = tripRepository.getAll();
+
+        //Check if list is empty
+        if(savedList.isEmpty()){
+            return null;
+        }
+
+        // Convert every trip to DTO class and save it in new list
+        List<TripDTO> responseList = new ArrayList<>();
+        for(Trip savedTrip : savedList){
+            TripDTO convertedTrip = converter.tripToDTO(savedTrip);
+            responseList.add(convertedTrip);
+        }
+
+        return responseList;
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("bring-me/trips")
@@ -66,7 +67,7 @@ public class TripController {
         TripDTO responseTrip = tripService.getById(id);
 
         // Check if response is null
-        if (responseTrip == null ){
+        if (responseTrip == null) {
             responseMap.put("Status", "204");
             responseMap.put("Message", "Unknown error");
             return new ResponseEntity<>(responseMap, HttpStatus.NO_CONTENT);
@@ -77,5 +78,26 @@ public class TripController {
         responseMap.put("Trip", responseTrip);
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
 
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<HashMap<String, Object>> getAllTrips() {
+        // Multi value map
+        HashMap<String, Object> responseMap = new HashMap<>();
+
+        // Get list of trips
+        List<TripDTO> responseList = tripService.getAllTrips();
+
+        if(responseList.isEmpty()){
+            responseMap.put("Status", "203");
+            responseMap.put("Message", "Empty list");
+            return new ResponseEntity<>(responseMap, HttpStatus.NO_CONTENT);
+        }
+
+        responseMap.put("Count fo trips", responseList.size());
+        responseMap.put("Status", "200");
+        responseMap.put("Message", "List found successfully.");
+        responseMap.put("Trips", responseList);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 }

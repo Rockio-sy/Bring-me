@@ -87,9 +87,9 @@ Output:
 comments : status code 200
 
 
-createNewFlight:
-Descriptoin : Create new flight
-API: bring-me/flight/new
+createNewTrip:
+Descriptoin : Create new trip
+API: bring-me/trip/new
 Type request: POST
 input type: JSON
 	EX:
@@ -107,9 +107,9 @@ output type: JSON
 	EX:
 		{
 		"status": "success 201",
-		"message": "Flight cerated successfully",
-		"flight_id" : 135,
-		"flight":{
+		"message": "Trip cerated successfully",
+		"trip_id" : 135,
+		"trip":{
 				"origin" : "7",
 				"destination" : "963",
 				"airport": "Damascus-Airport",
@@ -126,9 +126,9 @@ expected errors:
 	Check the logic of every opeartoin (available weight lower than 20 Kg)
 
 
-getFlightsList+filters:
-Descriptoin: List all flights depends on user's filtration
-API : bring-me/flights//{from}/{to}
+getTripsList+filters:
+Descriptoin: List all trips depends on user's filtration
+API : bring-me/trips//{from}/{to}
 Type request: GET
 input: JSON query parameters or no input
 	EX:
@@ -142,7 +142,7 @@ output: JSON
 		"status": "success 200",
 		"list":{
 				[
-				{"flight-owner-id":421,"id":31,"origin" : 7,"destination" : 963}
+				{"trip-owner-id":421,"id":31,"origin" : 7,"destination" : 963}
 				]
 			}
 		}
@@ -150,18 +150,18 @@ Comments: Status message is 200
 	**For me: add the time stamp(keeps the same in back, front change)**
 
 
-showFlight:
-Descriptoin: Show the flight info
-API : bring-me/flights/show{id}
+getTripById:
+Description: Show the trip info
+API : bring-me/trips/show{id}
 type request: GET
 input: No input
 output:
 	EX:
 		{
 		"status": "success 201",
-		"flight_id" : 135,
-		"flight":{
-				"flight-owner-id":421,
+		"trip_id" : 135,
+		"trip":{
+				"trip-owner-id":421,
 				"origin" : 7,
 				"destination" : 963,
 				"airport": "Damascus-Airport",
@@ -246,7 +246,7 @@ output: JSON
 					"origin" : 7,
 					"destination" : 963,
 					"item-id" : 123,
-					"flight-id" : 412,
+					"trip-id" : 412,
 					"comments" : "keep it far of water",
 				   }
 		}

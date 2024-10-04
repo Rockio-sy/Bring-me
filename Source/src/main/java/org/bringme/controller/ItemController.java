@@ -120,16 +120,15 @@ public class ItemController {
         List<ItemDTO> responseList = itemService.getAll();
 
         if (responseList.isEmpty()) {
-            responseMap.put("Status", "404");
+            responseMap.put("Status", "203");
             responseMap.put("Message", "No content");
             return new ResponseEntity<>(responseMap, HttpStatus.NO_CONTENT);
-        } else {
-            responseMap.put("Status", "200");
-            responseMap.put("Message", "List of items returned successfully.");
-            responseMap.put("Count of items", responseList.size());
-            responseMap.put("Items", responseList);
-            return new ResponseEntity<>(responseMap, HttpStatus.OK);
         }
+        responseMap.put("Status", "200");
+        responseMap.put("Message", "List found successfully.");
+        responseMap.put("Count of items", responseList.size());
+        responseMap.put("Items", responseList);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
     @GetMapping("/show/{id}")
@@ -137,7 +136,7 @@ public class ItemController {
         // Response map
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        if(id ==0){
+        if (id == 0) {
             responseMap.put("Status", "409");
             responseMap.put("Message", "Invalid data (id)");
             return new ResponseEntity<>(responseMap, HttpStatus.CONFLICT);

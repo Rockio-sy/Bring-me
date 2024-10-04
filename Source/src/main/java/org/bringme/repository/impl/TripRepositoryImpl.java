@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -20,19 +21,19 @@ public class TripRepositoryImpl implements TripRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public TripRepositoryImpl(JdbcTemplate jdbcTemplate){
+    public TripRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public Long saveTrip(Trip trip){
+    public Long saveTrip(Trip trip) {
         String sql = "INSERT INTO trips(origin, destination, destination_airport, empty_weight," +
                 " departure_time, arrival_time, transit, passenger_id, comments)" +
                 "VALUES" +
                 "(?, ?, ?, ?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        try{
-            jdbcTemplate.update(connection ->{
+        try {
+            jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
                 ps.setInt(1, trip.getOrigin());
                 ps.setInt(2, trip.getDestination());
@@ -46,24 +47,34 @@ public class TripRepositoryImpl implements TripRepository {
                 return ps;
             }, keyHolder);
             return Objects.requireNonNull(keyHolder.getKey()).longValue();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
     }
 
     @Override
-    public Optional<Trip> getById(Long id){
+    public Optional<Trip> getById(Long id) {
         String sql = "SELECT * FROM trips WHERE id = ?";
         return jdbcTemplate.query(sql, new TripRowMapper(), id)
                 .stream()
                 .findFirst();
     }
 
+    @Override
+    public List<Trip> getAll() {
+        String sql = "SELECT * FROM trips";
+        List<Trip> savedList = jdbcTemplate.query(sql, new TripRowMapper());
+        if (savedList.isEmpty()){
+            return null;
+        }
+        return savedList;
+    }
+
     // RowMapper
-    public static final class TripRowMapper implements RowMapper<Trip>{
+    public static final class TripRowMapper implements RowMapper<Trip> {
         @Override
-        public Trip mapRow(ResultSet rs, int rowNum) throws SQLException{
+        public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
             Trip newTrip = new Trip();
             newTrip.setId(rs.getLong("id"));
             newTrip.setOrigin(rs.getInt("origin"));

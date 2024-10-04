@@ -17,3 +17,10 @@ Map(
 6_ Should i send unknown error if the HttpStatus is 500 (INTERNAL_SERVER_ERROR)?
 7_ When function works successfully, but no content in the data base, i have to return 204, or 404  and which one if it found (200, 302)?
 8_ when id is 0, i have to return 409 --> CONFLICT ot 203 --> NO_CONTENT or 404 --> PAGE_NOT_FOUND
+9_ What is the best practice for filters ?
+    {
+        1_ Do filters in the database whatever the type of filtration it is ?
+        2_ Do some in database and some in logic business
+        3_ In the prototype the filter is only for countries, so should i do it automatically filtered by data of issue or time of the closest one of the day ?
+     }
+10_ For countries dropdown list, should i read the file and send data as JSON ?, or send the file itself and front will process it then give me the id ?

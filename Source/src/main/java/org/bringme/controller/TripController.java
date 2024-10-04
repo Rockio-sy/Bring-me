@@ -15,23 +15,21 @@ public class TripController {
 
     private final TripService tripService;
 
-    public TripController(TripService tripService){
+    public TripController(TripService tripService) {
         this.tripService = tripService;
     }
 
     @PostMapping("/new")
-    public ResponseEntity<HashMap<String, Object>> createNewTrip(@RequestBody TripDTO requestTrip)
-    {
+    public ResponseEntity<HashMap<String, Object>> createNewTrip(@RequestBody TripDTO requestTrip) {
         // Multi value map
         HashMap<String, Object> responseMap = new HashMap<>();
 
         // Data checking
-        if((requestTrip.getOrigin() == requestTrip.getDestination())
+        if ((requestTrip.getOrigin() == requestTrip.getDestination())
                 || requestTrip.getOrigin() == 0 || requestTrip.getDestination() == 0
                 || requestTrip.getEmptyWeight() == 0 || requestTrip.getPassengerId() == 0
                 || requestTrip.getDepartureTime().isBefore(LocalDateTime.now())
-                || requestTrip.getArrivalTime().isBefore(LocalDateTime.now()))
-        {
+                || requestTrip.getArrivalTime().isBefore(LocalDateTime.now())) {
             responseMap.put("Status", "422");
             responseMap.put("Message", "Invalid data");
             return new ResponseEntity<>(responseMap, HttpStatus.UNPROCESSABLE_ENTITY);
@@ -39,7 +37,7 @@ public class TripController {
 
         // Saving trip and return trip id
         TripDTO responseTrip = tripService.saveTrip(requestTrip);
-        if(responseTrip == null){
+        if (responseTrip == null) {
             responseMap.put("Status", "500");
             responseMap.put("Message", "Unknown error");
             return new ResponseEntity<>(responseMap, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -50,6 +48,34 @@ public class TripController {
         responseMap.put("Trip-id", responseTrip.getId());
         responseMap.put("Trip", responseTrip);
         return new ResponseEntity<>(responseMap, HttpStatus.CREATED);
+
+    }
+
+    @GetMapping("/show/{id}")
+    public ResponseEntity<HashMap<String, Object>> getTripById(@PathVariable Long id) {
+        // multi value map
+        HashMap<String, Object> responseMap = new HashMap<>();
+
+        if (id == 0) {
+            responseMap.put("Status", "409");
+            responseMap.put("Message", "Invalid data (id)");
+            return new ResponseEntity<>(responseMap, HttpStatus.CONFLICT);
+        }
+
+        // Get trip
+        TripDTO responseTrip = tripService.getById(id);
+
+        // Check if response is null
+        if (responseTrip == null ){
+            responseMap.put("Status", "204");
+            responseMap.put("Message", "Unknown error");
+            return new ResponseEntity<>(responseMap, HttpStatus.NO_CONTENT);
+        }
+
+        responseMap.put("Status", "200");
+        responseMap.put("Message", "Trip found successfully.");
+        responseMap.put("Trip", responseTrip);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
 
     }
 }

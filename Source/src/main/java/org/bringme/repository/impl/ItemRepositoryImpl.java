@@ -71,6 +71,7 @@ public class ItemRepositoryImpl implements ItemRepository {
         }
     }
 
+    // RowMapper
     public static final class ItemRowMapper implements RowMapper<Item> {
         @Override
         public Item mapRow(ResultSet rs, int rowNum) throws SQLException {

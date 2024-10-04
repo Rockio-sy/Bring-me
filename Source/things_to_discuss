@@ -14,3 +14,6 @@ Map(
 3_ Do i need to set teh user_id in the photo filename ?? (i save the file name in database, and the column is in the item table, so i can simply get the name and add the path, then get the file!
 4_ I save the photo in folder cus i cannot use Cloud memo, but when the user asks for an item, should i send him the encoded path for the photo, or the decoded path?, and why if this or this ?
 5_ should i set NULL as return data if the request got fail ?
+6_ Should i send unknown error if the HttpStatus is 500 (INTERNAL_SERVER_ERROR)?
+7_ When function works successfully, but no content in the data base, i have to return 204, or 404  and which one if it found (200, 302)?
+8_ when id is 0, i have to return 409 --> CONFLICT ot 203 --> NO_CONTENT or 404 --> PAGE_NOT_FOUND

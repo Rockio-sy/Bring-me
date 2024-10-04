@@ -13,5 +13,16 @@
 *.iws
 *.idea/
 
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+/resources/photos
+/resources/temp_photos/*
+
 #Sensetive data
 #application.properties

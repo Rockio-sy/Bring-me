@@ -33,7 +33,7 @@ public class ItemController {
 
         // Data checking
         if (requestItem.getLength() <= 0 || requestItem.getWeight() <= 0 || requestItem.getHeight() <= 0
-                || requestItem.getLength() >= 2 || requestItem.getWeight() >= 5 || requestItem.getHeight() >= 2
+                || requestItem.getLength() > 2 || requestItem.getWeight() > 5 || requestItem.getHeight() > 2
                 || requestItem.getOrigin() == requestItem.getDestination() || requestItem.getUser_id() == 0
                 || requestItem.getOrigin() == 0 || requestItem.getDestination() == 0) {
             responseMap.put("Status", "422");
@@ -44,9 +44,9 @@ public class ItemController {
         // Saving item and return id
         ItemDTO responseDTO = itemService.saveItem(requestItem);
         if (responseDTO.getId() == null) {
-            responseMap.put("Status", "500");
+            responseMap.put("Status", "204");
             responseMap.put("Message", "Unknown error");
-            return new ResponseEntity<>(responseMap, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(responseMap, HttpStatus.NO_CONTENT);
         }
 
         responseMap.put("Item", responseDTO);
@@ -56,7 +56,6 @@ public class ItemController {
         return new ResponseEntity<>(responseMap, HttpStatus.CREATED);
 
     }
-
 
     @PostMapping(value = "/new/upload-photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<HashMap<String, Object>> uploadPhoto(@Valid @RequestParam("image") MultipartFile image) {
@@ -137,6 +136,12 @@ public class ItemController {
     public ResponseEntity<HashMap<String, Object>> getItemById(@PathVariable Long id) {
         // Response map
         HashMap<String, Object> responseMap = new HashMap<>();
+
+        if(id ==0){
+            responseMap.put("Status", "409");
+            responseMap.put("Message", "Invalid data (id)");
+            return new ResponseEntity<>(responseMap, HttpStatus.CONFLICT);
+        }
 
         // Creating response
         ItemDTO responseItem = itemService.getItemById(id);

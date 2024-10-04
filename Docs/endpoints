@@ -126,7 +126,7 @@ expected errors:
 	Check the logic of every opeartoin (available weight lower than 20 Kg)
 
 
-getFlgihtsList+filters:
+getFlightsList+filters:
 Descriptoin: List all flights depends on user's filtration
 API : bring-me/flights//{from}/{to}
 Type request: GET

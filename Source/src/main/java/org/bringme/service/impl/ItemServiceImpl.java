@@ -4,6 +4,7 @@ import org.bringme.dto.ItemDTO;
 import org.bringme.model.Item;
 import org.bringme.repository.ItemRepository;
 import org.bringme.service.ItemService;
+import org.bringme.utils.Converter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,9 +27,12 @@ public class ItemServiceImpl implements ItemService {
     private String uploadDir;
 
     private final ItemRepository itemRepository;
+    private final Converter converter;
 
-    public ItemServiceImpl(ItemRepository itemRepository) {
+    public ItemServiceImpl(ItemRepository itemRepository, Converter converter)
+    {
         this.itemRepository = itemRepository;
+        this.converter = converter;
     }
 
     @Override
@@ -36,14 +40,12 @@ public class ItemServiceImpl implements ItemService {
         // Get from database
         List<Item> dataBaseList = itemRepository.getAll();
 
-        if(dataBaseList.isEmpty()){
-            System.out.println("EMPTY!");
+        if (dataBaseList.isEmpty()) {
             return null;
         }
 
         List<ItemDTO> responseList = new ArrayList<>();
-        for(Item dataBaseItem : dataBaseList){
-//            System.out.println(dataBaseItem);
+        for (Item dataBaseItem : dataBaseList) {
             ItemDTO responseItem = new ItemDTO();
             responseItem.setId(dataBaseItem.getId());
             responseItem.setName(dataBaseItem.getName());
@@ -65,7 +67,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDTO getItemById(Long id) {
         // Check if item exists
         Optional<Item> dataBaseItem = itemRepository.getById(id);
-        if(dataBaseItem.isEmpty()) {
+        if (dataBaseItem.isEmpty()) {
             return null;
         }
 
@@ -106,37 +108,18 @@ public class ItemServiceImpl implements ItemService {
             String filePath = uploadDir + File.separator + encodedFileName;
             Files.move(Paths.get(tempFilePath), Paths.get(filePath));
 
-            // Create new Item to insert it to database
-            Item newItem = new Item(
-                    null,
-                    itemDTO.getName(),
-                    itemDTO.getOrigin(),
-                    itemDTO.getDestination(),
-                    itemDTO.getWeight(),
-                    itemDTO.getHeight(),
-                    itemDTO.getLength(),
-                    itemDTO.getComments(),
-                    itemDTO.getDetailedOriginAddress(),
-                    encodedFileName,
-                    itemDTO.getUser_id()
-            );
+            // Convert to Item model
+            Item newItem = converter.DTOtoItem(itemDTO);
+            newItem.setPhoto(encodedFileName);
 
             // get the generated id
             Long generatedId = itemRepository.saveItem(newItem);
 
-            // New itemDTO to send in response
-            return new ItemDTO(
-                    generatedId,
-                    newItem.getName(),
-                    newItem.getOrigin(),
-                    newItem.getDestination(),
-                    newItem.getWeight(),
-                    newItem.getHeight(),
-                    newItem.getLength(),
-                    newItem.getComments(),
-                    newItem.getDetailedOriginAddress(),
-                    newItem.getPhoto(),
-                    newItem.getUser_id());
+            // Convert to ItemDTO
+            ItemDTO responseItemDTO = converter.itemToDTO(newItem);
+            responseItemDTO.setId(generatedId);
+
+            return responseItemDTO;
         } catch (IOException e) {
             System.out.println(e.getMessage());
             return null;

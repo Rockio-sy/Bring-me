@@ -1,2 +1,6 @@
-check the data in create new request
-should we get the origin and destination in Front or back ?, and should we divide the operation for many operations or all in one (need discuss)?
+
+
+
+1_ to get the user_id i want to use WEB token, and i will not use @PathVariable, or body, cus it will be hackable.
+2_ After checking if the user exists , should i return the user or only message that it is exists (Status code FORBIDDEN 403)!
+3_ I cannot move on without springSecurity, so i have to implement it !

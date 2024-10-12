@@ -7,15 +7,21 @@ public class Person {
     private String address;
     private String email;
     private String phone;
+    private String password;
+    private int accountStatus;
+
 
     public Person(){}
-    public Person(Long id, String firstName, String lastName, String address, String email, String phone) {
+
+    public Person(Long id, String firstName, String lastName, String address, String email, String phone, String password, int accountStatus) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.email = email;
         this.phone = phone;
+        this.password = password;
+        this.accountStatus = accountStatus;
     }
 
     public Long getId() {
@@ -64,6 +70,22 @@ public class Person {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int getAccountStatus() {
+        return accountStatus;
+    }
+
+    public void setAccountStatus(int accountStatus) {
+        this.accountStatus = accountStatus;
     }
 
     @Override

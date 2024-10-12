@@ -1,24 +1,27 @@
 package org.bringme.service.impl;
 
+import org.bringme.dto.PersonDTO;
 import org.bringme.model.Person;
 import org.bringme.repository.PersonRepository;
 import org.bringme.service.PersonService;
+import org.bringme.utils.Converter;
+
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+
 import java.util.Optional;
+
 
 @Service
 public class PersonServiceImpl implements PersonService {
     private final PersonRepository personRepository;
+    private final Converter converter;
+//    private final BCryptPasswordEncoder passwordEncoder;
 
-    public PersonServiceImpl(PersonRepository personRepository) {
+    public PersonServiceImpl(PersonRepository personRepository, Converter converter) {
+//        this.passwordEncoder = passwordEncoder;
         this.personRepository = personRepository;
-    }
-
-    @Override
-    public List<Person> getAllPersons() {
-        return personRepository.getAll();
+        this.converter = converter;
     }
 
     @Override
@@ -28,35 +31,27 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person savePerson(Person person) {
-        int rowAffected = personRepository.savePerson(person);
-        if (rowAffected > 0) {
-            return person;
-        }
-        return null;
+    public PersonDTO savePerson(PersonDTO requestPerson) {
+        // Convert to model
+        Person modelPerson = converter.DTOtoPerson(requestPerson);
+
+        // Save the HASH password
+//        String hasPass = passwordEncoder.encode(requestPerson.getPassword());
+//        modelPerson.setPassword(hasPass);
+
+        // Get generated ID
+        Long generatedId = personRepository.savePerson(modelPerson);
+
+        // Convert to DTO
+        PersonDTO response = converter.personToDTO(modelPerson);
+        response.setId(generatedId);
+        return response;
     }
 
     @Override
-    public Person updatePerson(Person person) {
-        Optional<Person> foundedPerson = personRepository.getPersonByPhone(person.getPhone());
-        if (foundedPerson.isPresent()) {
-            int rowAffected = personRepository.updatePerson(foundedPerson.get());
-            if (rowAffected > 0) {
-                return person;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public Person getPersonByPhone(String phone) {
-        Optional<Person> person = personRepository.getPersonByPhone(phone);
-        return person.orElse(null);
-    }
-
-    @Override
-    public void deletePerson(Long id) {
-        personRepository.deleteById(id);
+    public PersonDTO getByEmail(String email){
+        Optional<Person> person = personRepository.getByEmail(email);
+        return person.map(converter::personToDTO).orElse(null);
     }
 
 }

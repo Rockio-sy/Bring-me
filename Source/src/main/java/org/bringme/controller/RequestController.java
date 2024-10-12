@@ -22,6 +22,7 @@ public class RequestController {
         this.requestService = requestService;
     }
 
+    // Needs edit!
     @GetMapping("/all")
     public ResponseEntity<HashMap<String, Object>> getAll() {
         // Multi value map
@@ -43,20 +44,31 @@ public class RequestController {
         // Multi value map
         HashMap<String, Object> responseMap = new HashMap<>();
 
+        // Checking input
+        if ((request.getRequestedUserId().equals(request.getRequesterUserId()) ||
+                request.getRequesterUserId() < 1 || request.getRequestedUserId() < 1
+                || request.getOrigin().equals(request.getDestination())
+                || request.getDestination() < 1 || request.getOrigin() < 1)) {
+            responseMap.put("Message", "Invalid data");
+            responseMap.put("Request", null);
+            return new ResponseEntity<>(responseMap, HttpStatus.BAD_REQUEST);
+        }
+
         RequestDTO responseRequest = requestService.saveRequest(request);
 
-        if(responseRequest == null){
+        if (responseRequest == null) {
             responseMap.put("Message", "Unknown error");
             responseMap.put("Request", null);
             return new ResponseEntity<>(responseMap, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         responseMap.put("Message", "Request created successfully");
-        responseMap.put("Request-id",responseRequest.getId());
+        responseMap.put("Request-id", responseRequest.getId());
         responseMap.put("Request", responseRequest);
         return new ResponseEntity<>(responseMap, HttpStatus.CREATED);
     }
 
+    // Needs User_id from the token!
     @GetMapping("/spec/{id}")
     public ResponseEntity<Request> getRequestById(@PathVariable Long id) {
         Request request = requestService.getRequestById(id);

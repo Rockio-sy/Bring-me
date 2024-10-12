@@ -43,13 +43,13 @@ public class RequestServiceImpl implements RequestService {
     public RequestDTO saveRequest(RequestDTO request) {
 
         // Convert to Model class
-        Request requestToSave = converter.DTOtoRequest(request);
+        Request modelRequest = converter.DTOtoRequest(request);
 
         // Get generated id
-        Long generatedId = requestRepository.saveRequest(requestToSave);
+        Long generatedId = requestRepository.saveRequest(modelRequest);
 
         // Convert to DTO
-        RequestDTO responseRequest = converter.requestToDTO(requestToSave);
+        RequestDTO responseRequest = converter.requestToDTO(modelRequest);
         // Set the generated id
         responseRequest.setId(generatedId);
 

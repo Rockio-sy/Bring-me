@@ -7,10 +7,11 @@ import java.util.Optional;
 
 
 public interface PersonRepository {
-    List<Person> getAll();
+    Long savePerson(Person person);
     Optional<Person> getById(Long id);
-    int savePerson(Person person);
-    int updatePerson(Person person);
-    void deleteById(Long id);
-    Optional<Person> getPersonByPhone(String phone);
+    Optional<Person> getByEmail(String email);
+//    Optional<Person> getPersonByPhone(String phone);
+//    void deleteById(Long id);
+//    int updatePerson(Person person);
+//    List<Person> getAll();
 }

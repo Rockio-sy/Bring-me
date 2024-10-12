@@ -1,26 +1,2 @@
-Map(
-    number --> new task
-    #      --> suggestion
-    $      --> implemented
-    0      --> changes
-)
-
-1_ I cannot perform the user to upload hte photo then create the item, why ?
-    1_ I have to save the photo with the item id and user's id, and i cannot take the item id without saving it in the database
-    #_ I can do it by saving the photo temporary and wait till the user finishes then i can save it (this approach will take long time and will complicate the process)
-    $_ Best practice, allow the user to upload the photo and check it type or if it is empty then return a temp_name to the client-side, client-side will set the temp_name in JSON request and photo will be saved in the createNewItem function(endpoint).
-    0_ I have to set a mechanism to clean the temp files if the user did not send the createNewItem request.
-2_ Should i add function to check if the photo exists in the data base, since i encode the name with currentTimeMiles?
-3_ Do i need to set teh user_id in the photo filename ?? (i save the file name in database, and the column is in the item table, so i can simply get the name and add the path, then get the file!
-4_ I save the photo in folder cus i cannot use Cloud memo, but when the user asks for an item, should i send him the encoded path for the photo, or the decoded path?, and why if this or this ?
-5_ should i set NULL as return data if the request got fail ?
-6_ Should i send unknown error if the HttpStatus is 500 (INTERNAL_SERVER_ERROR)?
-7_ When function works successfully, but no content in the data base, i have to return 204, or 404  and which one if it found (200, 302)?
-8_ when id is 0, i have to return 409 --> CONFLICT ot 203 --> NO_CONTENT or 404 --> PAGE_NOT_FOUND
-9_ What is the best practice for filters ?
-    {
-        1_ Do filters in the database whatever the type of filtration it is ?
-        2_ Do some in database and some in logic business
-        3_ In the prototype the filter is only for countries, so should i do it automatically filtered by data of issue or time of the closest one of the day ?
-     }
-10_ For countries dropdown list, should i read the file and send data as JSON ?, or send the file itself and front will process it then give me the id ?
+check the data in create new request
+should we get the origin and destination in Front or back ?, and should we divide the operation for many operations or all in one (need discuss)?

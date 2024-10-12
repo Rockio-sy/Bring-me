@@ -1,8 +1,10 @@
 package org.bringme.utils;
 
 import org.bringme.dto.ItemDTO;
+import org.bringme.dto.RequestDTO;
 import org.bringme.dto.TripDTO;
 import org.bringme.model.Item;
+import org.bringme.model.Request;
 import org.bringme.model.Trip;
 import org.springframework.stereotype.Component;
 
@@ -57,7 +59,6 @@ public class Converter {
         return trip;
     }
 
-
     // Trip class to TripDTO class
     public TripDTO tripToDTO(Trip trip){
         return new TripDTO(
@@ -72,5 +73,36 @@ public class Converter {
                 trip.getComments(),
                 trip.getPassengerId()
         );
+    }
+
+    // Request class to RequestDTO class
+    public RequestDTO requestToDTO(Request request){
+        RequestDTO newRequestDTO = new RequestDTO();
+        newRequestDTO.setId(request.getId());
+        newRequestDTO.setRequesterUserId(request.getRequesterUserId());
+        newRequestDTO.setRequestedUserId(request.getRequestedUserId());
+        newRequestDTO.setItemId(request.getItemId());
+        newRequestDTO.setTripId(request.getTripId());
+        newRequestDTO.setOrigin(request.getOrigin());
+        newRequestDTO.setDestination(request.getDestination());
+        newRequestDTO.setComments(request.getComments());
+        newRequestDTO.setApprovement(request.isApprovement());
+        newRequestDTO.setPrice(request.getPrice());
+        return newRequestDTO;
+    }
+
+    public Request DTOtoRequest(RequestDTO requestDTO){
+        Request newRequest = new Request();
+        newRequest.setId(null);
+        newRequest.setRequesterUserId(requestDTO.getRequesterUserId());
+        newRequest.setRequestedUserId(requestDTO.getRequestedUserId());
+        newRequest.setItemId(requestDTO.getItemId());
+        newRequest.setTripId(requestDTO.getTripId());
+        newRequest.setOrigin(requestDTO.getOrigin());
+        newRequest.setDestination(requestDTO.getDestination());
+        newRequest.setComments(requestDTO.getComments());
+        newRequest.setApprovement(requestDTO.isApprovement());
+        newRequest.setPrice(requestDTO.getPrice());
+        return newRequest;
     }
 }

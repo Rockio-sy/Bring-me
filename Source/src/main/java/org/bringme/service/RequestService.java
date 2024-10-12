@@ -1,11 +1,12 @@
 package org.bringme.service;
 
+import org.bringme.dto.RequestDTO;
 import org.bringme.model.Request;
 
 import java.util.List;
 
 public interface RequestService {
-    List<Request> getAll();
+    List<RequestDTO> getAll();
     Request getRequestById(Long id);
-    Request saveRequest(Request request);
+    RequestDTO saveRequest(RequestDTO request);
 }

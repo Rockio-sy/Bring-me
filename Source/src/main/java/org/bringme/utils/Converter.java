@@ -1,9 +1,11 @@
 package org.bringme.utils;
 
 import org.bringme.dto.ItemDTO;
+import org.bringme.dto.PersonDTO;
 import org.bringme.dto.RequestDTO;
 import org.bringme.dto.TripDTO;
 import org.bringme.model.Item;
+import org.bringme.model.Person;
 import org.bringme.model.Request;
 import org.bringme.model.Trip;
 import org.springframework.stereotype.Component;
@@ -77,20 +79,21 @@ public class Converter {
 
     // Request class to RequestDTO class
     public RequestDTO requestToDTO(Request request){
-        RequestDTO newRequestDTO = new RequestDTO();
-        newRequestDTO.setId(request.getId());
-        newRequestDTO.setRequesterUserId(request.getRequesterUserId());
-        newRequestDTO.setRequestedUserId(request.getRequestedUserId());
-        newRequestDTO.setItemId(request.getItemId());
-        newRequestDTO.setTripId(request.getTripId());
-        newRequestDTO.setOrigin(request.getOrigin());
-        newRequestDTO.setDestination(request.getDestination());
-        newRequestDTO.setComments(request.getComments());
-        newRequestDTO.setApprovement(request.isApprovement());
-        newRequestDTO.setPrice(request.getPrice());
-        return newRequestDTO;
+        RequestDTO dto = new RequestDTO();
+        dto.setId(request.getId());
+        dto.setRequesterUserId(request.getRequesterUserId());
+        dto.setRequestedUserId(request.getRequestedUserId());
+        dto.setItemId(request.getItemId());
+        dto.setTripId(request.getTripId());
+        dto.setOrigin(request.getOrigin());
+        dto.setDestination(request.getDestination());
+        dto.setComments(request.getComments());
+        dto.setApprovement(request.isApprovement());
+        dto.setPrice(request.getPrice());
+        return dto;
     }
 
+    // RequestDTO class to Request class
     public Request DTOtoRequest(RequestDTO requestDTO){
         Request newRequest = new Request();
         newRequest.setId(null);
@@ -104,5 +107,32 @@ public class Converter {
         newRequest.setApprovement(requestDTO.isApprovement());
         newRequest.setPrice(requestDTO.getPrice());
         return newRequest;
+    }
+
+    // PersonDTO class to Person class
+    public Person DTOtoPerson(PersonDTO personDTO){
+        Person newPerson = new Person();
+        newPerson.setId(null);
+        newPerson.setFirstName(personDTO.getFirstName());
+        newPerson.setLastName(personDTO.getLastName());
+        newPerson.setAddress(personDTO.getAddress());
+        newPerson.setPhone(personDTO.getPhone());
+        newPerson.setEmail(personDTO.getEmail());
+        newPerson.setPassword(personDTO.getPassword());
+        newPerson.setAccountStatus(1);
+        return newPerson;
+    }
+
+    // Person class to PersonDTO class
+    public PersonDTO personToDTO(Person person){
+        PersonDTO dto = new PersonDTO();
+        dto.setId(person.getId());
+        dto.setFirstName(person.getFirstName());
+        dto.setLastName(person.getLastName());
+        dto.setAddress(person.getAddress());
+        dto.setPhone(person.getPhone());
+        dto.setEmail(person.getEmail());
+        dto.setPassword(person.getPassword());
+        return dto;
     }
 }

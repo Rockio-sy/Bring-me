@@ -1,5 +1,7 @@
 package org.bringme.controller;
 
+import jakarta.validation.Valid;
+import org.bringme.dto.PersonDTO;
 import org.bringme.model.Person;
 import org.bringme.service.PersonService;
 import org.springframework.http.HttpStatus;
@@ -7,51 +9,50 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("/person")
+@RequestMapping("bring-me/u/")
 public class PersonController {
     private final PersonService personService;
 
-    public PersonController(PersonService personService){
+    public PersonController(PersonService personService) {
         this.personService = personService;
     }
 
-    //Deprecated
-    @GetMapping("/all")
-    public ResponseEntity<List<Person>> listAll(){
-        List<Person> persons = personService.getAllPersons();
-        if(persons.isEmpty()){
-            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-        }else {
-            return new ResponseEntity<>(persons, HttpStatus.OK);
-        }
-    }
 
     @PostMapping("/new")
-    public ResponseEntity<Person> createNewUser(@RequestBody Person person){
-        Person newPerson = personService.savePerson(person);
-        if(newPerson != null){
-            newPerson = personService.getPersonByPhone(newPerson.getPhone());
-            return new ResponseEntity<>(newPerson, HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-    }
+    public ResponseEntity<HashMap<String, Object>> createNewUser(@Valid @RequestBody PersonDTO requestPerson) {
+        // Multi value map
+        HashMap<String, Object> responseMap = new HashMap<>();
 
-    //Deprecated
-    @PutMapping("/me")
-    public ResponseEntity<Person> updatePerson(@RequestBody Person person){
-        Person updatedPerson = personService.updatePerson(person);
-        if (updatedPerson != null){
-            return new ResponseEntity<>(updatedPerson, HttpStatus.OK);
+        // Check if the user exists
+        PersonDTO check = personService.getByEmail(requestPerson.getEmail());
+        if(check != null){
+            responseMap.put("Message", "Account already exists");
+            return new ResponseEntity<>(responseMap, HttpStatus.FORBIDDEN);
         }
-        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-    }
 
-    //Deprecated
-    @DeleteMapping("/delete")
-    public void deletePerson(@RequestParam Long id){
-        personService.deletePerson(id);
+        // Save new person in DB
+        PersonDTO responsePerson = personService.savePerson(requestPerson);
+        if (responsePerson == null) {
+            responseMap.put("Message", "Unknown error");
+            responseMap.put("Person", null);
+            return new ResponseEntity<>(responseMap, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        responseMap.put("Message", "Person created successfully.");
+        responseMap.put("Person", responsePerson);
+        return new ResponseEntity<>(responseMap, HttpStatus.CREATED);
     }
 }
+
+//Deprecated
+//    @PutMapping("/me")
+//    public ResponseEntity<Person> updatePerson(@RequestBody Person person){
+//        Person updatedPerson = personService.updatePerson(person);
+//        if (updatedPerson != null){
+//            return new ResponseEntity<>(updatedPerson, HttpStatus.OK);
+//        }
+//        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+//    }

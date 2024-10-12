@@ -254,7 +254,7 @@ Comments: status message is 200
 
 
 showMyRequests:
-description: List the reuqests that user has, with filtratoin.
+description: List the requests that user has, with filtration.
 API: bring-me/me/requests/{filter}
 input: no input
 output:
@@ -338,6 +338,20 @@ input: JSON
 			"retype-new-password" : "newPasswordTest"
 		}
 
-		
-		
+createNewRequest:
+API: bring-me/requests/new
+Type : POST
+input : JSON
+    EX:
+        {
+            "requester_id":31,
+            "requested_id":12,
+            "item_id":1,
+            "trip_id":23,
+            "origin":2,
+            "destination":3,
+            "price":100,
+            "comments":"asdasd",
+        }
+
 		

@@ -25,4 +25,5 @@
 /resources/temp_photos/*
 
 #Sensetive data
-#application.properties
+application.properties
+

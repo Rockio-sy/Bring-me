@@ -4,3 +4,5 @@
 1_ to get the user_id i want to use WEB token, and i will not use @PathVariable, or body, cus it will be hackable.
 2_ After checking if the user exists , should i return the user or only message that it is exists (Status code FORBIDDEN 403)!
 3_ I cannot move on without springSecurity, so i have to implement it !
+4_ we have to check the json response for every endpoint csu there are some fields that do not necessary to show to the client-side.
+5_ Discus the filterChain code!

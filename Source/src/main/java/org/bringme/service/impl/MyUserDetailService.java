@@ -27,9 +27,6 @@ public class MyUserDetailService implements UserDetailsService {
 
         if (user.isEmpty()) {
             throw new UsernameNotFoundException("Invalid input");
-        }else{
-            System.out.println("FOUND");
-            System.out.println(user.get().getPassword());
         }
 
         return new AuthUserDetails(user.get());

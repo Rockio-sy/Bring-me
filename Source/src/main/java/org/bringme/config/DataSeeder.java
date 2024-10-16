@@ -29,7 +29,7 @@ public class DataSeeder implements CommandLineRunner {
                 // Insert new data
                 String sql = "INSERT INTO persons (first_name, last_name, address, email, phone, password, account_status)" +
                         "VALUES" +
-                        "('Seed', 'seed', 'seed,seed32', 'seed@seed.seed', '123123', 'seed', 1)";
+                        "('Seed', 'seed', 'seed,seed32', 'seed@seed.seed', '123123', '$2a$12$GkCudTUDIIUJH9q0vP6OA.Fn2YbXVKryjjDojfN8N5WMEHlhLN9dK', 1)";
                 jdbcTemplate.update(sql);
                 System.out.println("Development data has been seeded.");
             } else {

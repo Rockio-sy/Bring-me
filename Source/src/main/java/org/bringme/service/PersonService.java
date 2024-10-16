@@ -6,7 +6,7 @@ import org.bringme.model.Person;
 import java.util.List;
 
 public interface PersonService {
-    Person getPersonById(Long id);
-    PersonDTO savePerson(PersonDTO requestPerson);
+    PersonDTO getPersonById(Long id);
     PersonDTO getByEmail(String email);
+    PersonDTO getByPhone(String phone);
 }

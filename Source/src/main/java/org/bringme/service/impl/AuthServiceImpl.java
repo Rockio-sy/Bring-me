@@ -72,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginData.emailOrPhone(), loginData.password()));
         if(authentication.isAuthenticated()){
             Long id = authRepository.getIdByEmailOrPhone(loginData.emailOrPhone());
-            return jwtService.generateToken(id);
+            return jwtService.generateToken(id, loginData.emailOrPhone());
         }
         return null;
     }

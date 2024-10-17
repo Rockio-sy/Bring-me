@@ -6,3 +6,4 @@
 3_ I cannot move on without springSecurity, so i have to implement it !
 4_ we have to check the json response for every endpoint csu there are some fields that do not necessary to show to the client-side.
 5_ Discus the filterChain code!
+6_ in the future i have to update the program to use Username instead of email of phone for login

@@ -2,6 +2,7 @@ package org.bringme.repository.impl;
 
 import org.bringme.model.Person;
 import org.bringme.repository.AuthRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -52,6 +53,19 @@ public class AuthRepositoryImpl implements AuthRepository {
                 .stream()
                 .findFirst();
     }
+
+    @Override
+    public Long getIdByEmailOrPhone(String emailOrPhone) {
+        String sql = "SELECT id FROM persons WHERE email = ? OR phone = ?";
+
+        try {
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("id"), emailOrPhone, emailOrPhone);
+        } catch (EmptyResultDataAccessException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
 
     private static final class AuthRowMapper implements RowMapper<Person> {
         @Override

@@ -21,12 +21,14 @@ public class AuthServiceImpl implements AuthService {
     private final AuthRepository authRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
-    public AuthServiceImpl(Converter converter, AuthRepository authRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationManager authenticationManager){
+    public AuthServiceImpl(Converter converter, AuthRepository authRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService){
         this.passwordEncoder = passwordEncoder;
         this.authRepository = authRepository;
         this.converter = converter;
         this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
 
@@ -69,7 +71,8 @@ public class AuthServiceImpl implements AuthService {
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginData.emailOrPhone(), loginData.password()));
         if(authentication.isAuthenticated()){
-            return "SUCCESS";
+            Long id = authRepository.getIdByEmailOrPhone(loginData.emailOrPhone());
+            return jwtService.generateToken(id);
         }
         return null;
     }

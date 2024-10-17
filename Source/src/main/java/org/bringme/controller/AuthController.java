@@ -58,7 +58,7 @@ public class AuthController {
         }
 
         responseMap.put("Message", "Login done");
-        responseMap.put("TOKEN", "ADSASD");
+        responseMap.put("TOKEN", token);
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 }

@@ -1,29 +1,30 @@
-# Build and jAR files
+# Build and JAR files
 /target/
 /build/
 
 # Logs
-*.logs
+*.log
 
-
-# IDE
+# IDE files and configurations
 .idea/
 *.iml
 *.ipr
 *.iws
-*.idea/
 
 # Default ignored files
 /shelf/
 /workspace.xml
+
 # Editor-based HTTP Client requests
 /httpRequests/
+
 # Datasource local storage ignored files
-/dataSources/
 /dataSources.local.xml
-/resources/photos
-/resources/temp_photos/*
 
-#Sensetive data
-application.properties
+# Ignoring photos and temporary photos directories
+/src/main/resources/photos/
+/src/main/resources/temp_photos/
 
+# Sensitive data
+.env
+/src/main/resources/application.properties

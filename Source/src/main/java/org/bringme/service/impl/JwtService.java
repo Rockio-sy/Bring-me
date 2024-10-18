@@ -1,15 +1,13 @@
 package org.bringme.service.impl;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import jakarta.validation.Valid;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +39,6 @@ public class JwtService {
 
     }
 
-
     /**
      * After adding username to the application, we can verify the token by username only without,
      * needing to use @emailOrPhone
@@ -55,7 +52,13 @@ public class JwtService {
         return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    public String extractId(String token) {
+    public Long extractIdAsLong(String token){
+        String out = extractClaim(token, Claims::getId);
+
+       return Long.parseLong(out);
+    }
+
+    public String extractIdAsString(String token) {
         return extractClaim(token, Claims::getId);
     }
 
@@ -65,10 +68,23 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parser()
-                .verifyWith(getKey())
-                .build().parseSignedClaims(token).getPayload();
+        try {
+            return Jwts
+                    .parser()
+                    .verifyWith(getKey())
+                    .build().parseSignedClaims(token).getPayload();
+        } catch (SignatureException e) {
+            System.out.println("INVALID SIGNATURE\n" + e.getMessage());
+        } catch (MalformedJwtException e) {
+            System.out.println("INVALID TOKEN\n" + e.getMessage());
+        } catch (ExpiredJwtException e) {
+            System.out.println("EXPIRED JWT TOKEN\n" + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("JWT CLAIMS STRING IS EMPTY\n" + e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            System.out.println("UNSUPPORTED JWT TOKEN\n" + e.getMessage());
+        }
+        return null;
     }
 
     public String extractEmailOrPhone(String token) {

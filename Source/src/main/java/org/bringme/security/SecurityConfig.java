@@ -38,7 +38,6 @@ public class SecurityConfig {
                         .requestMatchers("/auth/signup", "/auth/login").permitAll()
                                 .anyRequest().authenticated()
                         )
-                .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

@@ -6,7 +6,6 @@ import org.bringme.model.AuthLogin;
 import org.bringme.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +28,6 @@ public class AuthController {
         HashMap<String, Object> responseMap = new HashMap<>();
 
         // Check if the user exists
-
         if (authService.isExist(requestPerson.getEmail())) {
             responseMap.put("Message", "Provided credentials used already");
             return new ResponseEntity<>(responseMap, HttpStatus.FORBIDDEN);
@@ -52,13 +50,12 @@ public class AuthController {
         HashMap<String, Object> responseMap = new HashMap<>();
         String token = authService.verify(loginData);
         if (token == null) {
-            responseMap.put("Message", "UNAUTHORIZED");
+            responseMap.put("Message", "Invalid credentials");
             responseMap.put("Token", null);
             return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
         }
-
         responseMap.put("Message", "Login done");
-        responseMap.put("TOKEN", token);
+        responseMap.put("JWT-Token", token);
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 }

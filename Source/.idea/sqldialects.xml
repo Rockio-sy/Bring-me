@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/src/main/resources/db/migration/V1__Create_Person_Table.sql" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/db/migration/V2__Create_Item_Table.sql" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/db/migration/V3__Create_Request_Table.sql" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/db/migration/V4__Add_new_column_to_Items.sql" dialect="GenericSQL" />
-  </component>
-</project>

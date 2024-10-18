@@ -2,8 +2,8 @@ package org.bringme.controller;
 
 import jakarta.validation.Valid;
 import org.bringme.dto.ItemDTO;
-import org.bringme.model.Item;
 import org.bringme.service.ItemService;
+import org.bringme.service.impl.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,26 +20,38 @@ import java.util.List;
 public class ItemController {
 
     private final ItemService itemService;
+    private final JwtService jwtService;
 
-    public ItemController(ItemService itemService) {
+    public ItemController(ItemService itemService, JwtService jwtService) {
         this.itemService = itemService;
+        this.jwtService = jwtService;
     }
 
-
     @PostMapping("/new")
-    public ResponseEntity<HashMap<String, Object>> createNewItem(@Valid @RequestBody ItemDTO requestItem) {
+    public ResponseEntity<HashMap<String, Object>> createNewItem(@RequestHeader(value = "Authorization", required = false) String token, @Valid @RequestBody ItemDTO requestItem) {
         // multi value map
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        // Data checking
-        if (requestItem.getLength() <= 0 || requestItem.getWeight() <= 0 || requestItem.getHeight() <= 0
-                || requestItem.getLength() > 2 || requestItem.getWeight() > 5 || requestItem.getHeight() > 2
-                || requestItem.getOrigin() == requestItem.getDestination() || requestItem.getUser_id() == 0
-                || requestItem.getOrigin() == 0 || requestItem.getDestination() == 0) {
-            responseMap.put("Status", "422");
-            responseMap.put("Error message", "Invalid data");
-            return new ResponseEntity<>(responseMap, HttpStatus.UNPROCESSABLE_ENTITY);
+        // Validate token
+        if(token == null){
+            responseMap.put("Message", "Token is NULL");
+            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
         }
+        // Get the user id and set it in the request body
+        token = token.substring(7);
+        System.out.println("AFTER TOKEN");
+        Long userId = jwtService.extractIdAsLong(token);
+        requestItem.setUser_id(userId);
+
+            // Data checking
+            if (requestItem.getLength() <= 0 || requestItem.getWeight() <= 0 || requestItem.getHeight() <= 0
+                    || requestItem.getLength() > 2 || requestItem.getWeight() > 5 || requestItem.getHeight() > 2
+                    || requestItem.getOrigin() == requestItem.getDestination() || requestItem.getUser_id() == 0
+                    || requestItem.getOrigin() == 0 || requestItem.getDestination() == 0) {
+                responseMap.put("Status", "422");
+                responseMap.put("Error message", "Invalid data");
+                return new ResponseEntity<>(responseMap, HttpStatus.UNPROCESSABLE_ENTITY);
+            }
 
         // Saving item and return id
         ItemDTO responseDTO = itemService.saveItem(requestItem);

@@ -24,7 +24,7 @@ public class ItemDTO {
     private String detailedOriginAddress;
     @NotBlank
     private String photo;
-    @NotNull
+
     private Long user_id;
 
     // Self constructor

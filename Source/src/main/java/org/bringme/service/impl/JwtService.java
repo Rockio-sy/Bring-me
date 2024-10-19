@@ -41,7 +41,7 @@ public class JwtService {
 
     /**
      * After adding username to the application, we can verify the token by username only without,
-     * needing to use @emailOrPhone
+     * needing to use emailOrPhone
      */
     public boolean validateToken(String token, UserDetails userDetails) {
         final String emailOrPhone = extractEmailOrPhone(token);
@@ -52,10 +52,9 @@ public class JwtService {
         return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    public Long extractUserIdAsLong(String token){
+    public Long extractUserIdAsLong(String token) {
         String out = extractClaim(token, Claims::getId);
-
-       return Long.parseLong(out);
+        return Long.parseLong(out);
     }
 
     public String extractIdAsString(String token) {
@@ -92,7 +91,7 @@ public class JwtService {
     }
 
 
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
 
     }

@@ -1,7 +1,6 @@
 package org.bringme.controller;
 
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.bringme.dto.RequestDTO;
 import org.bringme.model.Request;
 import org.bringme.service.RequestService;
@@ -25,13 +24,12 @@ public class RequestController {
         this.jwtService = jwtService;
     }
 
-    // TODO: use token to get the user id
+    // TODO: Check the validation of the token if works!
     @GetMapping("/all")
     public ResponseEntity<HashMap<String, Object>> getAll(@RequestHeader(value = "Authorization") String header) {
         // Multi value map
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        // Validate token
         if (header == null || !header.startsWith("Bearer")) {
             responseMap.put("Message", "Invalid token.");
             return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);

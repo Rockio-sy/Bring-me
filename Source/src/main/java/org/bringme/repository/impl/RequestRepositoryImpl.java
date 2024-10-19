@@ -26,9 +26,9 @@ public class RequestRepositoryImpl implements RequestRepository {
     }
 
     @Override
-    public List<Request> getAll() {
-        String sql = "SELECT * FROM requests";
-        return jdbcTemplate.query(sql, new requestRowMapper());
+    public List<Request> getAll(Long userId) {
+        String sql = "SELECT * FROM requests WHERE requester_user_id = ? OR requested_user_id = ?";
+        return jdbcTemplate.query(sql, new requestRowMapper(), userId, userId);
     }
 
     @Override

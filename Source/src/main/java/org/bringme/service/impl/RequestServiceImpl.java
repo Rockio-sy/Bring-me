@@ -22,8 +22,8 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<RequestDTO> getAll() {
-        List<Request> requestList = requestRepository.getAll();
+    public List<RequestDTO> getAll(Long userId) {
+        List<Request> requestList = requestRepository.getAll(userId);
         if (requestList.isEmpty()){
             return null;
         }

@@ -127,7 +127,6 @@ public class ItemController {
 
     @GetMapping("/all")
     public ResponseEntity<HashMap<String, Object>> getAll() {
-//        System.out.println("In getAll controller");
         HashMap<String, Object> responseMap = new HashMap<>();
         List<ItemDTO> responseList = itemService.getAll();
 

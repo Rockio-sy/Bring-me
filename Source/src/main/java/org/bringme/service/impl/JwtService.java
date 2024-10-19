@@ -52,7 +52,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    public Long extractIdAsLong(String token){
+    public Long extractUserIdAsLong(String token){
         String out = extractClaim(token, Claims::getId);
 
        return Long.parseLong(out);

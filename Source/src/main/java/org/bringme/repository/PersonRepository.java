@@ -11,4 +11,5 @@ public interface PersonRepository {
     Optional<Person> getByEmail(String email);
     Optional<Person> getByPhone(String phone);
 
+    int updatePassword(Long userId, String encodedNewPassword);
 }

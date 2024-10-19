@@ -36,7 +36,6 @@ public class PersonRepositoryImpl implements PersonRepository {
     }
 
 
-
     @Override
     public Optional<Person> getByEmail(String email) {
         String sql = "SELECT * FROM persons WHERE email = ?";
@@ -48,6 +47,12 @@ public class PersonRepositoryImpl implements PersonRepository {
     public Optional<Person> getByPhone(String phone) {
         String sql = "SELECT * FROM persons WHERE phone=?";
         return jdbcTemplate.query(sql, new PersonRowMapper(), phone).stream().findFirst();
+    }
+
+    @Override
+    public int updatePassword(Long userId, String newPassword){
+        String sql = "UPDATE persons SET password = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, newPassword, userId);
     }
 
     private static final class PersonRowMapper implements RowMapper<Person> {

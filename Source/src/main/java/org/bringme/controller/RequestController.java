@@ -5,6 +5,7 @@ import org.apache.coyote.Response;
 import org.bringme.dto.RequestDTO;
 import org.bringme.model.Request;
 import org.bringme.service.RequestService;
+import org.bringme.service.impl.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,16 +18,20 @@ import java.util.List;
 public class RequestController {
 
     private final RequestService requestService;
+    private final JwtService jwtService;
 
-    public RequestController(RequestService requestService) {
+    public RequestController(RequestService requestService, JwtService jwtService) {
         this.requestService = requestService;
+        this.jwtService = jwtService;
     }
 
-    // Needs edit!
+    // TODO: use token to get the user id
     @GetMapping("/all")
     public ResponseEntity<HashMap<String, Object>> getAll() {
         // Multi value map
         HashMap<String, Object> responseMap = new HashMap<>();
+
+
 
         List<RequestDTO> responseList = requestService.getAll();
         if (responseList.isEmpty()) {
@@ -38,6 +43,7 @@ public class RequestController {
         responseMap.put("Requests", responseList);
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
+
 
     @PostMapping("/new")
     public ResponseEntity<HashMap<String, Object>> createNewRequest(@Valid @RequestBody RequestDTO request) {
@@ -68,7 +74,7 @@ public class RequestController {
         return new ResponseEntity<>(responseMap, HttpStatus.CREATED);
     }
 
-    // Needs User_id from the token!
+
     @GetMapping("/spec/{id}")
     public ResponseEntity<Request> getRequestById(@PathVariable Long id) {
         Request request = requestService.getRequestById(id);

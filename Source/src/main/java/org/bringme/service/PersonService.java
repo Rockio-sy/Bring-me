@@ -9,4 +9,5 @@ public interface PersonService {
     PersonDTO getPersonById(Long id);
     PersonDTO getByEmail(String email);
     PersonDTO getByPhone(String phone);
+    int updatePassword(Long userId, String newPassword, String oldPassword);
 }

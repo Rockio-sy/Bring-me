@@ -8,3 +8,4 @@
 5_ Discus the filterChain code!
 6_ in the future i have to update the program to use Username instead of email of phone for login
 7_ Ask for ItemController (validating token is right ?, how do i set the user id in the request)
+8_ Ask if we have to check the user id after extracting it from the token if it is null or no! (PersonController::37)

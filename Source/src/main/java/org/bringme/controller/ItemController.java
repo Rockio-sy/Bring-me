@@ -40,7 +40,7 @@ public class ItemController {
         // Get the user id and set it in the request body
         token = token.substring(7);
         System.out.println("AFTER TOKEN");
-        Long userId = jwtService.extractIdAsLong(token);
+        Long userId = jwtService.extractUserIdAsLong(token);
         requestItem.setUser_id(userId);
 
             // Data checking

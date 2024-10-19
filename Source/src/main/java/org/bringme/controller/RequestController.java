@@ -27,14 +27,21 @@ public class RequestController {
 
     // TODO: use token to get the user id
     @GetMapping("/all")
-    public ResponseEntity<HashMap<String, Object>> getAll() {
+    public ResponseEntity<HashMap<String, Object>> getAll(@RequestHeader(value = "Authorization") String header) {
         // Multi value map
         HashMap<String, Object> responseMap = new HashMap<>();
 
+        // Validate token
+        if (header == null || !header.startsWith("Bearer")) {
+            responseMap.put("Message", "Invalid token.");
+            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
+        }
 
+        String token = header.substring(7);
+        Long userId = jwtService.extractUserIdAsLong(token);
 
-        List<RequestDTO> responseList = requestService.getAll();
-        if (responseList.isEmpty()) {
+        List<RequestDTO> responseList = requestService.getAll(userId);
+        if (responseList == null) {
             responseMap.put("Message", "No content");
             responseMap.put("Requests", null);
             return new ResponseEntity<>(responseMap, HttpStatus.NO_CONTENT);

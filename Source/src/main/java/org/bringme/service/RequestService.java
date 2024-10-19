@@ -6,7 +6,7 @@ import org.bringme.model.Request;
 import java.util.List;
 
 public interface RequestService {
-    List<RequestDTO> getAll();
+    List<RequestDTO> getAll(Long userId);
     Request getRequestById(Long id);
     RequestDTO saveRequest(RequestDTO request);
 }

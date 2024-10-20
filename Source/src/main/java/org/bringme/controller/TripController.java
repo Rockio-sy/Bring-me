@@ -113,7 +113,6 @@ public class TripController {
             return new ResponseEntity<>(responseMap, HttpStatus.NO_CONTENT);
         }
 
-        responseMap.put("Count fo trips", responseList.size());
         responseMap.put("Status", "200");
         responseMap.put("Message", "List found successfully.");
         responseMap.put("Trips", responseList);

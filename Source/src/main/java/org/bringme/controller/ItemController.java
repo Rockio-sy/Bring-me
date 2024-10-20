@@ -135,7 +135,6 @@ public class ItemController {
         }
         responseMap.put("Status", "200");
         responseMap.put("Message", "List found successfully.");
-        responseMap.put("Count of items", responseList.size());
         responseMap.put("Items", responseList);
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
@@ -159,7 +158,8 @@ public class ItemController {
             responseMap.put("Item", responseItem);
             return new ResponseEntity<>(responseMap, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            responseMap.put("Message", "File not found");
+            return new ResponseEntity<>(responseMap, HttpStatus.NOT_FOUND);
         }
     }
 }

@@ -23,8 +23,6 @@ public class TripController {
         this.tripService = tripService;
     }
 
-
-    // TODO: use te token to get the user id
     @PostMapping("/new")
     public ResponseEntity<HashMap<String, Object>> createNewTrip(@RequestHeader(value = "Authorization") String header, @RequestBody TripDTO requestTrip) {
         // Multi value map

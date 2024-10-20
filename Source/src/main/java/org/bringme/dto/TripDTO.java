@@ -23,14 +23,13 @@ public class TripDTO {
     private boolean transit;
     @NotBlank
     private String comments;
-    @NotNull
-    private int passengerId;
+    private Long passengerId;
 
     public TripDTO() {
     }
 
     // CreateNewTrip response
-    public TripDTO(Long id, int origin, int destination, String destinationAirport, float emptyWeight, LocalDateTime arrivalTime, LocalDateTime departureTime, boolean transit, String comments, int passengerId) {
+    public TripDTO(Long id, int origin, int destination, String destinationAirport, float emptyWeight, LocalDateTime arrivalTime, LocalDateTime departureTime, boolean transit, String comments, Long passengerId) {
         this.id = id;
         this.origin = origin;
         this.destination = destination;
@@ -44,7 +43,7 @@ public class TripDTO {
     }
 
     // CreateNewTrip request
-    public TripDTO(int origin, int destination, String destinationAirport, float emptyWeight, LocalDateTime arrivalTime, LocalDateTime departureTime, boolean transit, String comments, int passengerId) {
+    public TripDTO(int origin, int destination, String destinationAirport, float emptyWeight, LocalDateTime arrivalTime, LocalDateTime departureTime, boolean transit, String comments, Long passengerId) {
         this.origin = origin;
         this.destination = destination;
         this.destinationAirport = destinationAirport;
@@ -132,12 +131,12 @@ public class TripDTO {
         this.comments = comments;
     }
 
-    @NotNull
-    public int getPassengerId() {
+
+    public Long getPassengerId() {
         return passengerId;
     }
 
-    public void setPassengerId(@NotNull int passengerId) {
+    public void setPassengerId(Long passengerId) {
         this.passengerId = passengerId;
     }
 

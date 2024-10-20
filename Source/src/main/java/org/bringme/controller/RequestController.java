@@ -24,7 +24,6 @@ public class RequestController {
         this.jwtService = jwtService;
     }
 
-    // TODO: Check the validation of the token if works!
     @GetMapping("/all")
     public ResponseEntity<HashMap<String, Object>> getAll(@RequestHeader(value = "Authorization") String header) {
         // Multi value map

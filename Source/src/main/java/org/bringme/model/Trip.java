@@ -12,10 +12,10 @@ public class Trip {
     private LocalDateTime departureTime;
     private boolean transit;
     private String comments;
-    private int passengerId;
+    private Long passengerId;
 
     public Trip(){}
-    public Trip(Long id, int origin, int destination, String destinationAirport, float emptyWeight, LocalDateTime arrivalTime, LocalDateTime departureTime, boolean transit, String comments, int passengerId) {
+    public Trip(Long id, int origin, int destination, String destinationAirport, float emptyWeight, LocalDateTime arrivalTime, LocalDateTime departureTime, boolean transit, String comments, Long passengerId) {
         this.id = id;
         this.origin = origin;
         this.destination = destination;
@@ -100,11 +100,11 @@ public class Trip {
         this.comments = comments;
     }
 
-    public int getPassengerId() {
+    public Long getPassengerId() {
         return passengerId;
     }
 
-    public void setPassengerId(int passengerId) {
+    public void setPassengerId(Long passengerId) {
         this.passengerId = passengerId;
     }
 

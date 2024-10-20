@@ -21,7 +21,6 @@ public class PersonController {
         this.jwtService = jwtService;
     }
 
-    // TODO: Write annotation to validate TOKEN then use it in every place i have validation
     @PostMapping("change-password")
     public ResponseEntity<HashMap<String, Object>> updatePassword(@RequestHeader(value = "Authorization") String token,
                                                                   @Valid @RequestParam(name = "new") String newPassword,

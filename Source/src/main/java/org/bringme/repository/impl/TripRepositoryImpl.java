@@ -42,7 +42,7 @@ public class TripRepositoryImpl implements TripRepository {
                 ps.setTimestamp(5, Timestamp.valueOf(trip.getDepartureTime()));
                 ps.setTimestamp(6, Timestamp.valueOf(trip.getArrivalTime()));
                 ps.setBoolean(7, trip.isTransit());
-                ps.setInt(8, trip.getPassengerId());
+                ps.setInt(8, trip.getPassengerId().intValue());
                 ps.setString(9, trip.getComments());
                 return ps;
             }, keyHolder);
@@ -85,7 +85,7 @@ public class TripRepositoryImpl implements TripRepository {
             newTrip.setDepartureTime(rs.getTimestamp("departure_time").toLocalDateTime());
             newTrip.setTransit(rs.getBoolean("transit"));
             newTrip.setComments(rs.getString("comments"));
-            newTrip.setPassengerId(rs.getInt("passenger_id"));
+            newTrip.setPassengerId(Integer.toUnsignedLong(rs.getInt("passenger_id")));
             return newTrip;
         }
     }

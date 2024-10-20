@@ -2,6 +2,7 @@ package org.bringme.controller;
 
 import org.bringme.dto.TripDTO;
 import org.bringme.service.TripService;
+import org.bringme.service.impl.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,26 +16,44 @@ import java.util.List;
 public class TripController {
 
     private final TripService tripService;
+    private final JwtService jwtService;
 
-    public TripController(TripService tripService) {
+    public TripController(TripService tripService, JwtService jwtService) {
+        this.jwtService = jwtService;
         this.tripService = tripService;
     }
 
 
     // TODO: use te token to get the user id
     @PostMapping("/new")
-    public ResponseEntity<HashMap<String, Object>> createNewTrip(@RequestBody TripDTO requestTrip) {
+    public ResponseEntity<HashMap<String, Object>> createNewTrip(@RequestHeader(value = "Authorization") String header, @RequestBody TripDTO requestTrip) {
         // Multi value map
         HashMap<String, Object> responseMap = new HashMap<>();
 
+        // Validate token
+        if (header == null || !header.startsWith("Bearer ")) {
+            responseMap.put("Message", "Header is null");
+            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
+        }
+
+        String token = header.substring(7);
+        Long passengerId = jwtService.extractUserIdAsLong(token);
+        requestTrip.setPassengerId(passengerId);
+
         // Data checking
-        if ((requestTrip.getOrigin() == requestTrip.getDestination())
-                || requestTrip.getOrigin() == 0 || requestTrip.getDestination() == 0
-                || requestTrip.getEmptyWeight() == 0 || requestTrip.getPassengerId() == 0
-                || requestTrip.getDepartureTime().isBefore(LocalDateTime.now())
-                || requestTrip.getArrivalTime().isBefore(LocalDateTime.now())) {
+        if (
+                (requestTrip.getOrigin() == requestTrip.getDestination())
+                        || requestTrip.getOrigin() == 0 || requestTrip.getDestination() == 0
+                        || requestTrip.getEmptyWeight() == 0 || requestTrip.getPassengerId() == 0
+        ) {
             responseMap.put("Status", "422");
             responseMap.put("Message", "Invalid data");
+            return new ResponseEntity<>(responseMap, HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
+        if (!tripService.checkTripTime(requestTrip.getDepartureTime(), requestTrip.getArrivalTime())) {
+            responseMap.put("Status", "422");
+            responseMap.put("Message", "Invalid time data");
             return new ResponseEntity<>(responseMap, HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
@@ -90,7 +109,7 @@ public class TripController {
         // Get list of trips
         List<TripDTO> responseList = tripService.getAllTrips();
 
-        if(responseList.isEmpty()){
+        if (responseList.isEmpty()) {
             responseMap.put("Status", "203");
             responseMap.put("Message", "Empty list");
             return new ResponseEntity<>(responseMap, HttpStatus.NO_CONTENT);

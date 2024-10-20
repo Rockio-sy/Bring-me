@@ -33,25 +33,24 @@ public class ItemController {
         HashMap<String, Object> responseMap = new HashMap<>();
 
         // Validate token
-        if(token == null){
+        if (token == null) {
             responseMap.put("Message", "Token is NULL");
             return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
         }
         // Get the user id and set it in the request body
         token = token.substring(7);
-        System.out.println("AFTER TOKEN");
         Long userId = jwtService.extractUserIdAsLong(token);
         requestItem.setUser_id(userId);
 
-            // Data checking
-            if (requestItem.getLength() <= 0 || requestItem.getWeight() <= 0 || requestItem.getHeight() <= 0
-                    || requestItem.getLength() > 2 || requestItem.getWeight() > 5 || requestItem.getHeight() > 2
-                    || requestItem.getOrigin() == requestItem.getDestination() || requestItem.getUser_id() == 0
-                    || requestItem.getOrigin() == 0 || requestItem.getDestination() == 0) {
-                responseMap.put("Status", "422");
-                responseMap.put("Error message", "Invalid data");
-                return new ResponseEntity<>(responseMap, HttpStatus.UNPROCESSABLE_ENTITY);
-            }
+        // Data checking
+        if (requestItem.getLength() <= 0 || requestItem.getWeight() <= 0 || requestItem.getHeight() <= 0
+                || requestItem.getLength() > 2 || requestItem.getWeight() > 5 || requestItem.getHeight() > 2
+                || requestItem.getOrigin() == requestItem.getDestination() || requestItem.getUser_id() == 0
+                || requestItem.getOrigin() == 0 || requestItem.getDestination() == 0) {
+            responseMap.put("Status", "422");
+            responseMap.put("Error message", "Invalid data");
+            return new ResponseEntity<>(responseMap, HttpStatus.UNPROCESSABLE_ENTITY);
+        }
 
         // Saving item and return id
         ItemDTO responseDTO = itemService.saveItem(requestItem);
@@ -92,7 +91,6 @@ public class ItemController {
                             responseMap.put("Status", "500 INTERNAL SERVER ERROR");
                             responseMap.put("Message", "Error uploading file");
                             responseMap.put("File-name", null);
-                            System.out.println("HERE IS THE ERROR");
                             return new ResponseEntity<>(responseMap, HttpStatus.INTERNAL_SERVER_ERROR);
                         }
                     } else {

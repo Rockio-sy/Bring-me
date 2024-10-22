@@ -11,6 +11,7 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 @Service
@@ -29,7 +30,7 @@ public class JwtService {
         return Jwts.builder()
                 .claims()
                 .add(claims)
-                .id(Long.toString(id))
+                .id(Objects.requireNonNull(Long.toString(id)))
                 .subject(emailOrPhone)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))

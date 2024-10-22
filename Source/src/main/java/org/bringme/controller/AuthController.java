@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/bring-me/auth")
 public class AuthController {
     private final AuthService authService;
 

@@ -71,6 +71,12 @@ public class ItemRepositoryImpl implements ItemRepository {
         }
     }
 
+    @Override
+    public List<Item> filterByCountries(int origin, int destination) {
+        String sql = "SELECT * FROM items WHERE origin = ? AND destination = ?";
+        return jdbcTemplate.query(sql, new ItemRowMapper(), origin, destination);
+    }
+
     // RowMapper
     public static final class ItemRowMapper implements RowMapper<Item> {
         @Override

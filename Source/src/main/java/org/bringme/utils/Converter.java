@@ -81,8 +81,8 @@ public class Converter {
     public RequestDTO requestToDTO(Request request){
         RequestDTO dto = new RequestDTO();
         dto.setId(request.getId());
-        dto.setRequesterUserId(request.getRequesterUserId());
-        dto.setRequestedUserId(request.getRequestedUserId());
+        dto.setRequesterUserId(request.getRequesterUserId().longValue());
+        dto.setRequestedUserId(request.getRequestedUserId().longValue());
         dto.setItemId(request.getItemId());
         dto.setTripId(request.getTripId());
         dto.setOrigin(request.getOrigin());
@@ -97,8 +97,8 @@ public class Converter {
     public Request DTOtoRequest(RequestDTO requestDTO){
         Request newRequest = new Request();
         newRequest.setId(null);
-        newRequest.setRequesterUserId(requestDTO.getRequesterUserId());
-        newRequest.setRequestedUserId(requestDTO.getRequestedUserId());
+        newRequest.setRequesterUserId(requestDTO.getRequesterUserId().intValue());
+        newRequest.setRequestedUserId(requestDTO.getRequestedUserId().intValue());
         newRequest.setItemId(requestDTO.getItemId());
         newRequest.setTripId(requestDTO.getTripId());
         newRequest.setOrigin(requestDTO.getOrigin());

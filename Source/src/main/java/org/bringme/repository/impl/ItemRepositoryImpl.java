@@ -77,6 +77,7 @@ public class ItemRepositoryImpl implements ItemRepository {
         return jdbcTemplate.query(sql, new ItemRowMapper(), origin, destination);
     }
 
+
     // RowMapper
     public static final class ItemRowMapper implements RowMapper<Item> {
         @Override

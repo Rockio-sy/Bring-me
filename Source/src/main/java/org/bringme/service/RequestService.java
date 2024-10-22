@@ -9,4 +9,6 @@ public interface RequestService {
     List<RequestDTO> getAll(Long userId);
     Request getRequestById(Long id);
     RequestDTO saveRequest(RequestDTO request);
+
+    Long isExists(Integer id, Integer tripId);
 }

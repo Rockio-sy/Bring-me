@@ -49,25 +49,36 @@ public class RequestController {
     }
 
 
+    // TODO  : Create endpoint to check if the request exists (already done, just we  need the endpoint
     @PostMapping("/new")
-    public ResponseEntity<HashMap<String, Object>> createNewRequest(@Valid @RequestBody RequestDTO request) {
+    public ResponseEntity<HashMap<String, Object>> createNewRequest(@Valid @RequestHeader(value = "Authorization") String header, @RequestBody RequestDTO request) {
         // Multi value map
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        // Checking input
-        if ((request.getRequestedUserId().equals(request.getRequesterUserId()) ||
-                request.getRequesterUserId() < 1 || request.getRequestedUserId() < 1
-                || request.getOrigin().equals(request.getDestination())
-                || request.getDestination() < 1 || request.getOrigin() < 1)) {
-            responseMap.put("Message", "Invalid data");
-            responseMap.put("Request", null);
-            return new ResponseEntity<>(responseMap, HttpStatus.BAD_REQUEST);
+        // Check if exists
+        Long id = requestService.isExists(request.getItemId(), request.getTripId());
+        if(id != null){
+            responseMap.put("Message", "Request already existed");
+            responseMap.put("id", id);
+            return new ResponseEntity<>(responseMap, HttpStatus.CONFLICT);
         }
+
+        // Validate token
+        if(header == null){
+            responseMap.put("Message", "Invalid Header.");
+            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
+        }
+        // getting requester user id from token
+        String token = header.substring(7);
+        Long userId = jwtService.extractUserIdAsLong(token);
+        request.setRequesterUserId(userId);
 
         RequestDTO responseRequest = requestService.saveRequest(request);
 
+        // Trip or item not found
         if (responseRequest == null) {
-            responseMap.put("Message", "Unknown error");
+            System.out.println("HEY");
+            responseMap.put("Message", "Invalid trip or item");
             responseMap.put("Request", null);
             return new ResponseEntity<>(responseMap, HttpStatus.INTERNAL_SERVER_ERROR);
         }

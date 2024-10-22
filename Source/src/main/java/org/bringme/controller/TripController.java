@@ -68,7 +68,6 @@ public class TripController {
         responseMap.put("Trip-id", responseTrip.getId());
         responseMap.put("Trip", responseTrip);
         return new ResponseEntity<>(responseMap, HttpStatus.CREATED);
-
     }
 
     @GetMapping("/show/{id}")

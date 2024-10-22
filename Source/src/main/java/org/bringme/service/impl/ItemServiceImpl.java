@@ -1,5 +1,6 @@
 package org.bringme.service.impl;
 
+import kotlin.collections.EmptyList;
 import org.bringme.dto.ItemDTO;
 import org.bringme.model.Item;
 import org.bringme.repository.ItemRepository;
@@ -109,6 +110,25 @@ public class ItemServiceImpl implements ItemService {
             System.out.println("ERROR:" + e.getMessage());
             return null;
         }
+    }
+
+    @Override
+    public List<ItemDTO> filterByCountries(int origin, int destination) {
+        // Check
+        if (origin == 0 || destination == 0) {
+            return List.of();
+        }
+
+        List<Item> data = itemRepository.filterByCountries(origin, destination);
+        if (data.isEmpty()) {
+            return List.of();
+        }
+        List<ItemDTO> response = new ArrayList<>();
+        for (Item item : data) {
+            ItemDTO dto = converter.itemToDTO(item);
+            response.add(dto);
+        }
+        return response;
     }
 
 }

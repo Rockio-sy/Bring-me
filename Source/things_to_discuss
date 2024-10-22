@@ -1,11 +1,5 @@
-
-
-
-1_ to get the user_id i want to use WEB token, and i will not use @PathVariable, or body, cus it will be hackable.
-2_ After checking if the user exists , should i return the user or only message that it is exists (Status code FORBIDDEN 403)!
-3_ I cannot move on without springSecurity, so i have to implement it !
-4_ we have to check the json response for every endpoint csu there are some fields that do not necessary to show to the client-side.
-5_ Discus the filterChain code!
+Save the user id only for now in the token!
+*** --> (Find In Google)4_ we have to check the json response for every endpoint csu there are some fields that do not necessary to show to the client-side.
 6_ in the future i have to update the program to use Username instead of email of phone for login
 7_ Ask for ItemController (validating token is right ?, how do i set the user id in the request)
 8_ Ask if we have to check the user id after extracting it from the token if it is null or no! (PersonController::37)

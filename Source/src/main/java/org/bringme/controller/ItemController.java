@@ -28,17 +28,19 @@ public class ItemController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<HashMap<String, Object>> createNewItem(@RequestHeader(value = "Authorization", required = false) String token, @Valid @RequestBody ItemDTO requestItem) {
+    public ResponseEntity<HashMap<String, Object>> createNewItem(@RequestHeader(value = "Authorization") String header, @Valid @RequestBody ItemDTO requestItem) {
         // multi value map
         HashMap<String, Object> responseMap = new HashMap<>();
 
         // Validate token
-        if (token == null) {
+        if (header == null) {
             responseMap.put("Message", "Token is NULL");
             return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
         }
+
+        // TODO: You have to get the user id in another way (SingleTon) in SecurityContextHolder()
         // Get the user id and set it in the request body
-        token = token.substring(7);
+        String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
         requestItem.setUser_id(userId);
 
@@ -161,5 +163,23 @@ public class ItemController {
             responseMap.put("Message", "File not found");
             return new ResponseEntity<>(responseMap, HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/filter/{from}/{to}")
+    public ResponseEntity<HashMap<String, Object>> getByCountry(@Valid @PathVariable(name = "from") int origin, @Valid @PathVariable(name = "to") int destination) {
+        // Multi-value map
+        HashMap<String, Object> responseMap = new HashMap<>();
+
+        // getting list of items
+        List<ItemDTO> response = itemService.filterByCountries(origin, destination);
+
+        if(response.isEmpty()){
+            responseMap.put("Message", "No content");
+            return new ResponseEntity<>(responseMap, HttpStatus.NO_CONTENT);
+        }
+
+        responseMap.put("Message", "Data returned successfully");
+        responseMap.put("Items", response);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 }

@@ -11,4 +11,6 @@ public interface ItemService {
     ItemDTO getItemById(Long id);
     ItemDTO saveItem(ItemDTO itemDTO);
     String saveTempFile(MultipartFile image);
+
+    List<ItemDTO> filterByCountries(int origin, int destination);
 }

@@ -46,6 +46,7 @@ public class AuthServiceImpl implements AuthService {
 
         // Convert to DTO
         requestPerson.setId(generatedId);
+        requestPerson.setAccountStatus(1);
         return requestPerson;
     }
 

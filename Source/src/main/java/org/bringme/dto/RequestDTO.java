@@ -6,29 +6,29 @@ import jakarta.validation.constraints.NotNull;
 public class RequestDTO {
 
     private Long id;
-    @NotNull
-    private Integer requesterUserId;
-    @NotNull
-    private Integer requestedUserId;
+
+    private Long requesterUserId;
+
+    private Long requestedUserId;
     @NotNull
     private Integer itemId;
     @NotNull
     private Integer tripId;
-    @NotNull
+
     private Integer origin;
-    @NotNull
+
     private Integer destination;
     @NotBlank
     private String comments;
-    @NotNull
     private boolean approvement;
     @NotNull
     private float price;
 
-    public RequestDTO(){}
+    public RequestDTO() {
+    }
 
     // Response CreateNewRequest constructor
-    public RequestDTO(Long id, Integer requesterUserId, Integer requestedUserId, Integer itemId, Integer tripId, Integer origin, Integer destination, String comments, boolean approvement, float price) {
+    public RequestDTO(Long id, Long requesterUserId, Long requestedUserId, Integer itemId, Integer tripId, Integer origin, Integer destination, String comments, boolean approvement, float price) {
         this.id = id;
         this.requesterUserId = requesterUserId;
         this.requestedUserId = requestedUserId;
@@ -42,15 +42,13 @@ public class RequestDTO {
     }
 
     // JSON Request CreateNewRequest constructor
-    public RequestDTO(Integer requesterUserId, Integer requestedUserId, Integer itemId, Integer tripId, Integer origin, Integer destination, String comments, boolean approvement, float price) {
+    // TODO: Add currency to the entity to use it with price
+    public RequestDTO(Long requesterUserId, Long requestedUserId, Integer itemId, Integer tripId, Integer origin, Integer destination, String comments, boolean approvement, float price) {
         this.requesterUserId = requesterUserId;
         this.requestedUserId = requestedUserId;
         this.itemId = itemId;
         this.tripId = tripId;
-        this.origin = origin;
-        this.destination = destination;
         this.comments = comments;
-        this.approvement = approvement;
         this.price = price;
     }
 
@@ -62,19 +60,19 @@ public class RequestDTO {
         this.id = id;
     }
 
-    public @NotNull Integer getRequesterUserId() {
+    public  Long getRequesterUserId() {
         return requesterUserId;
     }
 
-    public void setRequesterUserId(@NotNull Integer requesterUserId) {
+    public void setRequesterUserId(Long requesterUserId) {
         this.requesterUserId = requesterUserId;
     }
 
-    public @NotNull Integer getRequestedUserId() {
+    public Long getRequestedUserId() {
         return requestedUserId;
     }
 
-    public void setRequestedUserId(@NotNull Integer requestedUserId) {
+    public void setRequestedUserId(Long requestedUserId) {
         this.requestedUserId = requestedUserId;
     }
 
@@ -94,19 +92,19 @@ public class RequestDTO {
         this.tripId = tripId;
     }
 
-    public @NotNull Integer getOrigin() {
+    public Integer getOrigin() {
         return origin;
     }
 
-    public void setOrigin(@NotNull Integer origin) {
+    public void setOrigin(Integer origin) {
         this.origin = origin;
     }
 
-    public @NotNull Integer getDestination() {
+    public Integer getDestination() {
         return destination;
     }
 
-    public void setDestination(@NotNull Integer destination) {
+    public void setDestination(Integer destination) {
         this.destination = destination;
     }
 
@@ -118,12 +116,12 @@ public class RequestDTO {
         this.comments = comments;
     }
 
-    @NotNull
+
     public boolean isApprovement() {
         return approvement;
     }
 
-    public void setApprovement(@NotNull boolean approvement) {
+    public void setApprovement(boolean approvement) {
         this.approvement = approvement;
     }
 

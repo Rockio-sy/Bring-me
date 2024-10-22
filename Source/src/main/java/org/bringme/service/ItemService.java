@@ -13,4 +13,5 @@ public interface ItemService {
     String saveTempFile(MultipartFile image);
 
     List<ItemDTO> filterByCountries(int origin, int destination);
+
 }

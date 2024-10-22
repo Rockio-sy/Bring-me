@@ -2,6 +2,7 @@ package org.bringme.repository.impl;
 
 import org.bringme.model.Request;
 import org.bringme.repository.RequestRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -39,8 +40,8 @@ public class RequestRepositoryImpl implements RequestRepository {
                 "(?, ?, ?, ?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        try{
-            jdbcTemplate.update(connection ->{
+        try {
+            jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
                 ps.setInt(1, request.getRequestedUserId());
                 ps.setInt(2, request.getRequesterUserId());
@@ -54,7 +55,7 @@ public class RequestRepositoryImpl implements RequestRepository {
             }, keyHolder);
 
             return Objects.requireNonNull(keyHolder.getKey()).longValue();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
@@ -70,6 +71,16 @@ public class RequestRepositoryImpl implements RequestRepository {
                 .findFirst();
     }
 
+    @Override
+    public Long isExists(Integer itemId, Integer tripId) {
+        String sql = "SELECT id FROM requests WHERE item_id = ? AND trip_id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("id"), itemId, tripId);
+        } catch (EmptyResultDataAccessException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
     public static final class requestRowMapper implements RowMapper<Request> {
         @Override
         public Request mapRow(ResultSet rs, int rowNum) throws SQLException {

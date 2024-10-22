@@ -10,4 +10,5 @@ public interface TripRepository {
     Optional<Trip> getById(Long id);
     List<Trip> getAll();
 
+    List<Trip> filterByCountries(int origin, int destination);
 }

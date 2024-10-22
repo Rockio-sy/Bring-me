@@ -1,5 +1,6 @@
 package org.bringme.controller;
 
+import jakarta.validation.Valid;
 import org.bringme.dto.TripDTO;
 import org.bringme.service.TripService;
 import org.bringme.service.impl.JwtService;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -115,6 +117,22 @@ public class TripController {
         responseMap.put("Status", "200");
         responseMap.put("Message", "List found successfully.");
         responseMap.put("Trips", responseList);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
+
+    @GetMapping("/filter/{from}/{to}")
+    public ResponseEntity<HashMap<String, Object>> filterByCountries(@Valid @PathVariable("from") int origin, @Valid @PathVariable(name = "to") int destination) {
+        // Multi-value map
+        HashMap<String, Object> responseMap = new HashMap<>();
+
+        List<TripDTO> response = tripService.filterByCountries(origin, destination);
+        if (response.isEmpty()) {
+            responseMap.put("Message", "No content.");
+            return new ResponseEntity<>(responseMap, HttpStatus.NO_CONTENT);
+        }
+
+        responseMap.put("Message", "Data returned successfully.");
+        responseMap.put("Trips", response);
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 }

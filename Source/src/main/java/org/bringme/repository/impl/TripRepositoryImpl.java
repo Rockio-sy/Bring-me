@@ -71,6 +71,12 @@ public class TripRepositoryImpl implements TripRepository {
         return savedList;
     }
 
+    @Override
+    public List<Trip> filterByCountries(int origin, int destination) {
+        String sql = "SELECT * FROM trips WHERE origin = ? AND destination = ?";
+        return jdbcTemplate.query(sql, new TripRowMapper(), origin, destination);
+    }
+
     // RowMapper
     public static final class TripRowMapper implements RowMapper<Trip> {
         @Override

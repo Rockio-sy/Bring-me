@@ -11,4 +11,6 @@ public interface TripService {
     TripDTO getById(Long id);
     List<TripDTO> getAllTrips();
     boolean checkTripTime(LocalDateTime departure, LocalDateTime arrival);
+
+    List<TripDTO> filterByCountries(int origin, int destination);
 }

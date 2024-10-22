@@ -96,4 +96,23 @@ public class TripServiceImpl implements TripService {
         // 5. Everything is valid if none of the above conditions were met
         return true;
     }
+
+    @Override
+    public List<TripDTO> filterByCountries(int origin, int destination) {
+        // Get data from database
+        List<Trip> data = tripRepository.filterByCountries(origin, destination);
+
+        // Check
+        if (data.isEmpty()) {
+            return List.of();
+        }
+
+        // Convert
+        List<TripDTO> response = new ArrayList<>();
+        for (Trip trip : data) {
+            TripDTO dto = converter.tripToDTO(trip);
+            response.add(dto);
+        }
+        return response;
+    }
 }

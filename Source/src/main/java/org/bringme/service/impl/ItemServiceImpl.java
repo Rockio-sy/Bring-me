@@ -114,10 +114,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDTO> filterByCountries(int origin, int destination) {
-        // Check
-        if (origin == 0 || destination == 0) {
-            return List.of();
-        }
 
         List<Item> data = itemRepository.filterByCountries(origin, destination);
         if (data.isEmpty()) {

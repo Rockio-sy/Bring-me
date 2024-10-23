@@ -11,4 +11,10 @@ public interface RequestService {
     RequestDTO saveRequest(RequestDTO request);
 
     Long isExists(Integer id, Integer tripId);
+
+    List<RequestDTO> getSentRequests(Long userId);
+
+    List<RequestDTO> filterByDirections(Long userId, int origin, int destination);
+
+    List<RequestDTO> getReceivedRequests(Long userId);
 }

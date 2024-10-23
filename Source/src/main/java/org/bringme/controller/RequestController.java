@@ -49,7 +49,6 @@ public class RequestController {
     }
 
 
-    // TODO  : Create endpoint to check if the request exists (already done, just we  need the endpoint
     @PostMapping("/new")
     public ResponseEntity<HashMap<String, Object>> createNewRequest(@Valid @RequestHeader(value = "Authorization") String header, @RequestBody RequestDTO request) {
         // Multi value map
@@ -57,14 +56,14 @@ public class RequestController {
 
         // Check if exists
         Long id = requestService.isExists(request.getItemId(), request.getTripId());
-        if(id != null){
+        if (id != null) {
             responseMap.put("Message", "Request already existed");
             responseMap.put("id", id);
             return new ResponseEntity<>(responseMap, HttpStatus.CONFLICT);
         }
 
         // Validate token
-        if(header == null){
+        if (header == null) {
             responseMap.put("Message", "Invalid Header.");
             return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
         }
@@ -77,7 +76,6 @@ public class RequestController {
 
         // Trip or item not found
         if (responseRequest == null) {
-            System.out.println("HEY");
             responseMap.put("Message", "Invalid trip or item");
             responseMap.put("Request", null);
             return new ResponseEntity<>(responseMap, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -89,6 +87,77 @@ public class RequestController {
         return new ResponseEntity<>(responseMap, HttpStatus.CREATED);
     }
 
+    @GetMapping("/filter/by/sent")
+    public ResponseEntity<HashMap<String, Object>> getSentRequests(@Valid @RequestHeader(value = "Authorization") String header) {
+        // Multi-value map
+        HashMap<String, Object> responseMap = new HashMap<>();
+
+        if (header == null || !header.startsWith("Bearer ")) {
+            responseMap.put("Message", "Invalid Header");
+            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
+        }
+
+        String token = header.substring(7);
+        Long userId = jwtService.extractUserIdAsLong(token);
+
+        List<RequestDTO> response = requestService.getSentRequests(userId);
+        if (response.isEmpty()) {
+            responseMap.put("Message", "No Content");
+            return new ResponseEntity<>(responseMap, HttpStatus.NO_CONTENT);
+        }
+        responseMap.put("Message", "Data returned successfully.");
+        responseMap.put("Requests", response);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
+
+    @GetMapping("/filter/by/received")
+    public ResponseEntity<HashMap<String, Object>> getReceivedRequests(@Valid @RequestHeader("Authorization") String header) {
+        // Multi-value map
+        HashMap<String, Object> responseMap = new HashMap<>();
+
+        if (header == null || !header.startsWith("Bearer ")) {
+            System.out.println("HERE");
+            responseMap.put("Message", "Invalid Header");
+            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
+        }
+
+        String token = header.substring(7);
+        Long userId = jwtService.extractUserIdAsLong(token);
+
+        List<RequestDTO> response = requestService.getReceivedRequests(userId);
+        if (response.isEmpty()) {
+            responseMap.put("Message", "No Content");
+            return new ResponseEntity<>(responseMap, HttpStatus.NO_CONTENT);
+        }
+        responseMap.put("Message", "Data returned successfully.");
+        responseMap.put("Requests", response);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
+
+    @GetMapping("/filter/by/{from}/{to}")
+    public ResponseEntity<HashMap<String, Object>> filterByDirections(@Valid @RequestHeader("Authorization") String header, @Valid @PathVariable(value = "from") int origin, @Valid @PathVariable(value = "to") int destination) {
+
+        // Multi-value map
+        HashMap<String, Object> responseMap = new HashMap<>();
+
+        if (header == null || !header.startsWith("Bearer ")) {
+            responseMap.put("Message", "Invalid Header");
+            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
+        }
+
+        String token = header.substring(7);
+        Long userId = jwtService.extractUserIdAsLong(token);
+
+        List<RequestDTO> response = requestService.filterByDirections(userId, origin, destination);
+
+        if (response.isEmpty()) {
+            responseMap.put("Message", "No Content");
+            return new ResponseEntity<>(responseMap, HttpStatus.NO_CONTENT);
+        }
+        responseMap.put("Message", "Data returned successfully.");
+        responseMap.put("Requests", response);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
 
     @GetMapping("/spec/{id}")
     public ResponseEntity<Request> getRequestById(@PathVariable Long id) {

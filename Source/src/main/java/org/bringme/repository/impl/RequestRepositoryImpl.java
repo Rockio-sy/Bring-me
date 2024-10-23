@@ -81,6 +81,25 @@ public class RequestRepositoryImpl implements RequestRepository {
             return null;
         }
     }
+
+    @Override
+    public List<Request> getSentRequests(Long userId) {
+        String sql = "SELECT * FROM requests WHERE requested_user_id = ?";
+        return jdbcTemplate.query(sql, new requestRowMapper(), userId.intValue());
+    }
+
+    @Override
+    public List<Request> getByDirections(Long userId, int origin, int destination) {
+        String sql = "SELECT * FROM requests WHERE (requester_user_id = ? OR requested_user_id = ?) AND (origin = ? AND destination = ?)";
+        return jdbcTemplate.query(sql, new requestRowMapper(), userId.intValue(), userId.intValue(), origin, destination);
+    }
+
+    @Override
+    public List<Request> getReceivedRequests(Long userId) {
+        String sql = "SELECT * FROM requests WHERE requester_user_id = ? OR requested_user_id = ?";
+        return jdbcTemplate.query(sql, new requestRowMapper(), userId.intValue(), userId.intValue());
+    }
+
     public static final class requestRowMapper implements RowMapper<Request> {
         @Override
         public Request mapRow(ResultSet rs, int rowNum) throws SQLException {

@@ -159,6 +159,7 @@ public class RequestController {
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
+    // TODO: Make standard Response
     @GetMapping("/spec/{id}")
     public ResponseEntity<Request> getRequestById(@PathVariable Long id) {
         Request request = requestService.getRequestById(id);
@@ -168,4 +169,72 @@ public class RequestController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
+
+    @PutMapping("/approve/{id}")
+    public ResponseEntity<HashMap<String, Object>> approveRequests(@Valid @RequestHeader(value = "Authorization") String header, @Valid @PathVariable(value = "id") Long requestId) {
+        // Multi-value map
+        HashMap<String, Object> responseMap = new HashMap<>();
+
+        if (header == null || !header.startsWith("Bearer ")) {
+            responseMap.put("Message", "Invalid Header");
+            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
+        }
+
+        String token = header.substring(7);
+        Long userId = jwtService.extractUserIdAsLong(token);
+
+        boolean check = requestService.approveRequest(userId, requestId);
+        if (!check) {
+            responseMap.put("Message", "Internal error");
+            return new ResponseEntity<>(responseMap, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        responseMap.put("Message", "Request approved successfully.");
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
+
+    @GetMapping("/filter/approved")
+    public ResponseEntity<HashMap<String, Object>> filterByApprovement(@Valid @RequestHeader(value = "Authorization") String header) {
+        HashMap<String, Object> responseMap = new HashMap<>();
+
+        if (header == null || !header.startsWith("Bearer ")) {
+            responseMap.put("Message", "Invalid Header");
+            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
+        }
+
+        String token = header.substring(7);
+        Long userId = jwtService.extractUserIdAsLong(token);
+
+        List<RequestDTO> response = requestService.filterByApprovement(userId);
+        if (response.isEmpty()) {
+            responseMap.put("Message", "No Content");
+            return new ResponseEntity<>(responseMap, HttpStatus.NO_CONTENT);
+        }
+        responseMap.put("Message", "Data returned successfully.");
+        responseMap.put("Requests", response);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
+
+    @GetMapping("/filter/wait")
+    public ResponseEntity<HashMap<String, Object>> filterByWait(@Valid @RequestHeader(value = "Authorization") String header) {
+        HashMap<String, Object> responseMap = new HashMap<>();
+
+        if (header == null || !header.startsWith("Bearer ")) {
+            responseMap.put("Message", "Invalid Header");
+            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
+        }
+
+        String token = header.substring(7);
+        Long userId = jwtService.extractUserIdAsLong(token);
+
+        List<RequestDTO> response = requestService.filterByWait(userId);
+        if (response.isEmpty()) {
+            responseMap.put("Message", "No Content");
+            return new ResponseEntity<>(responseMap, HttpStatus.NO_CONTENT);
+        }
+        responseMap.put("Message", "Data returned successfully.");
+        responseMap.put("Requests", response);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
+
 }

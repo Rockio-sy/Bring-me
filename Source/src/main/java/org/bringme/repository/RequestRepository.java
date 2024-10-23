@@ -17,4 +17,10 @@ public interface RequestRepository {
     List<Request> getByDirections(Long userId, int origin, int destination);
 
     List<Request> getReceivedRequests(Long userId);
+
+    int approveRequest(Long requestId);
+
+    List<Request> filterByApprovement(Long userId);
+
+    List<Request> filterByWait(Long userId);
 }

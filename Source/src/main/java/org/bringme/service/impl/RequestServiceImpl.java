@@ -150,6 +150,60 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    public boolean approveRequest(Long userId, Long requestId) {
+        Optional<Request> checkRequest = requestRepository.getRequestById(requestId);
+        if (checkRequest.isEmpty()) {
+            return false;
+        }
+        if(!checkRequest.get().getRequestedUserId().equals(userId.intValue())){
+            return false;
+        }
+        int rowAffected = requestRepository.approveRequest(requestId);
+        if ( rowAffected <= 0){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public List<RequestDTO> filterByApprovement(Long userId) {
+        // Get data from database
+        List<Request> data = requestRepository.filterByApprovement(userId);
+
+        if (data.isEmpty()) {
+            return List.of();
+        }
+
+        List<RequestDTO> response = new ArrayList<>();
+        // Convert to DTO
+        for (Request re : data) {
+            RequestDTO dto = converter.requestToDTO(re);
+            response.add(dto);
+        }
+
+        return response;
+    }
+
+    @Override
+    public List<RequestDTO> filterByWait(Long userId) {
+        // Get data from database
+        List<Request> data = requestRepository.filterByWait(userId);
+
+        if (data.isEmpty()) {
+            return List.of();
+        }
+
+        List<RequestDTO> response = new ArrayList<>();
+        // Convert to DTO
+        for (Request re : data) {
+            RequestDTO dto = converter.requestToDTO(re);
+            response.add(dto);
+        }
+
+        return response;
+    }
+
+    @Override
     public Request getRequestById(Long id) {
         Optional<Request> newRequest = requestRepository.getRequestById(id);
         return newRequest.orElse(null);

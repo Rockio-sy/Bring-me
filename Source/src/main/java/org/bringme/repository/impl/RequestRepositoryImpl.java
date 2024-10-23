@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+// TODO: Check the triggers and functions for the updated_at and created_at in each table
 @Repository
 public class RequestRepositoryImpl implements RequestRepository {
 
@@ -98,6 +99,24 @@ public class RequestRepositoryImpl implements RequestRepository {
     public List<Request> getReceivedRequests(Long userId) {
         String sql = "SELECT * FROM requests WHERE requester_user_id = ? OR requested_user_id = ?";
         return jdbcTemplate.query(sql, new requestRowMapper(), userId.intValue(), userId.intValue());
+    }
+
+    @Override
+    public int approveRequest(Long requestId) {
+        String sql = "UPDATE requests SET approvement_statue = TRUE WHERE id = ?";
+        return jdbcTemplate.update(sql, requestId.intValue());
+    }
+
+    @Override
+    public List<Request> filterByApprovement(Long userId) {
+        String sql = "SELECT * FROM requests WHERE requester_user_id = ? AND  approvement_statue = TRUE";
+        return jdbcTemplate.query(sql, new requestRowMapper(), userId.intValue());
+    }
+
+    @Override
+    public List<Request> filterByWait(Long userId) {
+        String sql = "SELECT * FROM requests WHERE requester_user_id = ? AND approvement_statue = FALSE";
+        return jdbcTemplate.query(sql, new requestRowMapper(), userId.intValue());
     }
 
     public static final class requestRowMapper implements RowMapper<Request> {

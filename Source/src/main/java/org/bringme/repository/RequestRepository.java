@@ -11,4 +11,10 @@ public interface RequestRepository {
     Optional<Request> getRequestById(Long id);
 
     Long isExists(Integer itemId, Integer tripId);
+
+    List<Request> getSentRequests(Long userId);
+
+    List<Request> getByDirections(Long userId, int origin, int destination);
+
+    List<Request> getReceivedRequests(Long userId);
 }

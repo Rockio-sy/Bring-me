@@ -64,9 +64,9 @@ public class RequestServiceImpl implements RequestService {
         }
 
         // Set values of requested user id, trip and item to save in the database
-        if(Objects.equals(item.get().getUser_id(), request.getRequesterUserId())){
+        if (Objects.equals(item.get().getUser_id(), request.getRequesterUserId())) {
             request.setRequestedUserId(trip.get().getPassengerId());
-        } else if (Objects.equals(trip.get().getPassengerId(), request.getRequesterUserId())){
+        } else if (Objects.equals(trip.get().getPassengerId(), request.getRequesterUserId())) {
             request.setRequestedUserId(item.get().getUser_id());
         }
 
@@ -91,6 +91,62 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public Long isExists(Integer itemId, Integer tripId) {
         return requestRepository.isExists(itemId, tripId);
+    }
+
+    @Override
+    public List<RequestDTO> getSentRequests(Long userId) {
+        // Get data from database
+        List<Request> data = requestRepository.getSentRequests(userId);
+
+        if (data.isEmpty()) {
+            return List.of();
+        }
+
+        List<RequestDTO> response = new ArrayList<>();
+        // Convert to DTO
+        for (Request re : data) {
+            RequestDTO dto = converter.requestToDTO(re);
+            response.add(dto);
+        }
+
+        return response;
+    }
+
+    @Override
+    public List<RequestDTO> filterByDirections(Long userId, int origin, int destination) {
+        // Get data from database
+        List<Request> data = requestRepository.getByDirections(userId, origin, destination);
+
+        if (data.isEmpty()) {
+            return List.of();
+        }
+
+        List<RequestDTO> response = new ArrayList<>();
+        // Convert to DTO
+        for (Request re : data) {
+            RequestDTO dto = converter.requestToDTO(re);
+            response.add(dto);
+        }
+        return response;
+    }
+
+    @Override
+    public List<RequestDTO> getReceivedRequests(Long userId) {
+        // Get data from database
+        List<Request> data = requestRepository.getReceivedRequests(userId);
+
+        if (data.isEmpty()) {
+            return List.of();
+        }
+
+        List<RequestDTO> response = new ArrayList<>();
+        // Convert to DTO
+        for (Request re : data) {
+            RequestDTO dto = converter.requestToDTO(re);
+            response.add(dto);
+        }
+
+        return response;
     }
 
     @Override

@@ -1,8 +1,10 @@
 package org.bringme.controller;
 
 import jakarta.validation.Valid;
+import org.bringme.dto.PersonDTO;
 import org.bringme.dto.RequestDTO;
 import org.bringme.model.Request;
+import org.bringme.service.PersonService;
 import org.bringme.service.RequestService;
 import org.bringme.service.impl.JwtService;
 import org.springframework.http.HttpStatus;
@@ -18,10 +20,12 @@ public class RequestController {
 
     private final RequestService requestService;
     private final JwtService jwtService;
+    private final PersonService personService;
 
-    public RequestController(RequestService requestService, JwtService jwtService) {
+    public RequestController(RequestService requestService, JwtService jwtService, PersonService personService) {
         this.requestService = requestService;
         this.jwtService = jwtService;
+        this.personService = personService;
     }
 
     @GetMapping("/all")
@@ -234,6 +238,30 @@ public class RequestController {
         }
         responseMap.put("Message", "Data returned successfully.");
         responseMap.put("Requests", response);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
+
+    @GetMapping("/contact/{id}")
+    public ResponseEntity<HashMap<String, Object>> getUserDetails(@Valid @RequestHeader(value = "Authorization") String header, @Valid @PathVariable(value = "id") int hostId) {
+        HashMap<String, Object> responseMap = new HashMap<>();
+
+        if (header == null || !header.startsWith("Bearer ")) {
+            responseMap.put("Message", "Invalid Header");
+            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
+        }
+
+        String token = header.substring(7);
+        Long guestId = jwtService.extractUserIdAsLong(token);
+
+        boolean check = requestService.isThereCommonRequest(guestId, hostId);
+        if (!check) {
+            responseMap.put("Message", "No common working requests");
+            return new ResponseEntity<>(responseMap, HttpStatus.FORBIDDEN);
+        }
+
+        PersonDTO contacts = personService.showPersonDetails(hostId);
+        responseMap.put("Message", "Data successfully returned");
+        responseMap.put("Contacts", contacts);
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 

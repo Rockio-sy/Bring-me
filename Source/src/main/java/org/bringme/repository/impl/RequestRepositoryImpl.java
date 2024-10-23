@@ -119,6 +119,36 @@ public class RequestRepositoryImpl implements RequestRepository {
         return jdbcTemplate.query(sql, new requestRowMapper(), userId.intValue());
     }
 
+    /*SELECT TRUE
+WHERE EXISTS (
+    SELECT 1
+    FROM requests
+    WHERE
+        ((requester_user_id = 11 AND requested_user_id = 12)
+        OR (requester_user_id = 12 AND requested_user_id = 11))
+        AND removed_at IS NULL
+        AND approvement_statue IS TRUE
+);
+*/
+    @Override
+    public boolean isThereCommonRequest(Long guestId, int hostId) {
+        String sql = "SELECT TRUE " +
+                "WHERE EXISTS (" +
+                "SELECT 1 FROM requests " +  // Added space between "requests" and "WHERE"
+                "WHERE ((requester_user_id = ? AND requested_user_id = ?) " +
+                "OR (requester_user_id = ? AND requested_user_id = ?)) " +
+                "AND removed_at IS NULL " +
+                "AND approvement_statue IS TRUE)";
+
+        try{
+            return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, (rs, numRow) -> (rs.getBoolean(1)), guestId.intValue(), hostId, hostId, guestId.intValue()));
+        }catch (EmptyResultDataAccessException e){
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+
     public static final class requestRowMapper implements RowMapper<Request> {
         @Override
         public Request mapRow(ResultSet rs, int rowNum) throws SQLException {

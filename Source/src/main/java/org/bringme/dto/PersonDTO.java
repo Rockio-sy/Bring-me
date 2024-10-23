@@ -46,6 +46,15 @@ public class PersonDTO {
         this.accountStatus = accountStatus;
     }
 
+    // Response showUserDetails
+    public PersonDTO(String firstName, String lastName, String address, String email, String phone){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.email = email;
+        this.phone = phone;
+    }
+
     public Long getId() {
         return id;
     }

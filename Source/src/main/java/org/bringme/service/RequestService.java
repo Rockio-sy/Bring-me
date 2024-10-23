@@ -23,4 +23,6 @@ public interface RequestService {
     List<RequestDTO> filterByApprovement(Long userId);
 
     List<RequestDTO> filterByWait(Long userId);
+
+    boolean isThereCommonRequest(Long guestId, int hostId);
 }

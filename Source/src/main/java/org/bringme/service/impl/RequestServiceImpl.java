@@ -204,6 +204,11 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    public boolean isThereCommonRequest(Long guestId, int hostId) {
+        return requestRepository.isThereCommonRequest(guestId, hostId);
+    }
+
+    @Override
     public Request getRequestById(Long id) {
         Optional<Request> newRequest = requestRepository.getRequestById(id);
         return newRequest.orElse(null);

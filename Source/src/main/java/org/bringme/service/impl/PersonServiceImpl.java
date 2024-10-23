@@ -82,4 +82,10 @@ public class PersonServiceImpl implements PersonService {
         return 0;
     }
 
+    @Override
+    public PersonDTO showPersonDetails(int hostId) {
+        Optional<Person> data = personRepository.getById(Integer.toUnsignedLong(hostId));
+        return data.map(converter::personToDetails).orElse(null);
+    }
+
 }

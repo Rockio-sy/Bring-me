@@ -10,4 +10,6 @@ public interface PersonService {
     PersonDTO getByEmail(String email);
     PersonDTO getByPhone(String phone);
     int updatePassword(Long userId, String newPassword, String oldPassword);
+
+    PersonDTO showPersonDetails(int hostId);
 }

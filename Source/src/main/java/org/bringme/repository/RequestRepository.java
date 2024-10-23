@@ -23,4 +23,6 @@ public interface RequestRepository {
     List<Request> filterByApprovement(Long userId);
 
     List<Request> filterByWait(Long userId);
+
+    boolean isThereCommonRequest(Long guestId, int hostId);
 }

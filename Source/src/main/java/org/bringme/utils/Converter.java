@@ -135,4 +135,14 @@ public class Converter {
         dto.setPassword(person.getPassword());
         return dto;
     }
+
+    public PersonDTO personToDetails(Person person){
+        PersonDTO dto = new PersonDTO();
+        dto.setFirstName(person.getFirstName());
+        dto.setLastName(person.getLastName());
+        dto.setAddress(person.getAddress());
+        dto.setEmail(person.getEmail());
+        dto.setPhone(person.getPhone());
+        return dto;
+    }
 }

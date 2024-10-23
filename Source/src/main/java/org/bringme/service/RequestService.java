@@ -17,4 +17,10 @@ public interface RequestService {
     List<RequestDTO> filterByDirections(Long userId, int origin, int destination);
 
     List<RequestDTO> getReceivedRequests(Long userId);
+
+    boolean approveRequest(Long userId, Long requestId);
+
+    List<RequestDTO> filterByApprovement(Long userId);
+
+    List<RequestDTO> filterByWait(Long userId);
 }

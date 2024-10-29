@@ -1,7 +1,1 @@
-1_ I do repeat filtration functions in the service with the same logic with small difference, it is right?
-2_ For notifcations service, the ERD shows that i have to save the id of the noficatoin as Pk, then the operatoin id,
-and i do not have operation id for any operation!
-i have only the id of the items itselfs!
-should i add a operatoin id or save the (request, item, trip, person ..etc)'s id with text in about ?
-should i create a nofication table to save what does the user do while using the program?
-should i create a text to read the user's operatoin  or it should be readable from the table attributes ?
+

@@ -1,6 +1,5 @@
 package org.bringme.service.impl;
 
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.bringme.dto.RequestDTO;
 import org.bringme.model.Item;
 import org.bringme.model.Request;
@@ -8,6 +7,7 @@ import org.bringme.model.Trip;
 import org.bringme.repository.ItemRepository;
 import org.bringme.repository.RequestRepository;
 import org.bringme.repository.TripRepository;
+import org.bringme.service.EmailService;
 import org.bringme.service.RequestService;
 import org.bringme.utils.Converter;
 import org.springframework.stereotype.Service;
@@ -24,12 +24,14 @@ public class RequestServiceImpl implements RequestService {
     private final ItemRepository itemRepository;
     private final TripRepository tripRepository;
     private final Converter converter;
+    private final EmailService emailService;
 
-    public RequestServiceImpl(RequestRepository requestRepository, Converter converter, ItemRepository itemRepository, TripRepository tripRepository) {
+    public RequestServiceImpl(RequestRepository requestRepository, Converter converter, ItemRepository itemRepository, TripRepository tripRepository, EmailService emailService) {
         this.converter = converter;
         this.requestRepository = requestRepository;
         this.itemRepository = itemRepository;
         this.tripRepository = tripRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -82,6 +84,8 @@ public class RequestServiceImpl implements RequestService {
         // Convert to DTO
         RequestDTO responseRequest = converter.requestToDTO(modelRequest);
 
+        emailService.sendEmail("Your request has been created, check the link below for more info.", "New Request", (request.getRequesterUserId()));
+        emailService.sendEmail("Someone is requesting you, check the website for more info", "New Request", request.getRequestedUserId());
         // Set the generated id
         responseRequest.setId(generatedId);
 
@@ -155,13 +159,22 @@ public class RequestServiceImpl implements RequestService {
         if (checkRequest.isEmpty()) {
             return false;
         }
-        if(!checkRequest.get().getRequestedUserId().equals(userId.intValue())){
+        // Check if the user is the requested
+        if (!checkRequest.get().getRequestedUserId().equals(userId.intValue())) {
             return false;
         }
         int rowAffected = requestRepository.approveRequest(requestId);
-        if ( rowAffected <= 0){
+        if (rowAffected <= 0) {
             return false;
         }
+        // TODO : FIX THE MESSAGE IN THE EMAIL, REMOVE THE ORIGIN AND DESTINATION
+        emailService.sendEmail("Your request has been approved by the requested, request will be closed after 30 days\n"
+                ,"Approvement"
+                 ,(checkRequest.get().getRequesterUserId()).longValue());
+        emailService.sendEmail("You have approved request.\nRequest will be closed after 30 days" +
+                        "\nFrom:" + checkRequest.get().getOrigin() + "\nTo:" + checkRequest.get().getDestination()
+                        , "Approvement"
+                        , (checkRequest.get().getRequestedUserId().longValue()));
         return true;
     }
 

@@ -54,6 +54,11 @@ public class AuthController {
             responseMap.put("Token", null);
             return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
         }
+        if(!authService.isValidated(loginData)){
+            responseMap.put("Message", "Verification required.");
+            responseMap.put("Token", null);
+            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
+        }
         responseMap.put("Message", "Login done");
         responseMap.put("JWT-Token", token);
         return new ResponseEntity<>(responseMap, HttpStatus.OK);

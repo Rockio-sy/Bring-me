@@ -66,6 +66,21 @@ public class AuthRepositoryImpl implements AuthRepository {
         }
     }
 
+    @Override
+    public boolean isVerified(String emailOrPhone) {
+        String sql = "SELECT verification FROM persons WHERE email=?, OR phone = ?";
+        try {
+            int status = Objects.requireNonNull(jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("verification"), emailOrPhone, emailOrPhone));
+            if(status > 0){
+                return true;
+            }
+        }catch (EmptyResultDataAccessException e){
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return false;
+    }
+
 
     private static final class AuthRowMapper implements RowMapper<Person> {
         @Override

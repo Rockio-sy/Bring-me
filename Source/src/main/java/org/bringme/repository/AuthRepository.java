@@ -8,4 +8,6 @@ public interface AuthRepository {
     Optional<Person> getByEmailOrPhone(String emailOrPhone);
     Long savePerson(Person person);
     Long getIdByEmailOrPhone(String emailOrPhone);
+
+    boolean isVerified(String s);
 }

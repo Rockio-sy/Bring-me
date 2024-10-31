@@ -1,20 +1,14 @@
 package org.bringme.repository.impl;
 
-import org.bringme.dto.PersonDTO;
 import org.bringme.model.Person;
 import org.bringme.repository.PersonRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -53,6 +47,23 @@ public class PersonRepositoryImpl implements PersonRepository {
     public int updatePassword(Long userId, String newPassword){
         String sql = "UPDATE persons SET password = ? WHERE id = ?";
         return jdbcTemplate.update(sql, newPassword, userId);
+    }
+
+    @Override
+    public void verifyAccount(Long id) {
+        String sql = "UPDATE persons SET verification = 1 WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public Long getIdByEmailOrPhone(String emailOrPhone){
+        String sql = "SELECT id FROM persons WHERE email = ? OR phone = ?";
+        try{
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("id"), emailOrPhone, emailOrPhone);
+        }catch (EmptyResultDataAccessException e){
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
     private static final class PersonRowMapper implements RowMapper<Person> {

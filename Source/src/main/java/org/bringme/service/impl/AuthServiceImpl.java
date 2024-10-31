@@ -77,4 +77,9 @@ public class AuthServiceImpl implements AuthService {
         }
         return null;
     }
+
+    @Override
+    public boolean isValidated(AuthLogin loginData) {
+        return authRepository.isVerified(loginData.emailOrPhone());
+    }
 }

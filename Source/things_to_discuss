@@ -1,1 +1,1 @@
-
+1_ In EmailController (line 19), i need to get teh email from the front (cus the verification page will be after signup endpoint)

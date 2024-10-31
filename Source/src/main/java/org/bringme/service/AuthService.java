@@ -11,4 +11,6 @@ public interface AuthService {
     PersonDTO getByEmailOrPhone(String emailOrPhone);
 
     String verify(AuthLogin loginData);
+
+    boolean isValidated(AuthLogin loginData);
 }

@@ -68,7 +68,7 @@ public class AuthRepositoryImpl implements AuthRepository {
 
     @Override
     public boolean isVerified(String emailOrPhone) {
-        String sql = "SELECT verification FROM persons WHERE email=?, OR phone = ?";
+        String sql = "SELECT verification FROM persons WHERE email=? OR phone = ?";
         try {
             int status = Objects.requireNonNull(jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("verification"), emailOrPhone, emailOrPhone));
             if(status > 0){

@@ -163,7 +163,6 @@ public class RequestController {
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
-    // TODO: Make standard Response
     @GetMapping("/spec/{id}")
     public ResponseEntity<Request> getRequestById(@PathVariable Long id) {
         Request request = requestService.getRequestById(id);

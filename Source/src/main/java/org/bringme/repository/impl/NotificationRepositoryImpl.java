@@ -21,15 +21,35 @@ public class NotificationRepositoryImpl implements NotificationRepository {
     }
 
     @Override
-    public List<Notification> getAll(Long userId) {
+    public List<Notification> getAll(int userId) {
         String sql = "SELECT * FROM notifications WHERE user_id = ?";
         return jdbcTemplate.query(sql, new NotificationRowMapper(), userId);
     }
 
     @Override
-    public List<Notification> getNotMarked(Long userId) {
+    public List<Notification> getNotMarked(int userId) {
         String sql = "SELECT * FROM notifications WHERE user_id = ? AND marked = 1";
         return jdbcTemplate.query(sql, new NotificationRowMapper(), userId);
+    }
+
+    @Override
+    public void save(int userId, String content, int requestId) {
+        String sql = "INSERT INTO notifications (user_id, content, requestId)" +
+                "VALUES" +
+                "(?, ?, ?)";
+        jdbcTemplate.update(sql, userId, content, requestId);
+    }
+
+    @Override
+    public void markOneAsRead(int userId, Long id) {
+        String sql = "UPDATE TABLE notifications SET marked = 1 WHERE id = ? AND user_id = ?";
+        jdbcTemplate.update(sql, id, userId);
+    }
+
+    @Override
+    public void markAllAsRead(int userId) {
+        String sql = "UPDATE TABLE notifications SET marked = 1 WHERE user_id = ?";
+        jdbcTemplate.update(sql, userId);
     }
 
     private static final class NotificationRowMapper implements RowMapper<Notification>{

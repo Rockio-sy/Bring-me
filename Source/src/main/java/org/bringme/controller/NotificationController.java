@@ -8,10 +8,7 @@ import org.bringme.service.impl.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +25,7 @@ public class NotificationController {
         this.jwtService = jwtService;
     }
 
+    // TODO: Check if the userId should be integer or Long
     @GetMapping("/all")
     public ResponseEntity<HashMap<String, Object>> getAllNotifications(@Valid @RequestHeader(value = "Authorization") String header) {
         HashMap<String, Object> responseMap = new HashMap<>();
@@ -40,7 +38,7 @@ public class NotificationController {
         String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
 
-        List<NotificationDTO> all = notificationService.getAll(userId);
+        List<NotificationDTO> all = notificationService.getAll(userId.intValue());
 
         if (all.isEmpty()) {
             responseMap.put("Message", "No content");
@@ -62,7 +60,7 @@ public class NotificationController {
         String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
 
-        List<NotificationDTO> notMarked = notificationService.getNotMarked(userId);
+        List<NotificationDTO> notMarked = notificationService.getNotMarked(userId.intValue());
 
         if (notMarked.isEmpty()) {
             responseMap.put("Message", "No content");
@@ -73,5 +71,38 @@ public class NotificationController {
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
+    // TODO: Test add new notification, get it and mark it, then add others, get them and mark all
+    @PatchMapping("mark-one/{id}")
+    public ResponseEntity<HashMap<String, Object>> markOneAsRead(@Valid @RequestHeader(value = "Authorization") String header, @RequestParam(value = "id") Long id) {
+        HashMap<String, Object> responseMap = new HashMap<>();
 
+        // Validate
+        if (header == null || !header.startsWith("Bearer")) {
+            responseMap.put("Message", "Invalid token.");
+            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
+        }
+        String token = header.substring(7);
+        Long userId = jwtService.extractUserIdAsLong(token);
+
+        notificationService.markOneAsRead(userId.intValue(), id);
+        responseMap.put("Message", "marked as read successfully");
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
+
+    @PatchMapping("/mark-all")
+    public ResponseEntity<HashMap<String, Object>> markAllAsRead(@Valid @RequestHeader(value = "Authorization") String header){
+        HashMap<String, Object> responseMap = new HashMap<>();
+
+        // Validate
+        if (header == null || !header.startsWith("Bearer")) {
+            responseMap.put("Message", "Invalid token.");
+            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
+        }
+        String token = header.substring(7);
+        Long userId = jwtService.extractUserIdAsLong(token);
+
+        notificationService.markAllAsRead(userId.intValue());
+        responseMap.put("Message", "marked as read successfully");
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
 }

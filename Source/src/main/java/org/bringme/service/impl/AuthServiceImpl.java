@@ -1,7 +1,7 @@
 package org.bringme.service.impl;
 
 import org.bringme.dto.PersonDTO;
-import org.bringme.model.AuthLogin;
+import org.bringme.dto.AuthLogin;
 import org.bringme.model.Person;
 import org.bringme.repository.AuthRepository;
 import org.bringme.service.AuthService;

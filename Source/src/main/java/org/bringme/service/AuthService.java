@@ -1,7 +1,7 @@
 package org.bringme.service;
 
 import org.bringme.dto.PersonDTO;
-import org.bringme.model.AuthLogin;
+import org.bringme.dto.AuthLogin;
 
 public interface AuthService {
     PersonDTO signUp(PersonDTO requestPerson);

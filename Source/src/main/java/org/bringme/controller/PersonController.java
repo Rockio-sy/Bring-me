@@ -21,19 +21,19 @@ public class PersonController {
         this.jwtService = jwtService;
     }
 
-    @PostMapping("change-password")
-    public ResponseEntity<HashMap<String, Object>> updatePassword(@RequestHeader(value = "Authorization") String token,
+    @PostMapping("/change-password")
+    public ResponseEntity<HashMap<String, Object>> updatePassword(@RequestHeader(value = "Authorization") String header,
                                                                   @Valid @RequestParam(name = "new") String newPassword,
                                                                   @Valid @RequestParam(name = "old") String oldPassword) {
 
         HashMap<String, Object> responseMap = new HashMap<>();
-        if (token == null) {
+        if (header == null) {
             responseMap.put("Message", "Invalid token.");
             return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
         }
 
         // Ask for the user id and for the way of checking password in if(1, 2)
-        token = token.substring(7);
+        String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
         int check = personService.updatePassword(userId, newPassword, oldPassword);
         if (check == 1) {

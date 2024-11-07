@@ -2,7 +2,7 @@ package org.bringme.controller;
 
 import jakarta.validation.Valid;
 import org.bringme.dto.PersonDTO;
-import org.bringme.model.AuthLogin;
+import org.bringme.dto.AuthLogin;
 import org.bringme.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

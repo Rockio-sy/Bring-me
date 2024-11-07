@@ -69,8 +69,8 @@ public class DataSeeder implements CommandLineRunner {
             if(count == null || count == 0){
                 String sql = "INSERT INTO items (name, origin, destination, user_id, weight, height, length, full_address, comments, photo)" +
                         "VALUES" +
-                        "('items1', 1, 2, 16, 1, 1, 1, 'Full Address seed', 'seed comment', 'PHOTO_URL')," +
-                        "('items2', 3, 4, 16, 1, 1, 1, 'Full Address seed', 'seed comment', 'PHOTO_URL')";
+                        "('items1', 1, 2, 16, 1, 1, 1, 'Full Address seed', 'seed comment', 'ITEM_item1-3e3ffef9-0754-4926-99f8-eee363b57def-1729650538812-.png')," +
+                        "('items2', 3, 4, 16, 1, 1, 1, 'Full Address seed', 'seed comment', 'ITEM_item1-0669716b-9a26-4348-950b-9d5584b9910d-1729576564685-.png')";
                 jdbcTemplate.update(sql);
                 System.out.println("Development items data has been seeded.");
             }else{

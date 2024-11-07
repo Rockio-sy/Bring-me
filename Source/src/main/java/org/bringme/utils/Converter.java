@@ -1,13 +1,7 @@
 package org.bringme.utils;
 
-import org.bringme.dto.ItemDTO;
-import org.bringme.dto.PersonDTO;
-import org.bringme.dto.RequestDTO;
-import org.bringme.dto.TripDTO;
-import org.bringme.model.Item;
-import org.bringme.model.Person;
-import org.bringme.model.Request;
-import org.bringme.model.Trip;
+import org.bringme.dto.*;
+import org.bringme.model.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -144,5 +138,9 @@ public class Converter {
         dto.setEmail(person.getEmail());
         dto.setPhone(person.getPhone());
         return dto;
+    }
+
+    public NotificationDTO notificationToDTO(Notification model){
+        return new NotificationDTO(model.getId(), model.getUserId(), model.getContent(), model.isMarked(), model.getRequestId());
     }
 }

@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 
-// TODO: Check the error with JDBC template, and complete the query to save code in the table, then we have to do the verification for the code, starts from the controller
 @Repository
 public class EmailRepositoryImpl implements EmailRepository {
     private final JdbcTemplate jdbcTemplate;

@@ -21,7 +21,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<NotificationDTO> getAll(Long userId) {
+    public List<NotificationDTO> getAll(int userId) {
         List<Notification> allModel = notificationRepository.getAll(userId);
         if(allModel.isEmpty()){
             return List.of();
@@ -35,7 +35,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<NotificationDTO> getNotMarked(Long userId) {
+    public List<NotificationDTO> getNotMarked(int userId) {
         List<Notification> notMarkedModel = notificationRepository.getNotMarked(userId);
         if(notMarkedModel.isEmpty()){
             return List.of();
@@ -46,5 +46,20 @@ public class NotificationServiceImpl implements NotificationService {
             response.add(dto);
         }
         return response;
+    }
+
+    @Override
+    public void saveNotification(int userId, String content, int requestId) {
+        notificationRepository.save(userId, content, requestId);
+    }
+
+    @Override
+    public void markOneAsRead(int userId, Long id) {
+        notificationRepository.markOneAsRead(userId, id);
+    }
+
+    @Override
+    public void markAllAsRead(int userId) {
+        notificationRepository.markAllAsRead(userId);
     }
 }

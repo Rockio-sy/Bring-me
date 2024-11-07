@@ -2,12 +2,14 @@ package org.bringme.service.impl;
 
 import org.bringme.dto.RequestDTO;
 import org.bringme.model.Item;
+import org.bringme.model.Notification;
 import org.bringme.model.Request;
 import org.bringme.model.Trip;
 import org.bringme.repository.ItemRepository;
 import org.bringme.repository.RequestRepository;
 import org.bringme.repository.TripRepository;
 import org.bringme.service.EmailService;
+import org.bringme.service.NotificationService;
 import org.bringme.service.RequestService;
 import org.bringme.utils.Converter;
 import org.springframework.stereotype.Service;
@@ -25,13 +27,15 @@ public class RequestServiceImpl implements RequestService {
     private final TripRepository tripRepository;
     private final Converter converter;
     private final EmailService emailService;
+    private final NotificationService notificationService;
 
-    public RequestServiceImpl(RequestRepository requestRepository, Converter converter, ItemRepository itemRepository, TripRepository tripRepository, EmailService emailService) {
+    public RequestServiceImpl(RequestRepository requestRepository, Converter converter, ItemRepository itemRepository, TripRepository tripRepository, EmailService emailService, NotificationService notificationService) {
         this.converter = converter;
         this.requestRepository = requestRepository;
         this.itemRepository = itemRepository;
         this.tripRepository = tripRepository;
         this.emailService = emailService;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -84,8 +88,10 @@ public class RequestServiceImpl implements RequestService {
         // Convert to DTO
         RequestDTO responseRequest = converter.requestToDTO(modelRequest);
 
-        emailService.sendEmail("Your request has been created, check the link below for more info.", "New Request", (request.getRequesterUserId()));
+        emailService.sendEmail("Your request has been created", "New Request", (request.getRequesterUserId()));
         emailService.sendEmail("Someone is requesting you, check the website for more info", "New Request", request.getRequestedUserId());
+        notificationService.saveNotification((request.getRequesterUserId().intValue()), "Your request has been created", request.getId().intValue());
+        notificationService.saveNotification((request.getRequestedUserId().intValue()), "Someone is requesting you, check the website for more info", request.getId().intValue());
         // Set the generated id
         responseRequest.setId(generatedId);
 
@@ -167,7 +173,6 @@ public class RequestServiceImpl implements RequestService {
         if (rowAffected <= 0) {
             return false;
         }
-        // TODO : FIX THE MESSAGE IN THE EMAIL, REMOVE THE ORIGIN AND DESTINATION
         emailService.sendEmail("Your request has been approved by the requested, request will be closed after 30 days\n"
                 ,"Approvement"
                  ,(checkRequest.get().getRequesterUserId()).longValue());
@@ -175,6 +180,10 @@ public class RequestServiceImpl implements RequestService {
                         "\nFrom:" + checkRequest.get().getOrigin() + "\nTo:" + checkRequest.get().getDestination()
                         , "Approvement"
                         , (checkRequest.get().getRequestedUserId().longValue()));
+
+        notificationService.saveNotification((checkRequest.get().getRequesterUserId()), "Your request has been approved by the requested" ,requestId.intValue());
+        notificationService.saveNotification((checkRequest.get().getRequestedUserId()), "You have approved request" ,requestId.intValue());
+
         return true;
     }
 

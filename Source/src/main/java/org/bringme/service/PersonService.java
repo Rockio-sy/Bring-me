@@ -12,4 +12,6 @@ public interface PersonService {
     int updatePassword(Long userId, String newPassword, String oldPassword);
 
     PersonDTO showPersonDetails(int hostId);
+
+    PersonDTO createNewUser(PersonDTO newUser);
 }

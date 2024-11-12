@@ -99,5 +99,4 @@ public class PersonServiceImpl implements PersonService {
         newUser.setId(id);
         return newUser;
     }
-
 }

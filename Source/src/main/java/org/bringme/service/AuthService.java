@@ -10,7 +10,7 @@ public interface AuthService {
 
     PersonDTO getByEmailOrPhone(String emailOrPhone);
 
-    String verify(AuthLogin loginData);
+    String generateToken(AuthLogin loginData);
 
     boolean isValidated(AuthLogin loginData);
 }

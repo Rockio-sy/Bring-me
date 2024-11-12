@@ -68,12 +68,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String verify(AuthLogin loginData){
+    public String generateToken(AuthLogin loginData){
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginData.emailOrPhone(), loginData.password()));
         if(authentication.isAuthenticated()){
-            Long id = authRepository.getIdByEmailOrPhone(loginData.emailOrPhone());
-            return jwtService.generateToken(id, loginData.emailOrPhone());
+            Optional<Person> personToInclude = authRepository.getByEmailOrPhone(loginData.emailOrPhone());
+            return jwtService.generateToken(personToInclude.get(), loginData.emailOrPhone());
         }
         return null;
     }

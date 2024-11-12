@@ -9,11 +9,13 @@ public class Person {
     private String phone;
     private String password;
     private int accountStatus;
+    private String role;
+
 
 
     public Person(){}
 
-    public Person(Long id, String firstName, String lastName, String address, String email, String phone, String password, int accountStatus) {
+    public Person(Long id, String firstName, String lastName, String address, String email, String phone, String password, int accountStatus, String role) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -22,6 +24,7 @@ public class Person {
         this.phone = phone;
         this.password = password;
         this.accountStatus = accountStatus;
+        this.role = role;
     }
 
     public Long getId() {
@@ -86,6 +89,14 @@ public class Person {
 
     public void setAccountStatus(int accountStatus) {
         this.accountStatus = accountStatus;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override

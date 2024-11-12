@@ -82,6 +82,8 @@ public class AuthRepositoryImpl implements AuthRepository {
     }
 
 
+
+
     private static final class AuthRowMapper implements RowMapper<Person> {
         @Override
         public Person mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -93,6 +95,7 @@ public class AuthRepositoryImpl implements AuthRepository {
             newPerson.setEmail(rs.getString("email"));
             newPerson.setPhone(rs.getString("phone"));
             newPerson.setPassword(rs.getString("password"));
+            newPerson.setRole(rs.getString("role"));
             return newPerson;
         }
     }

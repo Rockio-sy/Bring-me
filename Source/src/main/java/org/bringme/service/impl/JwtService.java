@@ -3,6 +3,7 @@ package org.bringme.service.impl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import org.bringme.model.Person;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -24,14 +25,15 @@ public class JwtService {
     }
 
 
-    public String generateToken(Long id, String emailOrPhone) {
+    public String generateToken(Person personToInclude, String emailOrPhone) {
         Map<String, Object> claims = new HashMap<>();
 
         return Jwts.builder()
                 .claims()
                 .add(claims)
-                .id(Objects.requireNonNull(Long.toString(id)))
+                .id(Objects.requireNonNull(Long.toString(personToInclude.getId())))
                 .subject(emailOrPhone)
+                .add("role", personToInclude.getRole())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .and()
@@ -40,10 +42,6 @@ public class JwtService {
 
     }
 
-    /**
-     * After adding username to the application, we can verify the token by username only without,
-     * needing to use emailOrPhone
-     */
     public boolean validateToken(String token, UserDetails userDetails) {
         final String emailOrPhone = extractEmailOrPhone(token);
         return (emailOrPhone.equals(userDetails.getUsername()) && !isTokenExpired(token));
@@ -91,6 +89,7 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public String extractRole(String token){return extractClaim(token, claims -> claims.get("role", String.class));}
 
     public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());

@@ -77,6 +77,7 @@ public class PersonRepositoryImpl implements PersonRepository {
             newPerson.setEmail(rs.getString("email"));
             newPerson.setPhone(rs.getString("phone"));
             newPerson.setPassword(rs.getString("password"));
+            newPerson.setRole(rs.getString("role"));
             return newPerson;
         }
     }

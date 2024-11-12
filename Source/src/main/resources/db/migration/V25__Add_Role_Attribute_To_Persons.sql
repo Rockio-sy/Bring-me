@@ -1,0 +1,1 @@
+ALTER TABLE persons ADD COLUMN role VARCHAR(10) DEFAULT 'User';

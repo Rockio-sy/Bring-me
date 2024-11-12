@@ -25,7 +25,6 @@ public class NotificationController {
         this.jwtService = jwtService;
     }
 
-    // TODO: Check if the userId should be integer or Long
     @GetMapping("/all")
     public ResponseEntity<HashMap<String, Object>> getAllNotifications(@Valid @RequestHeader(value = "Authorization") String header) {
         HashMap<String, Object> responseMap = new HashMap<>();
@@ -72,7 +71,7 @@ public class NotificationController {
     }
 
     // TODO: Test add new notification, get it and mark it, then add others, get them and mark all
-    @PatchMapping("mark-one/{id}")
+    @PatchMapping("/mark-one/{id}")
     public ResponseEntity<HashMap<String, Object>> markOneAsRead(@Valid @RequestHeader(value = "Authorization") String header, @RequestParam(value = "id") Long id) {
         HashMap<String, Object> responseMap = new HashMap<>();
 

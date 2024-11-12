@@ -48,7 +48,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<HashMap<String, Object>> login(@Valid @RequestBody AuthLogin loginData) {
         HashMap<String, Object> responseMap = new HashMap<>();
-        String token = authService.verify(loginData);
+        String token = authService.generateToken(loginData);
         if (token == null) {
             responseMap.put("Message", "Invalid credentials");
             responseMap.put("Token", null);

@@ -19,6 +19,8 @@ public class PersonDTO {
     private String password;
     @NotNull
     private int accountStatus;
+    @NotBlank
+    private String role;
 
     public PersonDTO(){}
 
@@ -53,6 +55,14 @@ public class PersonDTO {
         this.address = address;
         this.email = email;
         this.phone = phone;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public Long getId() {

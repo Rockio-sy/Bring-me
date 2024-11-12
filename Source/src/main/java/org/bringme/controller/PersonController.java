@@ -51,4 +51,6 @@ public class PersonController {
         responseMap.put("New password", newPassword);
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
+
 }
+// TODO: The admin can create account for new admins (Needs functions and endpoint)

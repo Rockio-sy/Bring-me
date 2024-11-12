@@ -16,4 +16,6 @@ public interface PersonRepository {
     void verifyAccount(Long id);
 
     Long getIdByEmailOrPhone(String emailOrPhone);
+
+    Long save(Person model);
 }

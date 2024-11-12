@@ -88,4 +88,16 @@ public class PersonServiceImpl implements PersonService {
         return data.map(converter::personToDetails).orElse(null);
     }
 
+    @Override
+    public PersonDTO createNewUser(PersonDTO newUser) {
+        Person model = converter.DTOtoPerson(newUser);
+        model.setRole(newUser.getRole());
+        model.setPassword(passwordEncoder.encode(newUser.getPassword()));
+
+        Long id = personRepository.save(model);
+
+        newUser.setId(id);
+        return newUser;
+    }
+
 }

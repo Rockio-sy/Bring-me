@@ -5,10 +5,14 @@ import org.bringme.repository.PersonRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -44,7 +48,7 @@ public class PersonRepositoryImpl implements PersonRepository {
     }
 
     @Override
-    public int updatePassword(Long userId, String newPassword){
+    public int updatePassword(Long userId, String newPassword) {
         String sql = "UPDATE persons SET password = ? WHERE id = ?";
         return jdbcTemplate.update(sql, newPassword, userId);
     }
@@ -56,11 +60,36 @@ public class PersonRepositoryImpl implements PersonRepository {
     }
 
     @Override
-    public Long getIdByEmailOrPhone(String emailOrPhone){
+    public Long getIdByEmailOrPhone(String emailOrPhone) {
         String sql = "SELECT id FROM persons WHERE email = ? OR phone = ?";
-        try{
+        try {
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("id"), emailOrPhone, emailOrPhone);
-        }catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public Long save(Person model) {
+        String sql = "INSERT INTO persons (first_name, last_name, address, email, phone, password, role)" +
+                "VALUES" +
+                "(?, ?, ?, ?, ?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        try {
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+                ps.setString(1, model.getFirstName());
+                ps.setString(2, model.getLastName());
+                ps.setString(3, model.getAddress());
+                ps.setString(4, model.getEmail());
+                ps.setString(5, model.getPhone());
+                ps.setString(6, model.getPassword());
+                ps.setString(7, model.getRole());
+                return ps;
+            }, keyHolder);
+            return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        }catch (Exception e){
             System.out.println(e.getMessage());
             return null;
         }

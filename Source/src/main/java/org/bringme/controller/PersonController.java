@@ -1,6 +1,7 @@
 package org.bringme.controller;
 
 import jakarta.validation.Valid;
+import org.bringme.dto.PersonDTO;
 import org.bringme.service.PersonService;
 import org.bringme.service.impl.JwtService;
 import org.springframework.http.HttpStatus;
@@ -32,7 +33,6 @@ public class PersonController {
             return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
         }
 
-        // Ask for the user id and for the way of checking password in if(1, 2)
         String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
         int check = personService.updatePassword(userId, newPassword, oldPassword);
@@ -52,5 +52,12 @@ public class PersonController {
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
+    @PostMapping("/new-user")
+    public ResponseEntity<HashMap<String, Object>> createNewUserByAdmin(@RequestHeader(value = "Authorization") String header,@Valid @RequestBody PersonDTO newUser){
+        HashMap<String, Object> response = new HashMap<>();
+        PersonDTO dto = personService.createNewUser(newUser);
+        response.put("Message", "New person has been created.");
+        response.put("Person", dto);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
-// TODO: The admin can create account for new admins (Needs functions and endpoint)

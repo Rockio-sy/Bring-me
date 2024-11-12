@@ -22,10 +22,11 @@ public class PersonDTO {
     @NotBlank
     private String role;
 
-    public PersonDTO(){}
+    public PersonDTO() {
+    }
 
 
-    // Request createNewUser DTO
+    // Request signUp DTO
     public PersonDTO(String firstName, String lastName, String address, String email, String phone, String password, int accountStatus) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -36,7 +37,7 @@ public class PersonDTO {
         this.accountStatus = accountStatus;
     }
 
-    // Response createNewUser DTO
+    // Response signUp DTO
     public PersonDTO(Long id, String firstName, String lastName, String address, String email, String phone, String password, int accountStatus) {
         this.id = id;
         this.firstName = firstName;
@@ -48,8 +49,32 @@ public class PersonDTO {
         this.accountStatus = accountStatus;
     }
 
+    // Response createNewUserByAdmin
+    public PersonDTO(Long id, String firstName, String lastName, String address, String email, String phone, String password, int accountStatus, String role) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.email = email;
+        this.phone = phone;
+        this.password = password;
+        this.accountStatus = accountStatus;
+        this.role = role;
+    }
+
+    // Requests createNewUserByAdmin
+    public PersonDTO(String firstName, String lastName, String address, String email, String phone, String password, String role) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.email = email;
+        this.phone = phone;
+        this.password = password;
+        this.role = role;
+    }
+
     // Response showUserDetails
-    public PersonDTO(String firstName, String lastName, String address, String email, String phone){
+    public PersonDTO(String firstName, String lastName, String address, String email, String phone) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;

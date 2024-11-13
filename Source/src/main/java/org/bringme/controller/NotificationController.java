@@ -29,11 +29,6 @@ public class NotificationController {
     public ResponseEntity<HashMap<String, Object>> getAllNotifications(@Valid @RequestHeader(value = "Authorization") String header) {
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        // Validate
-        if (header == null || !header.startsWith("Bearer")) {
-            responseMap.put("Message", "Invalid token.");
-            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
-        }
         String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
 
@@ -48,14 +43,9 @@ public class NotificationController {
     }
 
     @GetMapping("/not-marked")
-    public ResponseEntity<HashMap<String, Object>> getNotMarkedNotifications(@Valid @RequestHeader(value = "Authorizations") String header) {
+    public ResponseEntity<HashMap<String, Object>> getNotMarkedNotifications(@Valid @RequestHeader(value = "Authorization") String header) {
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        // Validate
-        if (header == null || !header.startsWith("Bearer")) {
-            responseMap.put("Message", "Invalid token.");
-            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
-        }
         String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
 
@@ -70,16 +60,10 @@ public class NotificationController {
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
-    // TODO: Test add new notification, get it and mark it, then add others, get them and mark all
-    @PatchMapping("/mark-one/{id}")
+    @PatchMapping("/mark-one")
     public ResponseEntity<HashMap<String, Object>> markOneAsRead(@Valid @RequestHeader(value = "Authorization") String header, @RequestParam(value = "id") Long id) {
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        // Validate
-        if (header == null || !header.startsWith("Bearer")) {
-            responseMap.put("Message", "Invalid token.");
-            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
-        }
         String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
 
@@ -92,11 +76,6 @@ public class NotificationController {
     public ResponseEntity<HashMap<String, Object>> markAllAsRead(@Valid @RequestHeader(value = "Authorization") String header){
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        // Validate
-        if (header == null || !header.startsWith("Bearer")) {
-            responseMap.put("Message", "Invalid token.");
-            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
-        }
         String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
 

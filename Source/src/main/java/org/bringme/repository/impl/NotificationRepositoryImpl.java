@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class NotificationRepositoryImpl implements NotificationRepository {
@@ -28,7 +29,7 @@ public class NotificationRepositoryImpl implements NotificationRepository {
 
     @Override
     public List<Notification> getNotMarked(int userId) {
-        String sql = "SELECT * FROM notifications WHERE user_id = ? AND marked = 1";
+        String sql = "SELECT * FROM notifications WHERE user_id = ? AND marked = 0";
         return jdbcTemplate.query(sql, new NotificationRowMapper(), userId);
     }
 
@@ -42,14 +43,20 @@ public class NotificationRepositoryImpl implements NotificationRepository {
 
     @Override
     public void markOneAsRead(int userId, Long id) {
-        String sql = "UPDATE TABLE notifications SET marked = 1 WHERE id = ? AND user_id = ?";
+        String sql = "UPDATE notifications SET marked = 1 WHERE id = ? AND user_id = ?";
         jdbcTemplate.update(sql, id, userId);
     }
 
     @Override
     public void markAllAsRead(int userId) {
-        String sql = "UPDATE TABLE notifications SET marked = 1 WHERE user_id = ?";
+        String sql = "UPDATE notifications SET marked = 1 WHERE user_id = ?";
         jdbcTemplate.update(sql, userId);
+    }
+
+    @Override
+    public Optional<Notification> getById(Long id) {
+        String sql = "SELECT * FROM notifications WHERE id = ?";
+        return jdbcTemplate.query(sql, new NotificationRowMapper(), id).stream().findFirst();
     }
 
     private static final class NotificationRowMapper implements RowMapper<Notification>{

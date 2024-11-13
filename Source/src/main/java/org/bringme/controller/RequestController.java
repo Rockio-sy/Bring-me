@@ -33,11 +33,6 @@ public class RequestController {
         // Multi value map
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        if (header == null || !header.startsWith("Bearer")) {
-            responseMap.put("Message", "Invalid token.");
-            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
-        }
-
         String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
 
@@ -66,11 +61,6 @@ public class RequestController {
             return new ResponseEntity<>(responseMap, HttpStatus.CONFLICT);
         }
 
-        // Validate token
-        if (header == null) {
-            responseMap.put("Message", "Invalid Header.");
-            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
-        }
         // getting requester user id from token
         String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
@@ -96,11 +86,6 @@ public class RequestController {
         // Multi-value map
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        if (header == null || !header.startsWith("Bearer ")) {
-            responseMap.put("Message", "Invalid Header");
-            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
-        }
-
         String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
 
@@ -119,11 +104,6 @@ public class RequestController {
         // Multi-value map
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        if (header == null || !header.startsWith("Bearer ")) {
-            System.out.println("HERE");
-            responseMap.put("Message", "Invalid Header");
-            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
-        }
 
         String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
@@ -144,10 +124,6 @@ public class RequestController {
         // Multi-value map
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        if (header == null || !header.startsWith("Bearer ")) {
-            responseMap.put("Message", "Invalid Header");
-            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
-        }
 
         String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
@@ -178,10 +154,6 @@ public class RequestController {
         // Multi-value map
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        if (header == null || !header.startsWith("Bearer ")) {
-            responseMap.put("Message", "Invalid Header");
-            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
-        }
 
         String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
@@ -200,10 +172,6 @@ public class RequestController {
     public ResponseEntity<HashMap<String, Object>> filterByApprovement(@Valid @RequestHeader(value = "Authorization") String header) {
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        if (header == null || !header.startsWith("Bearer ")) {
-            responseMap.put("Message", "Invalid Header");
-            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
-        }
 
         String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
@@ -222,10 +190,6 @@ public class RequestController {
     public ResponseEntity<HashMap<String, Object>> filterByWait(@Valid @RequestHeader(value = "Authorization") String header) {
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        if (header == null || !header.startsWith("Bearer ")) {
-            responseMap.put("Message", "Invalid Header");
-            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
-        }
 
         String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
@@ -244,10 +208,6 @@ public class RequestController {
     public ResponseEntity<HashMap<String, Object>> getUserDetails(@Valid @RequestHeader(value = "Authorization") String header, @Valid @PathVariable(value = "id") int hostId) {
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        if (header == null || !header.startsWith("Bearer ")) {
-            responseMap.put("Message", "Invalid Header");
-            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
-        }
 
         String token = header.substring(7);
         Long guestId = jwtService.extractUserIdAsLong(token);

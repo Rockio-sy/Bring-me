@@ -27,14 +27,12 @@ public class PersonController {
                                                                   @Valid @RequestParam(name = "new") String newPassword,
                                                                   @Valid @RequestParam(name = "old") String oldPassword) {
         HashMap<String, Object> responseMap = new HashMap<>();
-        if (header == null) {
-            responseMap.put("Message", "Invalid token.");
-            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
-        }
 
         String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
+
         int check = personService.updatePassword(userId, newPassword, oldPassword);
+
         if (check == 1) {
             responseMap.put("Message", "Invalid old password.");
             return new ResponseEntity<>(responseMap, HttpStatus.BAD_REQUEST);

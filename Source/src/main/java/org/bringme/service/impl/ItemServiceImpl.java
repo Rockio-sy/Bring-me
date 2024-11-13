@@ -1,6 +1,5 @@
 package org.bringme.service.impl;
 
-import kotlin.collections.EmptyList;
 import org.bringme.dto.ItemDTO;
 import org.bringme.model.Item;
 import org.bringme.repository.ItemRepository;

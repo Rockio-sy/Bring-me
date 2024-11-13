@@ -34,7 +34,7 @@ public class NotificationRepositoryImpl implements NotificationRepository {
 
     @Override
     public void save(int userId, String content, int requestId) {
-        String sql = "INSERT INTO notifications (user_id, content, requestId)" +
+        String sql = "INSERT INTO notifications (user_id, content, request_id)" +
                 "VALUES" +
                 "(?, ?, ?)";
         jdbcTemplate.update(sql, userId, content, requestId);

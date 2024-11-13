@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 
 @RestController
-@RequestMapping("bring-me/u/")
+@RequestMapping("bring-me/p/")
 public class PersonController {
     private final PersonService personService;
     private final JwtService jwtService;
@@ -49,7 +49,7 @@ public class PersonController {
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
-    @PostMapping("/new-user")
+    @PostMapping("/a/new-user")
     public ResponseEntity<HashMap<String, Object>> createNewUserByAdmin(@RequestHeader(value = "Authorization") String header,@Valid @RequestBody PersonDTO newUser){
         HashMap<String, Object> response = new HashMap<>();
         PersonDTO dto = personService.createNewUser(newUser);
@@ -58,5 +58,5 @@ public class PersonController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //TODO: Remove every validation for the token, Spring security does it now
+    // TODO: Set the function to band user temporary by admin (needs security, study how to use isLocked() function in the entity)
 }

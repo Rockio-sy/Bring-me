@@ -3,11 +3,15 @@ package org.bringme.repository.impl;
 import org.bringme.model.Report;
 import org.bringme.repository.ReportRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Objects;
 
 @Repository
@@ -36,6 +40,27 @@ public class ReportRepositoryImpl implements ReportRepository {
         } catch (Exception e){
             System.out.println(e.getMessage());
             return null;
+        }
+    }
+
+    @Override
+    public List<Report> getAll() {
+        String sql = "SELECT * FROM reports WHERE answered_at = null";
+        return jdbcTemplate.query(sql, new ReportRowMapper());
+    }
+
+    public static final class ReportRowMapper implements RowMapper<Report>{
+        @Override
+        public Report mapRow(ResultSet rs, int rowNum) throws SQLException{
+            Report newReport = new Report();
+            newReport.setId(rs.getLong("id"));
+            newReport.setReportedUserId(rs.getInt("reported_user_id"));
+            newReport.setReporterUserId(rs.getInt("reporter_user_id"));
+            newReport.setRequestId(rs.getInt("request_id"));
+            newReport.setContent(rs.getString("content"));
+            newReport.setAnswer(rs.getString("answer"));
+            newReport.setAnsweredById(rs.getInt("answered_by_id"));
+            return newReport;
         }
     }
 }

@@ -9,4 +9,8 @@ public interface ReportService {
     ReportDTO createNewReport(ReportDTO form, Long id);
 
     List<ReportDTO> getAll();
+
+    List<ReportDTO> getNotAnswered();
+
+    ReportDTO getSpecific(Long id);
 }

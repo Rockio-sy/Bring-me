@@ -89,4 +89,27 @@ public class ReportServiceImpl implements ReportService {
         }
         return response;
     }
+
+    @Override
+    public List<ReportDTO> getNotAnswered() {
+        List<Report> data = reportRepository.getNotAnswered();
+        if (data.isEmpty()) {
+            throw new CustomException("No data", HttpStatus.NO_CONTENT);
+        }
+        List<ReportDTO> response = new ArrayList<>();
+        for (Report re : data) {
+            ReportDTO dto = converter.reportToDTO(re);
+            response.add(dto);
+        }
+        return response;
+    }
+
+    @Override
+    public ReportDTO getSpecific(Long id) {
+        Optional<Report> data = reportRepository.getSpecific(id);
+        if(data.isEmpty()){
+            throw new CustomException("Report doesn't exist", HttpStatus.NOT_FOUND);
+        }
+        return converter.reportToDTO(data.get());
+    }
 }

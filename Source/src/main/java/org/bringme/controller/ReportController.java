@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.service.invoker.HttpServiceArgumentResolver;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,11 +43,28 @@ public class ReportController {
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/a/all")
     public ResponseEntity<HashMap<String, Object>> getAllReports(){
         HashMap<String, Object> responseMap = new HashMap<>();
         List<ReportDTO> all = reportService.getAll();
-        responseMap.put("Message", "Not answered reports");
+        responseMap.put("Reports", all);
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
+
+    @GetMapping("/a/not-answered")
+    public ResponseEntity<HashMap<String, Object>> getNotAnsweredReports(){
+        HashMap<String, Object> responseMap = new HashMap<>();
+        List<ReportDTO> reports = reportService.getNotAnswered();
+        responseMap.put("Not answered reports", reports);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
+
+    @GetMapping("/a/spec")
+    public ResponseEntity<HashMap<String, Object>> getSpecificReport(@Valid @RequestParam(value = "id") Long id){
+        HashMap<String, Object> responseMap = new HashMap<>();
+        ReportDTO dto = reportService.getSpecific(id);
+        responseMap.put("Report", dto);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
+
 }

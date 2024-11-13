@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/bring-me/auth/signup", "/bring-me/auth/login",
                                 "/bring-me/trips/all", "/bring-me/items/all", "/bring-me/ver/*").permitAll()
-                                .requestMatchers("/bring-me/u/new-user", "/bring-me/report/all").hasRole("ADMIN")
+                                .requestMatchers("/bring-me/p/a/**", "/bring-me/report/a/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                         )
                 .httpBasic(Customizer.withDefaults())

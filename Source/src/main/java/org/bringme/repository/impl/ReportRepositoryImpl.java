@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class ReportRepositoryImpl implements ReportRepository {
@@ -45,8 +46,20 @@ public class ReportRepositoryImpl implements ReportRepository {
 
     @Override
     public List<Report> getAll() {
+        String sql = "SELECT * FROM reports";
+        return jdbcTemplate.query(sql, new ReportRowMapper());
+    }
+
+    @Override
+    public List<Report> getNotAnswered() {
         String sql = "SELECT * FROM reports WHERE answered_at = null";
         return jdbcTemplate.query(sql, new ReportRowMapper());
+    }
+
+    @Override
+    public Optional<Report> getSpecific(Long id) {
+        String sql = "SELECT * FROM reports WHERE id = ?";
+        return jdbcTemplate.query(sql, new ReportRowMapper(), id).stream().findFirst();
     }
 
     public static final class ReportRowMapper implements RowMapper<Report>{

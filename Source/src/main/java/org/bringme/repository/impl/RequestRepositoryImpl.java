@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,6 +34,7 @@ public class RequestRepositoryImpl implements RequestRepository {
         return jdbcTemplate.query(sql, new requestRowMapper(), userId, userId);
     }
 
+    @ExceptionHandler
     @Override
     public Long saveRequest(Request request) {
         String sql = "INSERT INTO requests (requested_user_id, requester_user_id," +

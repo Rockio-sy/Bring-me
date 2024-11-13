@@ -2,7 +2,11 @@ package org.bringme.service;
 
 import org.bringme.dto.ReportDTO;
 
+import java.util.List;
+
 public interface ReportService {
     boolean validateReportForm(ReportDTO form, Long id);
     ReportDTO createNewReport(ReportDTO form, Long id);
+
+    List<ReportDTO> getAll();
 }

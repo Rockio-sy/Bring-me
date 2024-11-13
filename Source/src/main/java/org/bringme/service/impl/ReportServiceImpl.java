@@ -11,6 +11,8 @@ import org.bringme.utils.Converter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -56,21 +58,35 @@ public class ReportServiceImpl implements ReportService {
         var request = requestModel.get();
         int reporter;
         int reported;
-        if(request.getRequestedUserId() == userID.intValue()){
+        if (request.getRequestedUserId() == userID.intValue()) {
             reported = userID.intValue();
             reporter = request.getRequesterUserId();
-        }else{
+        } else {
             reporter = userID.intValue();
             reported = request.getRequestedUserId();
         }
         // Save report in database
         Report model = new Report(requestId.intValue(), reporter, reported, form.getContent());
         Long reportId = reportRepository.save(model);
-        if(reportId == null){
+        if (reportId == null) {
             throw new CustomException("Error creating the report", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         model.setId(reportId);
         return converter.reportToDTO(model);
+    }
+
+    @Override
+    public List<ReportDTO> getAll() {
+        List<Report> data = reportRepository.getAll();
+        if (data.isEmpty()) {
+            throw new CustomException("No data", HttpStatus.NO_CONTENT);
+        }
+        List<ReportDTO> response = new ArrayList<>();
+        for (Report re : data) {
+            ReportDTO dto = converter.reportToDTO(re);
+            response.add(dto);
+        }
+        return response;
     }
 }

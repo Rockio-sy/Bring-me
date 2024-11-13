@@ -30,12 +30,6 @@ public class TripController {
         // Multi value map
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        // Validate token
-        if (header == null || !header.startsWith("Bearer ")) {
-            responseMap.put("Message", "Header is null");
-            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
-        }
-
         String token = header.substring(7);
         Long passengerId = jwtService.extractUserIdAsLong(token);
         requestTrip.setPassengerId(passengerId);

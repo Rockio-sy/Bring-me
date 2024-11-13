@@ -4,7 +4,9 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import org.bringme.model.Person;
+import org.bringme.service.exceptions.CustomException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -72,24 +74,21 @@ public class JwtService {
                     .verifyWith(getKey())
                     .build().parseSignedClaims(token).getPayload();
         } catch (SignatureException e) {
-            System.out.println("INVALID SIGNATURE\n" + e.getMessage());
+            throw new SignatureException("Invalid Signature");
         } catch (MalformedJwtException e) {
-            System.out.println("INVALID TOKEN\n" + e.getMessage());
+            throw new MalformedJwtException("Invalid token");
         } catch (ExpiredJwtException e) {
-            System.out.println("EXPIRED JWT TOKEN\n" + e.getMessage());
+            throw new CustomException("Expired token", HttpStatus.UNAUTHORIZED);
         } catch (IllegalArgumentException e) {
-            System.out.println("JWT CLAIMS STRING IS EMPTY\n" + e.getMessage());
+            throw new IllegalArgumentException("Claims are empty");
         } catch (UnsupportedJwtException e) {
-            System.out.println("UNSUPPORTED JWT TOKEN\n" + e.getMessage());
+            throw new UnsupportedJwtException("Unsupported token");
         }
-        return null;
     }
 
     public String extractEmailOrPhone(String token) {
         return extractClaim(token, Claims::getSubject);
     }
-
-    public String extractRole(String token){return extractClaim(token, claims -> claims.get("role", String.class));}
 
     public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());

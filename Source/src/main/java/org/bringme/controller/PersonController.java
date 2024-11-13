@@ -60,4 +60,6 @@ public class PersonController {
         response.put("Person", dto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    //TODO: Remove every validation for the token, Spring security does it now
 }

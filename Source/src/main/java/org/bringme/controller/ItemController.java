@@ -38,7 +38,6 @@ public class ItemController {
             return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
         }
 
-        // TODO: You have to get the user id in another way (SingleTon) in SecurityContextHolder()
         // Get the user id and set it in the request body
         String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);

@@ -143,4 +143,28 @@ public class Converter {
     public NotificationDTO notificationToDTO(Notification model){
         return new NotificationDTO(model.getId(), model.getUserId(), model.getContent(), model.isMarked(), model.getRequestId());
     }
+
+    public ReportDTO reportToDTO(Report model){
+        ReportDTO dto = new ReportDTO();
+        dto.setId(model.getId());
+        dto.setReporterUserId(model.getReporterUserId());
+        dto.setReportedUserId(model.getReportedUserId());
+        dto.setRequestId(model.getRequestId());
+        dto.setAnswer(model.getAnswer());
+        dto.setAnsweredById(model.getAnsweredById());
+        dto.setContent(model.getContent());
+        return dto;
+    }
+
+    public Report DTOtoReport(ReportDTO reportDTO){
+        Report model = new Report();
+        model.setId(reportDTO.getId());
+        model.setReporterUserId(reportDTO.getReporterUserId());
+        model.setReportedUserId(reportDTO.getReportedUserId());
+        model.setRequestId(reportDTO.getRequestId());
+        model.setAnswer(reportDTO.getAnswer());
+        model.setAnsweredById(reportDTO.getAnsweredById());
+        model.setContent(reportDTO.getContent());
+        return model;
+    }
 }

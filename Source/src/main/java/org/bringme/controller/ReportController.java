@@ -21,16 +21,10 @@ public class ReportController {
         this.jwtService = jwtService;
     }
 
-    // TODO: Should i catch the error here after throwing it from the controller or no
     @PostMapping("/new")
     public ResponseEntity<HashMap<String, Object>> createNewReport(@RequestHeader(value = "Authorization") String header,
                                                                     @Valid @RequestBody ReportDTO reportForm) {
         HashMap<String, Object> responseMap = new HashMap<>();
-        if (header == null) {
-            responseMap.put("Message", "Invalid token.");
-            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
-        }
-
         String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
 

@@ -12,6 +12,7 @@ import java.util.HashMap;
 @RestControllerAdvice
 public class ControllerAdvice {
 
+    // TODO: Use this in all methods for clean code
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<HashMap<String, Object>> customExceptionHandler(CustomException ex){
         HashMap<String, Object> errorResponse = new HashMap<>();
@@ -22,6 +23,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<HashMap<String, Object>> handleGeneralException(Exception ex) {
+        System.out.println(ex.getMessage());
         HashMap<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         errorResponse.put("error", "Internal Server Error");

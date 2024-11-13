@@ -4,11 +4,14 @@ import org.bringme.dto.NotificationDTO;
 import org.bringme.model.Notification;
 import org.bringme.repository.NotificationRepository;
 import org.bringme.service.NotificationService;
+import org.bringme.service.exceptions.CustomException;
 import org.bringme.utils.Converter;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
@@ -55,6 +58,14 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public void markOneAsRead(int userId, Long id) {
+        Optional<Notification> noty = notificationRepository.getById(id);
+        if(noty.isEmpty()){
+            throw new CustomException("No such notification", HttpStatus.BAD_REQUEST);
+        }
+        if(!(noty.get().getUserId() == userId)){
+            throw new CustomException("User doesn't belong to this notification", HttpStatus.BAD_REQUEST);
+        }
+
         notificationRepository.markOneAsRead(userId, id);
     }
 

@@ -32,18 +32,15 @@ public class ItemController {
         // multi value map
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        // Validate token
-        if (header == null) {
-            responseMap.put("Message", "Token is NULL");
-            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
-        }
-
         // Get the user id and set it in the request body
         String token = header.substring(7);
         Long userId = jwtService.extractUserIdAsLong(token);
+
         requestItem.setUser_id(userId);
 
         // Data checking
+
+        //TODO: Should be in service
         if (requestItem.getLength() <= 0 || requestItem.getWeight() <= 0 || requestItem.getHeight() <= 0
                 || requestItem.getLength() > 2 || requestItem.getWeight() > 5 || requestItem.getHeight() > 2
                 || requestItem.getOrigin() == requestItem.getDestination() || requestItem.getUser_id() == 0
@@ -54,6 +51,7 @@ public class ItemController {
         }
 
         // Saving item and return id
+        //TODO: To service
         ItemDTO responseDTO = itemService.saveItem(requestItem);
         if (responseDTO.getId() == null) {
             responseMap.put("Status", "204");
@@ -72,6 +70,7 @@ public class ItemController {
     @PostMapping(value = "/new/upload-photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<HashMap<String, Object>> uploadPhoto(@Valid @RequestParam("image") MultipartFile image) {
         HashMap<String, Object> responseMap = new HashMap<>();
+        //TODO: Move all to service
         try {
             // Check file status
             if (!(image.isEmpty() || image.getOriginalFilename() == null || image.getContentType() == null)) {

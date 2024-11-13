@@ -26,7 +26,6 @@ public class PersonController {
     public ResponseEntity<HashMap<String, Object>> updatePassword(@RequestHeader(value = "Authorization") String header,
                                                                   @Valid @RequestParam(name = "new") String newPassword,
                                                                   @Valid @RequestParam(name = "old") String oldPassword) {
-
         HashMap<String, Object> responseMap = new HashMap<>();
         if (header == null) {
             responseMap.put("Message", "Invalid token.");

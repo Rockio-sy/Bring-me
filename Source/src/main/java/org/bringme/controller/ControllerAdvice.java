@@ -21,14 +21,13 @@ public class ControllerAdvice {
     }
 
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<HashMap<String, Object>> handleGeneralException(Exception ex) {
-        System.out.println(ex.getMessage());
-        HashMap<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        errorResponse.put("error", "Internal Server Error");
-        errorResponse.put("message", "An unexpected error occurred.");
-
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<HashMap<String, Object>> handleGeneralException(Exception ex) {
+//        System.out.println(ex.getMessage());
+//        HashMap<String, Object> errorResponse = new HashMap<>();
+//        errorResponse.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+//        errorResponse.put("message", ex.getMessage());
+//
+//        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 }

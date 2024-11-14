@@ -6,11 +6,11 @@ import org.bringme.dto.AuthLogin;
 public interface AuthService {
     PersonDTO signUp(PersonDTO requestPerson);
 
-    boolean isExist(String emailOrPhone);
+    void isExist(String emailOrPhone);
 
     PersonDTO getByEmailOrPhone(String emailOrPhone);
 
     String generateToken(AuthLogin loginData);
 
-    boolean isValidated(AuthLogin loginData);
+    void isValidated(AuthLogin loginData);
 }

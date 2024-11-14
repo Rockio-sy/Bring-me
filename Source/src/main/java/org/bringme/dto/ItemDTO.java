@@ -6,23 +6,23 @@ import jakarta.validation.constraints.NotNull;
 public class ItemDTO {
 
     private Long id;
-    @NotBlank
+    @NotBlank(message = "Name cannot be empty")
     private String name;
-    @NotNull
+    @NotNull(message = "Country not found")
     private int origin;
-    @NotNull
+    @NotNull(message = "Country not found")
     private int destination;
-    @NotNull
+    @NotNull(message = "Invalid weight")
     private float weight;
-    @NotNull
+    @NotNull(message = "Invalid height")
     private float height;
-    @NotNull
+    @NotNull(message = "Invalid length")
     private float length;
-    @NotBlank
+    @NotBlank(message = "Write comments")
     private String comments;
-    @NotBlank
+    @NotBlank(message = "Address should be inserted")
     private String detailedOriginAddress;
-    @NotBlank
+    @NotBlank(message = "No photo found")
     private String photo;
 
     private Long user_id;

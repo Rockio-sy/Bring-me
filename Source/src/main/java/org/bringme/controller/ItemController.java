@@ -2,6 +2,7 @@ package org.bringme.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import org.bringme.dto.ItemDTO;
 import org.bringme.service.ItemService;
 import org.bringme.service.impl.JwtService;
@@ -64,8 +65,8 @@ public class ItemController {
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
-    @GetMapping("/show/{id}")
-    public ResponseEntity<HashMap<String, Object>> getItemById(@PathVariable @Min(1) Long id) {
+    @GetMapping("/show")
+    public ResponseEntity<HashMap<String, Object>> getItemById(@RequestParam @Positive Long id) {
         // Response map
         HashMap<String, Object> responseMap = new HashMap<>();
         // Creating response
@@ -76,8 +77,8 @@ public class ItemController {
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
-    @GetMapping("/filter/{from}/{to}")
-    public ResponseEntity<HashMap<String, Object>> getByCountry(@PathVariable(name = "from") @Min(1) int origin, @PathVariable(name = "to") @Min(1)int destination) {
+    @GetMapping("/filter/by/countries")
+    public ResponseEntity<HashMap<String, Object>> getByCountry(@RequestParam(name = "from") @Positive int origin, @RequestParam(name = "to") @Positive int destination) {
         // Multi-value map
         HashMap<String, Object> responseMap = new HashMap<>();
         // getting list of items

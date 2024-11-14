@@ -55,7 +55,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDTO getItemById(Long id) {
         // Check if item exists
         Optional<Item> model = itemRepository.getById(id);
-        if(model.isEmpty()){
+        if (model.isEmpty()) {
             throw new CustomException("Item not found", HttpStatus.NOT_FOUND);
         }
         return converter.itemToDTO(model.get());
@@ -111,8 +111,7 @@ public class ItemServiceImpl implements ItemService {
             Files.write(Paths.get(filePath), image.getBytes());
             return fileName;
         } catch (IOException e) {
-            System.out.println("ERROR:" + e.getMessage());
-            return null;
+            throw new CustomException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -35,7 +35,7 @@ public class EmailController {
     public ResponseEntity<HashMap<String, Object>> sendVerificationEmail(@Valid @RequestParam("email") String email) {
         HashMap<String, Object> responseMap = new HashMap<>();
         personService.getByEmail(email);
-        String code = emailService.sendVerificationCode(email);
+        emailService.sendVerificationCode(email);
         responseMap.put("Message", "Email has been sent successfully.");
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }

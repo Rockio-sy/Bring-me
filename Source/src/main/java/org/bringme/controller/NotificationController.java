@@ -28,16 +28,8 @@ public class NotificationController {
     @GetMapping("/all")
     public ResponseEntity<HashMap<String, Object>> getAllNotifications(@Valid @RequestHeader(value = "Authorization") String header) {
         HashMap<String, Object> responseMap = new HashMap<>();
-
-        String token = header.substring(7);
-        Long userId = jwtService.extractUserIdAsLong(token);
-
+        Long userId = jwtService.extractUserIdAsLong(header.substring(7));
         List<NotificationDTO> all = notificationService.getAll(userId.intValue());
-
-        if (all.isEmpty()) {
-            responseMap.put("Message", "No content");
-            return new ResponseEntity<>(responseMap, HttpStatus.NO_CONTENT);
-        }
         responseMap.put("Notifications", all);
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
@@ -46,15 +38,9 @@ public class NotificationController {
     public ResponseEntity<HashMap<String, Object>> getNotMarkedNotifications(@Valid @RequestHeader(value = "Authorization") String header) {
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        String token = header.substring(7);
-        Long userId = jwtService.extractUserIdAsLong(token);
+        Long userId = jwtService.extractUserIdAsLong(header.substring(7));
 
         List<NotificationDTO> notMarked = notificationService.getNotMarked(userId.intValue());
-
-        if (notMarked.isEmpty()) {
-            responseMap.put("Message", "No content");
-            return new ResponseEntity<>(responseMap, HttpStatus.NO_CONTENT);
-        }
 
         responseMap.put("Not-marked", notMarked);
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
@@ -63,21 +49,17 @@ public class NotificationController {
     @PatchMapping("/mark-one")
     public ResponseEntity<HashMap<String, Object>> markOneAsRead(@Valid @RequestHeader(value = "Authorization") String header, @RequestParam(value = "id") Long id) {
         HashMap<String, Object> responseMap = new HashMap<>();
-
-        String token = header.substring(7);
-        Long userId = jwtService.extractUserIdAsLong(token);
-
+        Long userId = jwtService.extractUserIdAsLong(header.substring(7));
         notificationService.markOneAsRead(userId.intValue(), id);
         responseMap.put("Message", "marked as read successfully");
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
     @PatchMapping("/mark-all")
-    public ResponseEntity<HashMap<String, Object>> markAllAsRead(@Valid @RequestHeader(value = "Authorization") String header){
+    public ResponseEntity<HashMap<String, Object>> markAllAsRead(@Valid @RequestHeader(value = "Authorization") String header) {
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        String token = header.substring(7);
-        Long userId = jwtService.extractUserIdAsLong(token);
+        Long userId = jwtService.extractUserIdAsLong(header.substring(7));
 
         notificationService.markAllAsRead(userId.intValue());
         responseMap.put("Message", "marked as read successfully");

@@ -27,7 +27,7 @@ public class NotificationServiceImpl implements NotificationService {
     public List<NotificationDTO> getAll(int userId) {
         List<Notification> allModel = notificationRepository.getAll(userId);
         if(allModel.isEmpty()){
-            return List.of();
+            throw new CustomException("No content", HttpStatus.NO_CONTENT);
         }
         List<NotificationDTO> response = new ArrayList<>();
         for(Notification model : allModel){
@@ -41,7 +41,7 @@ public class NotificationServiceImpl implements NotificationService {
     public List<NotificationDTO> getNotMarked(int userId) {
         List<Notification> notMarkedModel = notificationRepository.getNotMarked(userId);
         if(notMarkedModel.isEmpty()){
-            return List.of();
+            throw new CustomException("No content", HttpStatus.NO_CONTENT);
         }
         List<NotificationDTO> response = new ArrayList<>();
         for(Notification model : notMarkedModel){

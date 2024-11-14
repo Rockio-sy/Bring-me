@@ -15,6 +15,8 @@ public class Person {
     private int accountStatus;
     private String role;
 
+    //TODO: ADD EMAIL VERIFICATION FIELD AND USE IT IN THE LoadUserByUserName function.
+
 
 
 

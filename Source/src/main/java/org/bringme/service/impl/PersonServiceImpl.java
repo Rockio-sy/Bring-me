@@ -58,7 +58,7 @@ public class PersonServiceImpl implements PersonService {
     public PersonDTO getByEmail(String email) {
         Optional<Person> person = personRepository.getByEmail(email);
         if (person.isEmpty()) {
-            return null;
+            throw new CustomException("User not found", HttpStatus.NOT_FOUND);
         }
         PersonDTO response = converter.personToDTO(person.get());
         response.setPassword(null);

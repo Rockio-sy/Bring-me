@@ -66,25 +66,24 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public int updatePassword(Long userId, String newPassword, String oldPassword) {
+    public void updatePassword(Long userId, String newPassword, String oldPassword) {
         Optional<Person> person = personRepository.getById(userId);
         if (person.isEmpty()) {
-            return 3;
+            throw new CustomException("User not found", HttpStatus.NOT_FOUND);
         }
-
 
         if (!(passwordEncoder.matches(oldPassword, person.get().getPassword()))) {
-            return 1;
+            throw new CustomException("Old password is incorrect", HttpStatus.BAD_REQUEST);
         }
-
 
         String encodedNewPassword = passwordEncoder.encode(newPassword);
+
         int check = personRepository.updatePassword(userId, encodedNewPassword);
+
         if (check <= 0) {
-            return 2;
+            throw new CustomException("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return 0;
     }
 
     @Override
@@ -108,7 +107,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void bandUser(Long id) {
         int userId = reportRepository.getReportedUserId(id);
-        if(userId == -1){
+        if (userId == -1) {
             throw new CustomException("User doesn't exist", HttpStatus.NOT_FOUND);
         }
         personRepository.bandUser(userId);

@@ -14,4 +14,7 @@ public interface ItemService {
 
     List<ItemDTO> filterByCountries(int origin, int destination);
 
+    void checkInput(ItemDTO requestItem);
+
+    String checkMediaFile(MultipartFile image);
 }

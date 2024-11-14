@@ -34,7 +34,6 @@ public class RequestRepositoryImpl implements RequestRepository {
         return jdbcTemplate.query(sql, new requestRowMapper(), userId, userId);
     }
 
-    @ExceptionHandler
     @Override
     public Long saveRequest(Request request) {
         String sql = "INSERT INTO requests (requested_user_id, requester_user_id," +

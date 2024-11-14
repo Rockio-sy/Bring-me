@@ -4,8 +4,11 @@ import org.bringme.dto.ItemDTO;
 import org.bringme.model.Item;
 import org.bringme.repository.ItemRepository;
 import org.bringme.service.ItemService;
+import org.bringme.service.exceptions.CustomException;
 import org.bringme.utils.Converter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,7 +40,7 @@ public class ItemServiceImpl implements ItemService {
         List<Item> dataBaseList = itemRepository.getAll();
 
         if (dataBaseList.isEmpty()) {
-            return null;
+            throw new CustomException("No data", HttpStatus.NO_CONTENT);
         }
 
         List<ItemDTO> responseList = new ArrayList<>();
@@ -52,13 +55,16 @@ public class ItemServiceImpl implements ItemService {
     public ItemDTO getItemById(Long id) {
         // Check if item exists
         Optional<Item> model = itemRepository.getById(id);
-        return model.map(converter::itemToDTO).orElse(null);
-        // Create DTO item
-
+        if(model.isEmpty()){
+            throw new CustomException("Item not found", HttpStatus.NOT_FOUND);
+        }
+        return converter.itemToDTO(model.get());
     }
 
     @Override
     public ItemDTO saveItem(ItemDTO itemDTO) {
+
+        checkInput(itemDTO);
         try {
             // Change the file name
             String originalFileName = itemDTO.getPhoto();
@@ -87,8 +93,7 @@ public class ItemServiceImpl implements ItemService {
 
             return responseItemDTO;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+            throw new CustomException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -116,7 +121,7 @@ public class ItemServiceImpl implements ItemService {
 
         List<Item> data = itemRepository.filterByCountries(origin, destination);
         if (data.isEmpty()) {
-            return List.of();
+            throw new CustomException("Not found", HttpStatus.NO_CONTENT);
         }
         List<ItemDTO> response = new ArrayList<>();
         for (Item item : data) {
@@ -124,6 +129,46 @@ public class ItemServiceImpl implements ItemService {
             response.add(dto);
         }
         return response;
+    }
+
+    @Override
+    public void checkInput(ItemDTO requestItem) {
+        if (requestItem.getLength() <= 0 || requestItem.getWeight() <= 0 || requestItem.getHeight() <= 0
+                || requestItem.getLength() > 2 || requestItem.getWeight() > 5 || requestItem.getHeight() > 2
+                || requestItem.getOrigin() == requestItem.getDestination() || requestItem.getUser_id() == 0
+                || requestItem.getOrigin() == 0 || requestItem.getDestination() == 0) {
+            throw new CustomException("Invalid input", HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    @Override
+    public String checkMediaFile(MultipartFile image) {
+        if (image.isEmpty()) {
+            throw new CustomException("File is empty", HttpStatus.BAD_REQUEST);
+        }
+
+        if (image.getOriginalFilename() == null || image.getContentType() == null) {
+            throw new CustomException("File metadata is invalid", HttpStatus.BAD_REQUEST);
+        }
+
+        // Check file size
+        if (image.getSize() > (2 * 1024 * 1024)) {
+            throw new CustomException("File size should be 2MB or less", HttpStatus.PAYLOAD_TOO_LARGE);
+        }
+
+        // Check file type
+        String contentType = image.getContentType();
+        if (!(contentType.startsWith("image/png") || contentType.startsWith("image/jpeg"))) {
+            throw new CustomException("PNG or JPEG only", HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+        }
+
+        // Save temp file
+        String tempFileName = saveTempFile(image);
+        if (tempFileName == null) {
+            throw new CustomException("Error uploading file", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return tempFileName;
     }
 
 }

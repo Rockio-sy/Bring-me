@@ -2,6 +2,9 @@ package org.bringme.repository.impl;
 
 import org.bringme.model.Report;
 import org.bringme.repository.ReportRepository;
+import org.bringme.service.exceptions.CustomException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -18,27 +21,29 @@ import java.util.Optional;
 @Repository
 public class ReportRepositoryImpl implements ReportRepository {
     private final JdbcTemplate jdbcTemplate;
-    public ReportRepositoryImpl(JdbcTemplate jdbcTemplate){
+
+    public ReportRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
     @Override
     public Long save(Report model) {
         String sql = "INSERT INTO reports (request_id, reporter_user_id, reported_user_id, content)" +
                 "VALUES " +
                 "(?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        try{
-            jdbcTemplate.update(connection ->{
+        try {
+            jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
                 ps.setInt(1, model.getRequestId());
                 ps.setInt(2, model.getReporterUserId());
                 ps.setInt(3, model.getReportedUserId());
                 ps.setString(4, model.getContent());
-                 return ps;
+                return ps;
             }, keyHolder);
 
             return Objects.requireNonNull(keyHolder.getKey()).longValue();
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
@@ -62,9 +67,32 @@ public class ReportRepositoryImpl implements ReportRepository {
         return jdbcTemplate.query(sql, new ReportRowMapper(), id).stream().findFirst();
     }
 
-    public static final class ReportRowMapper implements RowMapper<Report>{
+    @Override
+    public Optional<Report> isAnswered(Long reportId) {
+        String sql = "SELECT * FROM reports WHERE id = ?";
+        return jdbcTemplate.query(sql, new ReportRowMapper(), reportId).stream().findFirst();
+    }
+
+    @Override
+    public void answerReport(Long reportId, Long adminId, String answer) {
+        String sql = "UPDATE reports SET answer = ?, answered_by_id = ? WHERE id = ?";
+        jdbcTemplate.update(sql, answer, adminId, reportId);
+    }
+
+    @Override
+    public int getReportedUserId(Long reportId) {
+        String sql = "SELECT reported_user_id FROM reports WHERE id = ?";
+        Integer id = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("reported_user_id"), reportId);
+        // -1 means user doesn't exist
+        if (id == null) {
+            return -1;
+        }
+        return id;
+    }
+
+    public static final class ReportRowMapper implements RowMapper<Report> {
         @Override
-        public Report mapRow(ResultSet rs, int rowNum) throws SQLException{
+        public Report mapRow(ResultSet rs, int rowNum) throws SQLException {
             Report newReport = new Report();
             newReport.setId(rs.getLong("id"));
             newReport.setReportedUserId(rs.getInt("reported_user_id"));

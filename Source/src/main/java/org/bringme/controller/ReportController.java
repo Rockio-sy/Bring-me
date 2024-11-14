@@ -28,7 +28,7 @@ public class ReportController {
 
     @PostMapping("/new")
     public ResponseEntity<HashMap<String, Object>> createNewReport(@RequestHeader(value = "Authorization") String header,
-                                                                    @Valid @RequestBody ReportDTO reportForm) {
+                                                                   @Valid @RequestBody ReportDTO reportForm) {
 
         // Extract user id
         String token = header.substring(7);
@@ -44,7 +44,7 @@ public class ReportController {
     }
 
     @GetMapping("/a/all")
-    public ResponseEntity<HashMap<String, Object>> getAllReports(){
+    public ResponseEntity<HashMap<String, Object>> getAllReports() {
         HashMap<String, Object> responseMap = new HashMap<>();
         List<ReportDTO> all = reportService.getAll();
         responseMap.put("Reports", all);
@@ -52,7 +52,7 @@ public class ReportController {
     }
 
     @GetMapping("/a/not-answered")
-    public ResponseEntity<HashMap<String, Object>> getNotAnsweredReports(){
+    public ResponseEntity<HashMap<String, Object>> getNotAnsweredReports() {
         HashMap<String, Object> responseMap = new HashMap<>();
         List<ReportDTO> reports = reportService.getNotAnswered();
         responseMap.put("Not answered reports", reports);
@@ -60,10 +60,19 @@ public class ReportController {
     }
 
     @GetMapping("/a/spec")
-    public ResponseEntity<HashMap<String, Object>> getSpecificReport(@Valid @RequestParam(value = "id") Long id){
+    public ResponseEntity<HashMap<String, Object>> getSpecificReport(@Valid @RequestParam(value = "id") Long id) {
         HashMap<String, Object> responseMap = new HashMap<>();
         ReportDTO dto = reportService.getSpecific(id);
         responseMap.put("Report", dto);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
+
+    @PutMapping("/a/answer")
+    public ResponseEntity<HashMap<String, Object>> answerReport(@RequestHeader(value = "Authorization") String header, @RequestParam("id") Long reportId, @RequestParam("answer") String answer) {
+        Long adminId = jwtService.extractUserIdAsLong(header.substring(7));
+        reportService.answerReport(adminId, reportId, answer);
+        HashMap<String, Object> responseMap = new HashMap<>();
+        responseMap.put("Message", "Report has been answered");
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 

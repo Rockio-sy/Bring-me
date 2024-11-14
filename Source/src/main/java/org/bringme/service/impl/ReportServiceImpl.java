@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -107,9 +106,21 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public ReportDTO getSpecific(Long id) {
         Optional<Report> data = reportRepository.getSpecific(id);
-        if(data.isEmpty()){
+        if (data.isEmpty()) {
             throw new CustomException("Report doesn't exist", HttpStatus.NOT_FOUND);
         }
         return converter.reportToDTO(data.get());
+    }
+
+    @Override
+    public void answerReport(Long adminId, Long reportId, String answer) {
+        Optional<Report> check = reportRepository.isAnswered(reportId);
+        if (check.isEmpty()) {
+            throw new CustomException("Report doesn't exist", HttpStatus.NOT_FOUND);
+        }
+        if (check.get().getAnswer().isEmpty()) {
+            throw new CustomException("Report already answered", HttpStatus.FORBIDDEN);
+        }
+        reportRepository.answerReport(reportId, adminId, answer);
     }
 }

@@ -48,17 +48,21 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<HashMap<String, Object>> login(@Valid @RequestBody AuthLogin loginData) {
         HashMap<String, Object> responseMap = new HashMap<>();
+
         String token = authService.generateToken(loginData);
         if (token == null) {
             responseMap.put("Message", "Invalid credentials");
             responseMap.put("Token", null);
             return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
         }
+
+        // Check if the account is Email-verified
         if(!authService.isValidated(loginData)){
             responseMap.put("Message", "Verification required.");
             responseMap.put("Token", null);
             return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
         }
+
         responseMap.put("Message", "Login done");
         responseMap.put("JWT-Token", token);
         return new ResponseEntity<>(responseMap, HttpStatus.OK);

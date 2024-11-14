@@ -96,6 +96,7 @@ public class AuthRepositoryImpl implements AuthRepository {
             newPerson.setPhone(rs.getString("phone"));
             newPerson.setPassword(rs.getString("password"));
             newPerson.setRole(rs.getString("role"));
+            newPerson.setAccountStatus(rs.getInt("account_status"));
             return newPerson;
         }
     }

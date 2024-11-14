@@ -10,6 +10,4 @@ public interface AuthRepository {
     Long getIdByEmailOrPhone(String emailOrPhone);
 
     boolean isVerified(String s);
-
-
 }

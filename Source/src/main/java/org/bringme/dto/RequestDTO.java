@@ -43,7 +43,7 @@ public class RequestDTO {
 
     // JSON Request CreateNewRequest constructor
     // TODO: Add currency to the entity to use it with price
-    public RequestDTO(Long requesterUserId, Long requestedUserId, Integer itemId, Integer tripId, Integer origin, Integer destination, String comments, boolean approvement, float price) {
+    public RequestDTO(Long requesterUserId, Long requestedUserId, Integer itemId, Integer tripId, String comments, float price) {
         this.requesterUserId = requesterUserId;
         this.requestedUserId = requestedUserId;
         this.itemId = itemId;

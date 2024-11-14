@@ -5,7 +5,9 @@ import org.bringme.dto.AuthLogin;
 import org.bringme.model.Person;
 import org.bringme.repository.AuthRepository;
 import org.bringme.service.AuthService;
+import org.bringme.service.exceptions.CustomException;
 import org.bringme.utils.Converter;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,7 +25,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    public AuthServiceImpl(Converter converter, AuthRepository authRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService){
+    public AuthServiceImpl(Converter converter, AuthRepository authRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService) {
         this.passwordEncoder = passwordEncoder;
         this.authRepository = authRepository;
         this.converter = converter;
@@ -43,6 +45,9 @@ public class AuthServiceImpl implements AuthService {
 
         // Get generated ID
         Long generatedId = authRepository.savePerson(modelPerson);
+        if (generatedId == null) {
+            throw new CustomException("Problem while creating the account", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
         // Convert to DTO
         requestPerson.setId(generatedId);
@@ -51,15 +56,17 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean isExist(String emailOrPhone){
+    public void isExist(String emailOrPhone) {
         Optional<Person> person = authRepository.getByEmailOrPhone(emailOrPhone);
-        return person.isPresent();
+        if (person.isEmpty()) {
+            throw new CustomException("User not found", HttpStatus.NOT_FOUND);
+        }
     }
 
     @Override
-    public PersonDTO getByEmailOrPhone(String emailOrPhone){
+    public PersonDTO getByEmailOrPhone(String emailOrPhone) {
         Optional<Person> person = authRepository.getByEmailOrPhone(emailOrPhone);
-        if(person.isEmpty()){
+        if (person.isEmpty()) {
             return null;
         }
         PersonDTO response = converter.personToDTO(person.get());
@@ -68,18 +75,28 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String generateToken(AuthLogin loginData){
+    public String generateToken(AuthLogin loginData) {
+        String token = null;
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginData.emailOrPhone(), loginData.password()));
-        if(authentication.isAuthenticated()){
+        if (authentication.isAuthenticated()) {
             Optional<Person> personToInclude = authRepository.getByEmailOrPhone(loginData.emailOrPhone());
-            return jwtService.generateToken(personToInclude.get(), loginData.emailOrPhone());
+            if (personToInclude.isEmpty()) {
+                throw new CustomException("User not found", HttpStatus.NOT_FOUND);
+            }
+            token = jwtService.generateToken(personToInclude.get(), loginData.emailOrPhone());
+
         }
-        return null;
+        if (token == null) {
+            throw new CustomException("Invalid credentials", HttpStatus.FORBIDDEN);
+        }
+        return token;
     }
 
     @Override
-    public boolean isValidated(AuthLogin loginData) {
-        return authRepository.isVerified(loginData.emailOrPhone());
+    public void isValidated(AuthLogin loginData) {
+        if (!authRepository.isVerified(loginData.emailOrPhone())) {
+            throw new CustomException("Email verification needed", HttpStatus.FORBIDDEN);
+        }
     }
 }

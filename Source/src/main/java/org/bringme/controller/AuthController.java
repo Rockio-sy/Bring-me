@@ -22,46 +22,31 @@ public class AuthController {
         this.authService = authService;
     }
 
+    //TODO:Fix that the users cannot share one email or phone!
     @PostMapping("/signup")
-    public ResponseEntity<HashMap<String, Object>> signUp(@Valid @RequestBody PersonDTO requestPerson) {
+    public ResponseEntity<HashMap<String, Object>> signUp(@RequestBody PersonDTO requestPerson) {
         // Multi value map
         HashMap<String, Object> responseMap = new HashMap<>();
 
         // Check if the user exists
-        if (authService.isExist(requestPerson.getEmail())) {
-            responseMap.put("Message", "Provided credentials used already");
-            return new ResponseEntity<>(responseMap, HttpStatus.FORBIDDEN);
-        }
+        authService.isExist(requestPerson.getEmail());
 
         // Save new person in DB
         PersonDTO responsePerson = authService.signUp(requestPerson);
-        if (responsePerson == null) {
-            responseMap.put("Message", "Unknown error");
-            responseMap.put("Person", null);
-            return new ResponseEntity<>(responseMap, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
         responseMap.put("Message", "Person created successfully.");
         responseMap.put("Person", responsePerson);
         return new ResponseEntity<>(responseMap, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<HashMap<String, Object>> login(@Valid @RequestBody AuthLogin loginData) {
+    public ResponseEntity<HashMap<String, Object>> login(@RequestBody AuthLogin loginData) {
         HashMap<String, Object> responseMap = new HashMap<>();
 
         String token = authService.generateToken(loginData);
-        if (token == null) {
-            responseMap.put("Message", "Invalid credentials");
-            responseMap.put("Token", null);
-            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
-        }
 
         // Check if the account is Email-verified
-        if(!authService.isValidated(loginData)){
-            responseMap.put("Message", "Verification required.");
-            responseMap.put("Token", null);
-            return new ResponseEntity<>(responseMap, HttpStatus.UNAUTHORIZED);
-        }
+        authService.isValidated(loginData);
 
         responseMap.put("Message", "Login done");
         responseMap.put("JWT-Token", token);

@@ -1,4 +1,6 @@
 package org.bringme.dto;
 
-public record AuthLogin(String emailOrPhone, String password) {
+import jakarta.validation.constraints.NotBlank;
+
+public record AuthLogin(@NotBlank(message = "Email or phone is required filed") String emailOrPhone,@NotBlank(message = "Password needed") String password) {
 }

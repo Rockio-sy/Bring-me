@@ -33,8 +33,6 @@ public class SecurityConfig {
     }
 
 
-    // TODO: The returned HTTP STATUS of locked account is 500, i have to change it to UNAUTHORIZED
-
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         return http

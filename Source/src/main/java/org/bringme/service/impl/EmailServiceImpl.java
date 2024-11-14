@@ -6,6 +6,8 @@ import org.bringme.model.Person;
 import org.bringme.repository.EmailRepository;
 import org.bringme.repository.PersonRepository;
 import org.bringme.service.EmailService;
+import org.bringme.service.exceptions.CustomException;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -41,21 +43,21 @@ public class EmailServiceImpl implements EmailService {
             helper.setText("Thank you for using \"Bring-Me\"\nYour verification code is: " + code + ".\n", true);
             mailSender.send(mimeMessage);
         } catch (MessagingException | UnsupportedEncodingException e) {
-            System.out.println(e.getMessage());
+            throw new CustomException("Email is not sent", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        // TODO: Do not forget to set the code for temporary period
         emailRepository.saveCode(email, code);
         return code;
     }
 
     @Override
-    public int validateCode(String userInput, String email) {
+    public void validateCode(String userInput, String email) {
         String originalCode = emailRepository.getCode(email);
         if (!originalCode.equals(userInput)) {
-            return 1;
+            throw new CustomException("Invalid code", HttpStatus.BAD_REQUEST);
         }
         Long userId = personRepository.getIdByEmailOrPhone(email);
         personRepository.verifyAccount(userId);
-        return 0;
     }
 
     @Override

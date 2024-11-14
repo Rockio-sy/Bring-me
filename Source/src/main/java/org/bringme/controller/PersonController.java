@@ -58,5 +58,13 @@ public class PersonController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PutMapping("/a/band")
+    public ResponseEntity<HashMap<String, Object>> bandUser(@Valid @RequestParam("reportId") Long reportId){
+        HashMap<String, Object> responseMap = new HashMap<>();
+        personService.bandUser(reportId);
+        responseMap.put("Message", "User banned successfully.");
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
+
     // TODO: Set the function to band user temporary by admin (needs security, study how to use isLocked() function in the entity)
 }

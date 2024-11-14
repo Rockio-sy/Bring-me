@@ -13,4 +13,6 @@ public interface ReportService {
     List<ReportDTO> getNotAnswered();
 
     ReportDTO getSpecific(Long id);
+
+    void answerReport(Long adminId, Long reportId, String answer);
 }

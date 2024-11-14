@@ -3,9 +3,12 @@ package org.bringme.service.impl;
 import org.bringme.dto.PersonDTO;
 import org.bringme.model.Person;
 import org.bringme.repository.PersonRepository;
+import org.bringme.repository.ReportRepository;
 import org.bringme.service.PersonService;
+import org.bringme.service.exceptions.CustomException;
 import org.bringme.utils.Converter;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +21,14 @@ public class PersonServiceImpl implements PersonService {
     private final PersonRepository personRepository;
     private final Converter converter;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final ReportRepository reportRepository;
 
 
-    public PersonServiceImpl(PersonRepository personRepository, Converter converter, BCryptPasswordEncoder passwordEncoder) {
+    public PersonServiceImpl(PersonRepository personRepository, Converter converter, BCryptPasswordEncoder passwordEncoder, ReportRepository reportRepository) {
         this.personRepository = personRepository;
         this.converter = converter;
         this.passwordEncoder = passwordEncoder;
+        this.reportRepository = reportRepository;
     }
 
     @Override
@@ -98,5 +103,14 @@ public class PersonServiceImpl implements PersonService {
 
         newUser.setId(id);
         return newUser;
+    }
+
+    @Override
+    public void bandUser(Long id) {
+        int userId = reportRepository.getReportedUserId(id);
+        if(userId == -1){
+            throw new CustomException("User doesn't exist", HttpStatus.NOT_FOUND);
+        }
+        personRepository.bandUser(userId);
     }
 }

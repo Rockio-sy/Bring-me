@@ -71,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
     public String generateToken(AuthLogin loginData){
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginData.emailOrPhone(), loginData.password()));
-        if(authentication.isAuthenticated()){
+        if(!authentication.isAuthenticated()){
             Optional<Person> personToInclude = authRepository.getByEmailOrPhone(loginData.emailOrPhone());
             return jwtService.generateToken(personToInclude.get(), loginData.emailOrPhone());
         }

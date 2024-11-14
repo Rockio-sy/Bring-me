@@ -18,4 +18,6 @@ public interface PersonRepository {
     Long getIdByEmailOrPhone(String emailOrPhone);
 
     Long save(Person model);
+
+    void bandUser(int id);
 }

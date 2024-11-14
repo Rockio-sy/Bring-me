@@ -13,4 +13,10 @@ public interface ReportRepository {
     List<Report> getNotAnswered();
 
     Optional<Report> getSpecific(Long id);
+
+    Optional<Report> isAnswered(Long reportId);
+
+    void answerReport(Long reportId, Long adminId, String answer);
+
+    int getReportedUserId(Long reportId);
 }

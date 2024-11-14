@@ -8,6 +8,10 @@ public class Person {
     private String email;
     private String phone;
     private String password;
+    // Account status
+    // 0 --> Not verified
+    // 1 --> Verified
+    // 2 --> Baned
     private int accountStatus;
     private String role;
 

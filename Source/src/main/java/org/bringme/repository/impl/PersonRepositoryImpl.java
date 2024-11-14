@@ -95,6 +95,13 @@ public class PersonRepositoryImpl implements PersonRepository {
         }
     }
 
+    // TODO: I have to set it for 15 days or less (How?)
+    @Override
+    public void bandUser(int id) {
+        String sql = "UPDATE persons SET account_status = 2 WHERE id = ?";
+        jdbcTemplate.update(sql, Integer.toUnsignedLong(id));
+    }
+
     private static final class PersonRowMapper implements RowMapper<Person> {
         @Override
         public Person mapRow(ResultSet rs, int rowNum) throws SQLException {

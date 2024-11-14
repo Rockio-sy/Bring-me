@@ -14,4 +14,6 @@ public interface PersonService {
     PersonDTO showPersonDetails(int hostId);
 
     PersonDTO createNewUser(PersonDTO newUser);
+
+    void bandUser(Long id);
 }

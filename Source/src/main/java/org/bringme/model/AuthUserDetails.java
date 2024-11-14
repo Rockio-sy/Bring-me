@@ -53,7 +53,7 @@ public class AuthUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return person.getAccountStatus() < 2;
     }
 
     @Override

@@ -2,8 +2,10 @@ package org.bringme.security;
 
 
 import org.bringme.filter.JwtFilter;
+import org.bringme.model.AuthUserDetails;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -29,6 +31,9 @@ public class SecurityConfig {
         this.userDetailService = userDetailService;
         this.jwtFilter = jwtFilter;
     }
+
+
+    // TODO: The returned HTTP STATUS of locked account is 500, i have to change it to UNAUTHORIZED
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {

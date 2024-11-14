@@ -8,9 +8,13 @@ import java.util.List;
 
 public interface TripService {
     TripDTO saveTrip(TripDTO tripDTO);
+
     TripDTO getById(Long id);
+
     List<TripDTO> getAllTrips();
-    boolean checkTripTime(LocalDateTime departure, LocalDateTime arrival);
+
+    void validateTrip(TripDTO requestTrip);
+
 
     List<TripDTO> filterByCountries(int origin, int destination);
 }

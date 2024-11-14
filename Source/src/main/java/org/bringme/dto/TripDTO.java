@@ -1,19 +1,22 @@
 package org.bringme.dto;
 
+import jakarta.mail.Message;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDateTime;
 
 public class TripDTO {
     private Long id;
-    @NotNull
+    @Positive(message = " Origin country not found")
     private int origin;
-    @NotNull
+    @Positive(message = "Destination country not found")
     private int destination;
-    @NotBlank
+    @NotBlank(message = "Destination airport cannot be blank")
     private String destinationAirport;
-    @NotNull
+    @Positive (message = "Weight cannot be negative or 0")
     private float emptyWeight;
     @NotNull
     private LocalDateTime arrivalTime;
@@ -21,7 +24,7 @@ public class TripDTO {
     private LocalDateTime departureTime;
     @NotNull
     private boolean transit;
-    @NotBlank
+    @NotBlank(message = "Comments cannot be blank")
     private String comments;
     private Long passengerId;
 

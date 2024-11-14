@@ -4,7 +4,9 @@ import org.bringme.dto.TripDTO;
 import org.bringme.model.Trip;
 import org.bringme.repository.TripRepository;
 import org.bringme.service.TripService;
+import org.bringme.service.exceptions.CustomException;
 import org.bringme.utils.Converter;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -31,7 +33,7 @@ public class TripServiceImpl implements TripService {
 
         Long generatedId = tripRepository.saveTrip(newTrip);
         if (generatedId == null) {
-            return null;
+            throw new CustomException("Cannot create trip", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         // Convert to TripDTO then return
@@ -44,9 +46,10 @@ public class TripServiceImpl implements TripService {
     public TripDTO getById(Long id) {
         // Get trip from database
         Optional<Trip> savedTrip = tripRepository.getById(id);
-
-        // Convert to DTO and return
-        return savedTrip.map(converter::tripToDTO).orElse(null);
+        if (savedTrip.isEmpty()) {
+            throw new CustomException("Trip not found", HttpStatus.NO_CONTENT);
+        }
+        return converter.tripToDTO(savedTrip.get());
     }
 
     @Override
@@ -56,7 +59,7 @@ public class TripServiceImpl implements TripService {
 
         //Check if list is empty
         if (savedList.isEmpty()) {
-            return null;
+            throw new CustomException("No content", HttpStatus.NO_CONTENT);
         }
 
         // Convert every trip to DTO class and save it in new list
@@ -70,31 +73,40 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public boolean checkTripTime(LocalDateTime departure, LocalDateTime arrival) {
+    public void validateTrip(TripDTO requestTrip) {
 
-        // 1. Check if departure time is in the past
-        if (departure.isBefore(LocalDateTime.now())) {
-            return false;  // Departure is in the past
+        // 1. Check if origin and destination are the same
+        if (requestTrip.getOrigin() == requestTrip.getDestination()) {
+            throw new CustomException("Origin and destination cannot be the same.", HttpStatus.BAD_REQUEST);
         }
 
-        // 2. Check if arrival time is before departure time
-        if (arrival.isBefore(departure)) {
-            return false;  // Arrival happens before departure, which is not logical
+        // 2. Check if origin, destination, empty weight, or passenger ID is zero
+        if (requestTrip.getOrigin() == 0 || requestTrip.getDestination() == 0
+                || requestTrip.getEmptyWeight() == 0 || requestTrip.getPassengerId() == 0) {
+            throw new CustomException("Origin, destination, empty weight, and passenger ID must be non-zero.", HttpStatus.BAD_REQUEST);
         }
 
-        // 3. Check if flight has a minimum duration (e.g., at least 30 minutes)
-        Duration flightDuration = Duration.between(departure, arrival);
+        // 4. Check if departure time is in the past
+        if (requestTrip.getDepartureTime().isBefore(LocalDateTime.now())) {
+            throw new CustomException("Departure time cannot be in the past.", HttpStatus.BAD_REQUEST);
+        }
+
+        // 5. Check if arrival time is before departure time
+        if (requestTrip.getArrivalTime().isBefore(requestTrip.getDepartureTime())) {
+            throw new CustomException("Arrival time cannot be before departure time.", HttpStatus.BAD_REQUEST);
+        }
+
+        // 6. Check if flight has a minimum duration (e.g., at least 30 minutes)
+        Duration flightDuration = Duration.between(requestTrip.getDepartureTime(), requestTrip.getArrivalTime());
         if (flightDuration.toMinutes() < 30) {
-            return false;  // Flights should be at least 30 minutes long
+            throw new CustomException("Flight duration must be at least 30 minutes.", HttpStatus.BAD_REQUEST);
         }
 
-        // 4. OPTIONAL: If flights on the same day need to be at least 4 hours apart
-        if (departure.toLocalDate().equals(arrival.toLocalDate())) {
-            return flightDuration.toHours() >= 4;  // Flights on the same day should be at least 4 hours long
+        // 7. Optional: Ensure flights on the same day are at least 4 hours apart
+        if (requestTrip.getDepartureTime().toLocalDate().equals(requestTrip.getArrivalTime().toLocalDate())
+                && flightDuration.toHours() < 4) {
+            throw new CustomException("Flights on the same day must be at least 4 hours long.", HttpStatus.BAD_REQUEST);
         }
-
-        // 5. Everything is valid if none of the above conditions were met
-        return true;
     }
 
     @Override
@@ -104,7 +116,7 @@ public class TripServiceImpl implements TripService {
 
         // Check
         if (data.isEmpty()) {
-            return List.of();
+            throw new CustomException("No content", HttpStatus.NO_CONTENT);
         }
 
         // Convert

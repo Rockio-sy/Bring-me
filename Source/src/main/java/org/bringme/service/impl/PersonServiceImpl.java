@@ -89,7 +89,10 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public PersonDTO showPersonDetails(int hostId) {
         Optional<Person> data = personRepository.getById(Integer.toUnsignedLong(hostId));
-        return data.map(converter::personToDetails).orElse(null);
+        if(data.isEmpty()){
+            throw new CustomException("User not found", HttpStatus.NOT_FOUND);
+        }
+        return converter.personToDetails(data.get());
     }
 
     @Override

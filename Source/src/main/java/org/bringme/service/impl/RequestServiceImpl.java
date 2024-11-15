@@ -2,7 +2,6 @@ package org.bringme.service.impl;
 
 import org.bringme.dto.RequestDTO;
 import org.bringme.model.Item;
-import org.bringme.model.Notification;
 import org.bringme.model.Request;
 import org.bringme.model.Trip;
 import org.bringme.repository.ItemRepository;
@@ -11,7 +10,9 @@ import org.bringme.repository.TripRepository;
 import org.bringme.service.EmailService;
 import org.bringme.service.NotificationService;
 import org.bringme.service.RequestService;
+import org.bringme.service.exceptions.CustomException;
 import org.bringme.utils.Converter;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class RequestServiceImpl implements RequestService {
     public List<RequestDTO> getAll(Long userId) {
         List<Request> requestList = requestRepository.getAll(userId);
         if (requestList.isEmpty()) {
-            return null;
+            throw new CustomException("No content", HttpStatus.NO_CONTENT);
         }
 
         // Convert to DTO
@@ -62,11 +63,11 @@ public class RequestServiceImpl implements RequestService {
         Optional<Item> item = itemRepository.getById(request.getItemId().longValue());
         Optional<Trip> trip = tripRepository.getById(request.getTripId().longValue());
         if (item.isEmpty() || trip.isEmpty()) {
-            return null;
+            throw new CustomException("No enough sources to create the request", HttpStatus.BAD_REQUEST);
         }
 
         if (item.get().getOrigin() != item.get().getOrigin() || item.get().getDestination() != item.get().getDestination()) {
-            return null;
+            throw new CustomException("Directions are not compatible", HttpStatus.BAD_REQUEST);
         }
 
         // Set values of requested user id, trip and item to save in the database
@@ -99,8 +100,11 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Long isExists(Integer itemId, Integer tripId) {
-        return requestRepository.isExists(itemId, tripId);
+    public void isExist(Integer itemId, Integer tripId) {
+        Long id = requestRepository.isExists(itemId, tripId);
+        if (id != null) {
+            throw new CustomException("Request already exist", HttpStatus.CONFLICT);
+        }
     }
 
     @Override
@@ -109,7 +113,7 @@ public class RequestServiceImpl implements RequestService {
         List<Request> data = requestRepository.getSentRequests(userId);
 
         if (data.isEmpty()) {
-            return List.of();
+            throw new CustomException("No content", HttpStatus.NO_CONTENT);
         }
 
         List<RequestDTO> response = new ArrayList<>();
@@ -128,7 +132,7 @@ public class RequestServiceImpl implements RequestService {
         List<Request> data = requestRepository.getByDirections(userId, origin, destination);
 
         if (data.isEmpty()) {
-            return List.of();
+            throw new CustomException("No content", HttpStatus.NO_CONTENT);
         }
 
         List<RequestDTO> response = new ArrayList<>();
@@ -146,7 +150,7 @@ public class RequestServiceImpl implements RequestService {
         List<Request> data = requestRepository.getReceivedRequests(userId);
 
         if (data.isEmpty()) {
-            return List.of();
+            throw new CustomException("No content", HttpStatus.NO_CONTENT);
         }
 
         List<RequestDTO> response = new ArrayList<>();
@@ -160,31 +164,28 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public boolean approveRequest(Long userId, Long requestId) {
+    public void approveRequest(Long userId, Long requestId) {
         Optional<Request> checkRequest = requestRepository.getRequestById(requestId);
         if (checkRequest.isEmpty()) {
-            return false;
+            throw new CustomException("Request not found", HttpStatus.BAD_REQUEST);
         }
         // Check if the user is the requested
         if (!checkRequest.get().getRequestedUserId().equals(userId.intValue())) {
-            return false;
+            throw new CustomException("Current user is not the requested user", HttpStatus.BAD_REQUEST);
         }
-        int rowAffected = requestRepository.approveRequest(requestId);
-        if (rowAffected <= 0) {
-            return false;
-        }
+        requestRepository.approveRequest(requestId);
+
+
         emailService.sendEmail("Your request has been approved by the requested, request will be closed after 30 days\n"
-                ,"Approvement"
-                 ,(checkRequest.get().getRequesterUserId()).longValue());
+                , "Approvement"
+                , (checkRequest.get().getRequesterUserId()).longValue());
         emailService.sendEmail("You have approved request.\nRequest will be closed after 30 days" +
                         "\nFrom:" + checkRequest.get().getOrigin() + "\nTo:" + checkRequest.get().getDestination()
-                        , "Approvement"
-                        , (checkRequest.get().getRequestedUserId().longValue()));
+                , "Approvement"
+                , (checkRequest.get().getRequestedUserId().longValue()));
 
-        notificationService.saveNotification((checkRequest.get().getRequesterUserId()), "Your request has been approved by the requested" ,requestId.intValue());
-        notificationService.saveNotification((checkRequest.get().getRequestedUserId()), "You have approved request" ,requestId.intValue());
-
-        return true;
+        notificationService.saveNotification((checkRequest.get().getRequesterUserId()), "Your request has been approved by the requested", requestId.intValue());
+        notificationService.saveNotification((checkRequest.get().getRequestedUserId()), "You have approved request", requestId.intValue());
     }
 
     @Override
@@ -193,7 +194,7 @@ public class RequestServiceImpl implements RequestService {
         List<Request> data = requestRepository.filterByApprovement(userId);
 
         if (data.isEmpty()) {
-            return List.of();
+            throw new CustomException("No content", HttpStatus.NO_CONTENT);
         }
 
         List<RequestDTO> response = new ArrayList<>();
@@ -212,7 +213,7 @@ public class RequestServiceImpl implements RequestService {
         List<Request> data = requestRepository.filterByWait(userId);
 
         if (data.isEmpty()) {
-            return List.of();
+            throw new CustomException("No content", HttpStatus.NO_CONTENT);
         }
 
         List<RequestDTO> response = new ArrayList<>();
@@ -227,12 +228,18 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public boolean isThereCommonRequest(Long guestId, int hostId) {
-        return requestRepository.isThereCommonRequest(guestId, hostId);
+        if (!requestRepository.isThereCommonRequest(guestId, hostId)) {
+            throw new CustomException("No common request", HttpStatus.BAD_REQUEST);
+        }
+        return true;
     }
 
     @Override
     public Request getRequestById(Long id) {
         Optional<Request> newRequest = requestRepository.getRequestById(id);
-        return newRequest.orElse(null);
+        if (newRequest.isEmpty()) {
+            throw new CustomException("Not found", HttpStatus.NOT_FOUND);
+        }
+        return newRequest.get();
     }
 }

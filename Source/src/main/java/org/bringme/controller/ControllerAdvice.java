@@ -12,7 +12,6 @@ import java.util.HashMap;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    // TODO: Use this in all methods for clean code
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<HashMap<String, Object>> customExceptionHandler(CustomException ex){
         HashMap<String, Object> errorResponse = new HashMap<>();

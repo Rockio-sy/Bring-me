@@ -56,5 +56,4 @@ public class PersonController {
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
-    // TODO: Set the function to band user temporary by admin (needs security, study how to use isLocked() function in the entity)
 }

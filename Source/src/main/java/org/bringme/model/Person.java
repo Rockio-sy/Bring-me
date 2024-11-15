@@ -15,12 +15,9 @@ public class Person {
     private int accountStatus;
     private String role;
 
-    //TODO: ADD EMAIL VERIFICATION FIELD AND USE IT IN THE LoadUserByUserName function.
 
-
-
-
-    public Person(){}
+    public Person() {
+    }
 
     public Person(Long id, String firstName, String lastName, String address, String email, String phone, String password, int accountStatus, String role) {
         this.id = id;

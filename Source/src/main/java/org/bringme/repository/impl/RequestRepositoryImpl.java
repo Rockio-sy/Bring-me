@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-// TODO: Check the triggers and functions for the updated_at and created_at in each table
 @Repository
 public class RequestRepositoryImpl implements RequestRepository {
 
@@ -103,9 +101,9 @@ public class RequestRepositoryImpl implements RequestRepository {
     }
 
     @Override
-    public int approveRequest(Long requestId) {
+    public void approveRequest(Long requestId) {
         String sql = "UPDATE requests SET approvement_statue = TRUE WHERE id = ?";
-        return jdbcTemplate.update(sql, requestId.intValue());
+        jdbcTemplate.update(sql, requestId.intValue());
     }
 
     @Override

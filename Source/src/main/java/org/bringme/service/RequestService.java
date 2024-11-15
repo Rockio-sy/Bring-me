@@ -10,7 +10,7 @@ public interface RequestService {
     Request getRequestById(Long id);
     RequestDTO saveRequest(RequestDTO request);
 
-    Long isExists(Integer id, Integer tripId);
+    void isExist(Integer id, Integer tripId);
 
     List<RequestDTO> getSentRequests(Long userId);
 
@@ -18,7 +18,7 @@ public interface RequestService {
 
     List<RequestDTO> getReceivedRequests(Long userId);
 
-    boolean approveRequest(Long userId, Long requestId);
+    void approveRequest(Long userId, Long requestId);
 
     List<RequestDTO> filterByApprovement(Long userId);
 

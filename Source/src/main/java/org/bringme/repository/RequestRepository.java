@@ -18,7 +18,7 @@ public interface RequestRepository {
 
     List<Request> getReceivedRequests(Long userId);
 
-    int approveRequest(Long requestId);
+    void approveRequest(Long requestId);
 
     List<Request> filterByApprovement(Long userId);
 

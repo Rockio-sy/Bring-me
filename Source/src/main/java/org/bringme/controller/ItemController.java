@@ -20,7 +20,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/bring-me/items")
 public class ItemController {
-// TODO: Try all endpoints after changing clean the code
     private final ItemService itemService;
     private final JwtService jwtService;
 

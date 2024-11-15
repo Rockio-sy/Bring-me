@@ -22,7 +22,6 @@ public class AuthController {
         this.authService = authService;
     }
 
-    //TODO:Fix again that the users do not have same EMAIL or PHONE!
     @PostMapping("/signup")
     public ResponseEntity<HashMap<String, Object>> signUp(@RequestBody PersonDTO requestPerson) {
         HashMap<String, Object> responseMap = new HashMap<>();

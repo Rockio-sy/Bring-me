@@ -175,14 +175,15 @@ public class RequestServiceImpl implements RequestService {
         }
         requestRepository.approveRequest(requestId);
 
-
-        emailService.sendEmail("Your request has been approved by the requested, request will be closed after 30 days\n"
-                , "Approvement"
-                , (checkRequest.get().getRequesterUserId()).longValue());
         emailService.sendEmail("You have approved request.\nRequest will be closed after 30 days" +
                         "\nFrom:" + checkRequest.get().getOrigin() + "\nTo:" + checkRequest.get().getDestination()
                 , "Approvement"
                 , (checkRequest.get().getRequestedUserId().longValue()));
+
+        emailService.sendEmail("Your request has been approved by the requested, request will be closed after 30 days\n"
+                , "Approvement"
+                , (checkRequest.get().getRequesterUserId()).longValue());
+
 
         notificationService.saveNotification((checkRequest.get().getRequesterUserId()), "Your request has been approved by the requested", requestId.intValue());
         notificationService.saveNotification((checkRequest.get().getRequestedUserId()), "You have approved request", requestId.intValue());
@@ -228,7 +229,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public boolean isThereCommonRequest(Long guestId, int hostId) {
-        if (!requestRepository.isThereCommonRequest(guestId, hostId)) {
+        if (requestRepository.isThereCommonRequest(guestId, hostId)) {
             throw new CustomException("No common request", HttpStatus.BAD_REQUEST);
         }
         return true;

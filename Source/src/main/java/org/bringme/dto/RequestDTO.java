@@ -1,5 +1,6 @@
 package org.bringme.dto;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -43,9 +44,7 @@ public class RequestDTO {
 
     // JSON Request CreateNewRequest constructor
     // TODO: Add currency to the entity to use it with price
-    public RequestDTO(Long requesterUserId, Long requestedUserId, Integer itemId, Integer tripId, String comments, float price) {
-        this.requesterUserId = requesterUserId;
-        this.requestedUserId = requestedUserId;
+    public RequestDTO( Integer itemId, Integer tripId, String comments, float price) {
         this.itemId = itemId;
         this.tripId = tripId;
         this.comments = comments;

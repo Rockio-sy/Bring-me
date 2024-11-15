@@ -1,6 +1,7 @@
 package org.bringme.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.bringme.dto.PersonDTO;
 import org.bringme.dto.RequestDTO;
 import org.bringme.model.Request;
@@ -22,6 +23,8 @@ public class RequestController {
     private final JwtService jwtService;
     private final PersonService personService;
 
+    // Trip --> 22 -- Tarek
+    // Item --> 25 -- Admin
 
     //TODO: Try this code after cleaning the code
     public RequestController(RequestService requestService, JwtService jwtService, PersonService personService) {
@@ -123,7 +126,7 @@ public class RequestController {
     }
 
     @GetMapping("/contact/{id}")
-    public ResponseEntity<HashMap<String, Object>> getUserDetails(@Valid @RequestHeader(value = "Authorization") String header, @Valid @PathVariable(value = "id") int hostId) {
+    public ResponseEntity<HashMap<String, Object>> getUserDetails(@Valid @RequestHeader(value = "Authorization") String header, @Positive @PathVariable(value = "id") int hostId) {
         HashMap<String, Object> responseMap = new HashMap<>();
         Long guestId = jwtService.extractUserIdAsLong(header.substring(7));
         requestService.isThereCommonRequest(guestId, hostId);

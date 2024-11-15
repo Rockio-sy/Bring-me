@@ -133,7 +133,7 @@ WHERE EXISTS (
     public boolean isThereCommonRequest(Long guestId, int hostId) {
         String sql = "SELECT TRUE " +
                 "WHERE EXISTS (" +
-                "SELECT 1 FROM requests " +  // Added space between "requests" and "WHERE"
+                "SELECT 1 FROM requests " +
                 "WHERE ((requester_user_id = ? AND requested_user_id = ?) " +
                 "OR (requester_user_id = ? AND requested_user_id = ?)) " +
                 "AND removed_at IS NULL " +

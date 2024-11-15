@@ -13,4 +13,6 @@ public interface AuthService {
     String generateToken(AuthLogin loginData);
 
     void isValidated(AuthLogin loginData);
+
+    void checkEmailAndPhone(String email, String phone);
 }

@@ -31,7 +31,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public String sendVerificationCode(String email) {
+    public void sendVerificationCode(String email) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper;
         String code = generateCode();
@@ -47,7 +47,6 @@ public class EmailServiceImpl implements EmailService {
         }
         // TODO: Do not forget to set the code for temporary period
         emailRepository.saveCode(email, code);
-        return code;
     }
 
     @Override

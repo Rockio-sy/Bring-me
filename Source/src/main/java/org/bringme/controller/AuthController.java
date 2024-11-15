@@ -22,18 +22,12 @@ public class AuthController {
         this.authService = authService;
     }
 
-    //TODO:Fix that the users cannot share one email or phone!
+    //TODO:Fix again that the users do not have same EMAIL or PHONE!
     @PostMapping("/signup")
     public ResponseEntity<HashMap<String, Object>> signUp(@RequestBody PersonDTO requestPerson) {
-        // Multi value map
         HashMap<String, Object> responseMap = new HashMap<>();
-
-        // Check if the user exists
-        authService.isExist(requestPerson.getEmail());
-
-        // Save new person in DB
+        authService.checkEmailAndPhone(requestPerson.getEmail(), requestPerson.getPhone());
         PersonDTO responsePerson = authService.signUp(requestPerson);
-
         responseMap.put("Message", "Person created successfully.");
         responseMap.put("Person", responsePerson);
         return new ResponseEntity<>(responseMap, HttpStatus.CREATED);

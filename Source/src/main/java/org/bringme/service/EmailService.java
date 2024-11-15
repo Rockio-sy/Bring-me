@@ -2,7 +2,7 @@ package org.bringme.service;
 
 public interface EmailService {
 
-    String sendVerificationCode(String email);
+    void sendVerificationCode(String email);
 
     void validateCode(String userInput, String email);
 

@@ -55,11 +55,12 @@ public class AuthServiceImpl implements AuthService {
         return requestPerson;
     }
 
+    // Specially for authentication!!
     @Override
     public void isExist(String emailOrPhone) {
         Optional<Person> person = authRepository.getByEmailOrPhone(emailOrPhone);
-        if (person.isEmpty()) {
-            throw new CustomException("User not found", HttpStatus.NOT_FOUND);
+        if (person.isPresent()) {
+            throw new CustomException("User already exist(used resources)", HttpStatus.CONFLICT);
         }
     }
 
@@ -97,6 +98,16 @@ public class AuthServiceImpl implements AuthService {
     public void isValidated(AuthLogin loginData) {
         if (!authRepository.isVerified(loginData.emailOrPhone())) {
             throw new CustomException("Email verification needed", HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @Override
+    public void checkEmailAndPhone(String email, String phone) {
+        if(authRepository.getByEmailOrPhone(email).isPresent()){
+            throw new CustomException("User already existed", HttpStatus.CONFLICT);
+        }
+        if(authRepository.getByEmailOrPhone(phone).isPresent()){
+            throw new CustomException("User already existed", HttpStatus.CONFLICT);
         }
     }
 }

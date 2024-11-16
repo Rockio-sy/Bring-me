@@ -1,9 +1,7 @@
 package org.bringme.repository.impl;
 
-import org.bringme.model.Item;
 import org.bringme.model.Rate;
 import org.bringme.repository.RateRepository;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -14,7 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class RateRepositoryImpl implements RateRepository {
@@ -51,20 +48,6 @@ public class RateRepositoryImpl implements RateRepository {
             return null;
         }
     }
-
-
-
-/*
-* CREATE TABLE rates(
-id SERIAL PRIMARY KEY,
-rated_user_id INT NOT NULL,
-request_id INT NOT NULL,
-rate_value INT
-comments TEXT DEFAULT '',
-created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-CONSTRAINT fk_user_id FOREIGN KEY (rated_user_id) REFERENCES persons(id) ON DELETE CASCADE,
-CONSTRAINT fk_request_id FOREIGN KEY (request_id) REFERENCES requests(id) ON DELETE CASCADE
-);*/
 
     public static final class RateRowMapper implements RowMapper<Rate> {
         @Override

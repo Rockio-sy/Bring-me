@@ -167,4 +167,17 @@ public class Converter {
         model.setContent(reportDTO.getContent());
         return model;
     }
+
+    public RateDTO rateToDTO(Rate r) {
+        return new RateDTO(r.getId(), r.getUserId(), r.getComments(), r.getValue(), r.getRequestId());
+    }
+
+    public Rate DTOtoRate(RateDTO r){
+        Rate model = new Rate();
+        model.setValue(r.value());
+        model.setComments(r.comment());
+        model.setRequestId(r.requestId());
+        model.setUserId(r.ratedUserId());
+        return model;
+    }
 }

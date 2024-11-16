@@ -35,6 +35,25 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.0</version> <!-- You can choose the latest version -->
+        </dependency>
+
+        <!-- Jackson Annotations (For annotations like @JsonIgnoreProperties, @JsonProperty, etc.) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.15.0</version> <!-- Latest version -->
+        </dependency>
+
+        <!-- Jackson Core (Required for Jackson core functionality) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.15.0</version> <!-- Latest version -->
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

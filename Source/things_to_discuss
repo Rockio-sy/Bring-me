@@ -1,1 +1,5 @@
-2_ In every controller, i have to write the function(endpoint) and annotate it with admin only
+1_ What i have to do for the database in my application ??
+2_ Since i use JDBC, should i create the database for testing again with the migration files that i have before ?
+3_ Which functions i have to test ?
+4_ Should i test the controller and service or controller ?
+5_ It is better to use Spring or just keep using java ?

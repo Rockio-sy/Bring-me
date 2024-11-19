@@ -19,7 +19,6 @@ public class ControllerAdvice {
         return new ResponseEntity<>(errorResponse, ex.getStatus());
     }
 
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<HashMap<String, Object>> handleGeneralException(Exception ex) {
         System.out.println(ex.getMessage());

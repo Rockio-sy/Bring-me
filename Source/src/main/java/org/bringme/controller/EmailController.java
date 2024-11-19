@@ -21,11 +21,9 @@ public class EmailController {
         this.emailService = emailService;
         this.personService = personService;
     }
-
-    @PostMapping("/code") // Check the line number in things_to_discuss
+    @PostMapping("/code")
     public ResponseEntity<HashMap<String, Object>> verifyEmail(@NotBlank(message = "Email cannot be empty") @RequestParam("email") String email, @NotBlank(message = "Code required") @RequestParam("code") String userInput) {
         HashMap<String, Object> responseMap = new HashMap<>();
-
         emailService.validateCode(userInput, email);
         responseMap.put("Message", "Account verified.");
         return new ResponseEntity<>(responseMap, HttpStatus.OK);

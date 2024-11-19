@@ -53,7 +53,6 @@ public class PersonServiceImpl implements PersonService {
         return response;
     }
 
-
     @Override
     public PersonDTO getByEmail(String email) {
         Optional<Person> person = personRepository.getByEmail(email);
@@ -78,18 +77,15 @@ public class PersonServiceImpl implements PersonService {
 
         String encodedNewPassword = passwordEncoder.encode(newPassword);
 
-        int check = personRepository.updatePassword(userId, encodedNewPassword);
-
-        if (check <= 0) {
+        if (personRepository.updatePassword(userId, encodedNewPassword) <= 0) {
             throw new CustomException("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     @Override
     public PersonDTO showPersonDetails(int hostId) {
         Optional<Person> data = personRepository.getById(Integer.toUnsignedLong(hostId));
-        if(data.isEmpty()){
+        if (data.isEmpty()) {
             throw new CustomException("User not found", HttpStatus.NOT_FOUND);
         }
         return converter.personToDetails(data.get());
@@ -102,6 +98,9 @@ public class PersonServiceImpl implements PersonService {
         model.setPassword(passwordEncoder.encode(newUser.getPassword()));
 
         Long id = personRepository.save(model);
+        if (id == null) {
+            throw new CustomException("Failed creating new user", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
         newUser.setId(id);
         return newUser;

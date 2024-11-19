@@ -8,6 +8,7 @@ import org.bringme.repository.RateRepository;
 import org.bringme.utils.Converter;
 import org.bringme.service.exceptions.CustomException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

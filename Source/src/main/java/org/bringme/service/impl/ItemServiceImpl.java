@@ -1,14 +1,15 @@
 package org.bringme.service.impl;
 
+import jakarta.websocket.EncodeException;
 import org.bringme.dto.ItemDTO;
 import org.bringme.model.Item;
 import org.bringme.repository.ItemRepository;
 import org.bringme.service.ItemService;
 import org.bringme.service.exceptions.CustomException;
 import org.bringme.utils.Converter;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -92,26 +93,31 @@ public class ItemServiceImpl implements ItemService {
             responseItemDTO.setId(generatedId);
 
             return responseItemDTO;
-        } catch (Exception e) {
-            throw new CustomException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            //TODO: Catch spec Exception and throw the compatible message for it
+        } catch (IOException e) {
+            throw new CustomException("Failed create item : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NullPointerException e) {
+            throw new CustomException("image not found: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (StringIndexOutOfBoundsException e) {
+            throw new CustomException("Image format error: " + e.getMessage(), HttpStatus.UNSUPPORTED_MEDIA_TYPE);
         }
     }
 
     @Override
     public String saveTempFile(MultipartFile image) {
         try {
-            // Extract the extension
-            String originalFileName = Objects.requireNonNull(image.getOriginalFilename());
-            String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-            // Change the file name to TEMPORARY
+            String extension = extractExtension(image);
+            // Generate file name
             String fileName = "TEMP_" + UUID.randomUUID() + "_" + System.currentTimeMillis() + extension;
-            // Create path to the file
-            String filePath = uploadDir + File.separator + fileName;
-            // Copy the file
+            // Create file path
+            String filePath = Paths.get(uploadDir, fileName).toString();
+            // Write file
             Files.write(Paths.get(filePath), image.getBytes());
             return fileName;
         } catch (IOException e) {
-            throw new CustomException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomException("Failed to save file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IllegalStateException e) {
+            throw new CustomException("Upload directory issue: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -134,9 +140,9 @@ public class ItemServiceImpl implements ItemService {
     public void checkInput(ItemDTO requestItem) {
         if (requestItem.getLength() <= 0 || requestItem.getWeight() <= 0 || requestItem.getHeight() <= 0
                 || requestItem.getLength() > 2 || requestItem.getWeight() > 5 || requestItem.getHeight() > 2
-                || requestItem.getOrigin() == requestItem.getDestination() || requestItem.getUser_id() == 0
-                || requestItem.getOrigin() == 0 || requestItem.getDestination() == 0) {
-            throw new CustomException("Invalid input", HttpStatus.UNPROCESSABLE_ENTITY);
+                || requestItem.getOrigin() == requestItem.getDestination() || requestItem.getUser_id() <= 0
+                || requestItem.getOrigin() <= 0 || requestItem.getDestination() <= 0) {
+            throw new CustomException("Invalid input", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -168,6 +174,23 @@ public class ItemServiceImpl implements ItemService {
         }
 
         return tempFileName;
+    }
+
+    @NotNull
+    private String extractExtension(MultipartFile image) {
+        assert uploadDir != null && !uploadDir.trim().isEmpty() : "Upload directory is not configured.";
+        String extension;
+        // Extract the extension
+        try {
+            String originalFileName = Objects.requireNonNull(image.getOriginalFilename());
+            extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+        } catch (StringIndexOutOfBoundsException e) {
+            throw new CustomException("File format error", HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        if (!(extension.equals(".png")) && !(extension.equals(".jpeg")) && !(extension.equals("jpg"))) {
+            throw new CustomException("Image only", HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+        }
+        return extension;
     }
 
 }

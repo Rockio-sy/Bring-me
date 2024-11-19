@@ -10,8 +10,6 @@ import java.util.List;
 
 @RestController
 public class CountryController {
-
-
     private final CountryService countryService;
 
     public CountryController(CountryService countryService) {
@@ -21,7 +19,6 @@ public class CountryController {
     // Define the endpoint to get the list of countries
     @GetMapping("/api/countries")
     public List<Country> getCountries() {
-        // Call the service to get the list of countries
         return countryService.getCountries();
     }
 }

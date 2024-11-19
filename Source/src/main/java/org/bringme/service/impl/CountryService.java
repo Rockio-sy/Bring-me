@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class CountryService {
     public List<Country> getCountries(){
-        // Load the JSON file from the resources folder
         try {
             InputStream inputStream = new ClassPathResource("countries.json").getInputStream();
 

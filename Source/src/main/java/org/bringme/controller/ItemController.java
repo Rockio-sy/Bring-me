@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/bring-me/items")
 public class ItemController {
@@ -43,7 +42,6 @@ public class ItemController {
         responseMap.put("Item", responseDTO);
         responseMap.put("Message", "Item created successfully.");
         return new ResponseEntity<>(responseMap, HttpStatus.CREATED);
-
     }
 
     @PostMapping(value = "/new/upload-photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

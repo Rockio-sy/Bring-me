@@ -1,13 +1,14 @@
 package org.bringme.service.impl;
 
-import jakarta.mail.Multipart;
 import org.bringme.dto.ItemDTO;
 import org.bringme.model.Item;
 import org.bringme.repository.ItemRepository;
 import org.bringme.service.exceptions.CustomException;
 import org.bringme.utils.Converter;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -25,6 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(TestWatchersExtension.class)
 public class ItemServiceImplTest {
 
     private final String uploadDir = "/home/rockio/مخصص/Bring-me/Source/src/main/resources/photos";
@@ -42,6 +44,8 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    // TODO: Write the name for all tests
+    @DisplayName("Given valid multipart file, when save temp file, then return file name")
     void givenValidMultipartFile_whenSaveTempFile_thenReturnFileName() throws IOException {
         // Arrange
         MultipartFile mockFile = mock(MultipartFile.class);
@@ -241,7 +245,6 @@ public class ItemServiceImplTest {
         assertEquals("Invalid input", ex.getMessage());
         assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
     }
-
 
     @Test
     void givenSameDirections_whenCheckInput_ReturnInvalidInputException() {

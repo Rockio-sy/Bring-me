@@ -68,7 +68,7 @@ public class ReportRepositoryImpl implements ReportRepository {
     }
 
     @Override
-    public Optional<Report> isAnswered(Long reportId) {
+    public Optional<Report> getById(Long reportId) {
         String sql = "SELECT * FROM reports WHERE id = ?";
         return jdbcTemplate.query(sql, new ReportRowMapper(), reportId).stream().findFirst();
     }

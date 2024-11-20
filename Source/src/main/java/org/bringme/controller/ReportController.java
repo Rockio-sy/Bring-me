@@ -1,16 +1,14 @@
 package org.bringme.controller;
 
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import org.bringme.dto.ReportDTO;
 import org.bringme.service.ReportService;
 import org.bringme.service.impl.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.service.invoker.HttpServiceArgumentResolver;
 
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +66,7 @@ public class ReportController {
     }
 
     @PutMapping("/a/answer")
-    public ResponseEntity<HashMap<String, Object>> answerReport(@RequestHeader(value = "Authorization") String header, @RequestParam("id") Long reportId, @RequestParam("answer") String answer) {
+    public ResponseEntity<HashMap<String, Object>> answerReport(@Valid @RequestHeader(value = "Authorization") String header, @Positive @RequestParam("id") Long reportId, @NotBlank @RequestParam("answer") String answer) {
         Long adminId = jwtService.extractUserIdAsLong(header.substring(7));
         reportService.answerReport(adminId, reportId, answer);
         HashMap<String, Object> responseMap = new HashMap<>();

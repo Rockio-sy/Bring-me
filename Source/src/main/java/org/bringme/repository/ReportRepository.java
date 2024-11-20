@@ -14,7 +14,7 @@ public interface ReportRepository {
 
     Optional<Report> getSpecific(Long id);
 
-    Optional<Report> isAnswered(Long reportId);
+    Optional<Report> getById(Long reportId);
 
     void answerReport(Long reportId, Long adminId, String answer);
 

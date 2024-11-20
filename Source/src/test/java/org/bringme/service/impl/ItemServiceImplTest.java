@@ -124,7 +124,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
-    void givenItemWitNullImage_whenSaveItem_thenReturnNotFoundException() throws IOException {
+    void givenItemWitNullImage_whenSaveItem_thenReturnNotFoundException() {
 
         ItemDTO dto = new ItemDTO("Test_name", 1, 3, 2, 2, 2, "No com", "Address", null, 1L);
         when(converter.DTOtoItem(dto)).thenReturn(new Item()); // Stub the DTO to Item conversion
@@ -137,7 +137,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
-    void givenItemWithoutValidImage_whenSaveItem_thenReturnImageFormatException() throws IOException {
+    void givenItemWithoutValidImage_whenSaveItem_thenReturnImageFormatException() {
 
         ItemDTO dto = new ItemDTO("Test_name", 1, 3, 2, 2, 2, "No com", "Address", "ada", 1L);
         when(converter.DTOtoItem(dto)).thenReturn(new Item()); // Stub the DTO to Item conversion
@@ -269,14 +269,12 @@ public class ItemServiceImplTest {
         assertEquals("Invalid input", ex.getMessage());
         assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
     }
-    
+
     @Test
-    void givenThreeHeight_whenCheckInput_ReturnInvalidInputException(){
+    void givenThreeHeight_whenCheckInput_ReturnInvalidInputException() {
         ItemDTO dto = new ItemDTO("test", 2, 2, 2, 3, 2, "no comment", "add", null, 1L);
         CustomException ex = assertThrows(CustomException.class, () -> itemService.checkInput(dto));
         assertEquals("Invalid input", ex.getMessage());
         assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
     }
-    
-
 }

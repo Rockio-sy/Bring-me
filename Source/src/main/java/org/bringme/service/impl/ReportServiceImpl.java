@@ -42,7 +42,7 @@ public class ReportServiceImpl implements ReportService {
 
         if (!(userID.intValue() == (requestModel.get().getRequesterUserId())
                 || userID.intValue() == (requestModel.get().getRequestedUserId()))) {
-            throw new CustomException("User doesn't belong to this request", HttpStatus.BAD_REQUEST);
+            throw new CustomException("User doesn't belong to this request", HttpStatus.FORBIDDEN);
         }
         return true;
     }
@@ -52,8 +52,10 @@ public class ReportServiceImpl implements ReportService {
         Long requestId = Integer.toUnsignedLong(form.getRequestId());
         Optional<Request> requestModel = requestRepository.getRequestById(requestId);
 
-
         // Extract reporter and reported users
+        if (requestModel.isEmpty()) {
+            throw new CustomException("Request not found", HttpStatus.BAD_REQUEST);
+        }
         var request = requestModel.get();
         int reporter;
         int reported;
@@ -64,13 +66,13 @@ public class ReportServiceImpl implements ReportService {
             reporter = userID.intValue();
             reported = request.getRequestedUserId();
         }
+
         // Save report in database
         Report model = new Report(requestId.intValue(), reporter, reported, form.getContent());
         Long reportId = reportRepository.save(model);
         if (reportId == null) {
             throw new CustomException("Error creating the report", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
         model.setId(reportId);
         return converter.reportToDTO(model);
     }
@@ -114,11 +116,11 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public void answerReport(Long adminId, Long reportId, String answer) {
-        Optional<Report> check = reportRepository.isAnswered(reportId);
+        Optional<Report> check = reportRepository.getById(reportId);
         if (check.isEmpty()) {
             throw new CustomException("Report doesn't exist", HttpStatus.NOT_FOUND);
         }
-        if (check.get().getAnswer().isEmpty()) {
+        if (!(check.get().getAnswer().isEmpty())) {
             throw new CustomException("Report already answered", HttpStatus.FORBIDDEN);
         }
         reportRepository.answerReport(reportId, adminId, answer);

@@ -15,7 +15,9 @@ public class Trip {
     private Long passengerId;
 
     public Trip(){}
-    public Trip(Long id, int origin, int destination, String destinationAirport, float emptyWeight, LocalDateTime arrivalTime, LocalDateTime departureTime, boolean transit, String comments, Long passengerId) {
+    public Trip(Long id, int origin, int destination, String destinationAirport, float emptyWeight,
+                LocalDateTime arrivalTime, LocalDateTime departureTime, boolean transit,
+                String comments, Long passengerId) {
         this.id = id;
         this.origin = origin;
         this.destination = destination;

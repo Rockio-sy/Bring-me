@@ -57,17 +57,18 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    //TODO: Test required
     public RequestDTO saveRequest(RequestDTO request) {
 
         // get item, trip and requested user id
         Optional<Item> item = itemRepository.getById(request.getItemId().longValue());
         Optional<Trip> trip = tripRepository.getById(request.getTripId().longValue());
         if (item.isEmpty() || trip.isEmpty()) {
-            throw new CustomException("No enough sources to create the request", HttpStatus.BAD_REQUEST);
+            throw new CustomException("Item or trip are not found", HttpStatus.FORBIDDEN);
         }
 
-        if (item.get().getOrigin() != item.get().getOrigin() || item.get().getDestination() != item.get().getDestination()) {
-            throw new CustomException("Directions are not compatible", HttpStatus.BAD_REQUEST);
+        if (item.get().getOrigin() != trip.get().getOrigin() || item.get().getDestination() != trip.get().getDestination()) {
+            throw new CustomException("Directions are incompatible", HttpStatus.FORBIDDEN);
         }
 
         // Set values of requested user id, trip and item to save in the database
@@ -97,6 +98,33 @@ public class RequestServiceImpl implements RequestService {
         responseRequest.setId(generatedId);
 
         return responseRequest;
+    }
+
+    @Override
+    //TODO: Test required
+    public void approveRequest(Long userId, Long requestId) {
+        Optional<Request> checkRequest = requestRepository.getRequestById(requestId);
+        if (checkRequest.isEmpty()) {
+            throw new CustomException("Request not found", HttpStatus.BAD_REQUEST);
+        }
+        // Check if the user is the requested
+        if (!checkRequest.get().getRequestedUserId().equals(userId.intValue())) {
+            throw new CustomException("Current user is not the requested user", HttpStatus.BAD_REQUEST);
+        }
+        requestRepository.approveRequest(requestId);
+
+        emailService.sendEmail("You have approved request.\nRequest will be closed after 30 days" +
+                        "\nFrom:" + checkRequest.get().getOrigin() + "\nTo:" + checkRequest.get().getDestination()
+                , "Approvement"
+                , (checkRequest.get().getRequestedUserId().longValue()));
+
+        emailService.sendEmail("Your request has been approved by the requested, request will be closed after 30 days\n"
+                , "Approvement"
+                , (checkRequest.get().getRequesterUserId()).longValue());
+
+
+        notificationService.saveNotification((checkRequest.get().getRequesterUserId()), "Your request has been approved by the requested", requestId.intValue());
+        notificationService.saveNotification((checkRequest.get().getRequestedUserId()), "You have approved request", requestId.intValue());
     }
 
     @Override
@@ -163,31 +191,6 @@ public class RequestServiceImpl implements RequestService {
         return response;
     }
 
-    @Override
-    public void approveRequest(Long userId, Long requestId) {
-        Optional<Request> checkRequest = requestRepository.getRequestById(requestId);
-        if (checkRequest.isEmpty()) {
-            throw new CustomException("Request not found", HttpStatus.BAD_REQUEST);
-        }
-        // Check if the user is the requested
-        if (!checkRequest.get().getRequestedUserId().equals(userId.intValue())) {
-            throw new CustomException("Current user is not the requested user", HttpStatus.BAD_REQUEST);
-        }
-        requestRepository.approveRequest(requestId);
-
-        emailService.sendEmail("You have approved request.\nRequest will be closed after 30 days" +
-                        "\nFrom:" + checkRequest.get().getOrigin() + "\nTo:" + checkRequest.get().getDestination()
-                , "Approvement"
-                , (checkRequest.get().getRequestedUserId().longValue()));
-
-        emailService.sendEmail("Your request has been approved by the requested, request will be closed after 30 days\n"
-                , "Approvement"
-                , (checkRequest.get().getRequesterUserId()).longValue());
-
-
-        notificationService.saveNotification((checkRequest.get().getRequesterUserId()), "Your request has been approved by the requested", requestId.intValue());
-        notificationService.saveNotification((checkRequest.get().getRequestedUserId()), "You have approved request", requestId.intValue());
-    }
 
     @Override
     public List<RequestDTO> filterByApprovement(Long userId) {

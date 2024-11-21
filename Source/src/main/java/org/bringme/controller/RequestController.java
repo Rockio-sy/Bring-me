@@ -49,7 +49,7 @@ public class RequestController {
         // Multi value map
         HashMap<String, Object> responseMap = new HashMap<>();
 
-        // Check if exists
+        // Check if request exists
         requestService.isExist(request.getItemId(), request.getTripId());
 
         // getting requester user id from token

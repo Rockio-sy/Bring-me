@@ -49,8 +49,6 @@ public class RateServiceImpl implements RateService {
     @Override
     public void checkRatingAvailability(Long userId, int ratedUserId) {
         if(!requestRepository.isThereCommonRequest(userId, ratedUserId)){
-            System.out.println("HERE");
-            System.out.println("Current: "+userId +"\nRated: "+ ratedUserId);
             throw new CustomException("No common requests", HttpStatus.BAD_REQUEST);
         }
     }

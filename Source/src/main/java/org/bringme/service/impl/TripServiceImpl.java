@@ -27,9 +27,9 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public TripDTO saveTrip(TripDTO requestTrip) {
+    public TripDTO saveTrip(TripDTO tripDto) {
         // Convert to Trip model
-        Trip newTrip = converter.DTOtoTrip(requestTrip);
+        Trip newTrip = converter.DTOtoTrip(tripDto);
 
         Long generatedId = tripRepository.saveTrip(newTrip);
         if (generatedId == null) {
@@ -73,6 +73,7 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    //TODO: to be tested
     public void validateTrip(TripDTO requestTrip) {
 
         // 1. Check if origin and destination are the same
@@ -96,13 +97,8 @@ public class TripServiceImpl implements TripService {
             throw new CustomException("Arrival time cannot be before departure time.", HttpStatus.BAD_REQUEST);
         }
 
-        // 6. Check if flight has a minimum duration (e.g., at least 30 minutes)
+        // 6. Optional: Ensure flights on the same day are at least 4 hours apart
         Duration flightDuration = Duration.between(requestTrip.getDepartureTime(), requestTrip.getArrivalTime());
-        if (flightDuration.toMinutes() < 30) {
-            throw new CustomException("Flight duration must be at least 30 minutes.", HttpStatus.BAD_REQUEST);
-        }
-
-        // 7. Optional: Ensure flights on the same day are at least 4 hours apart
         if (requestTrip.getDepartureTime().toLocalDate().equals(requestTrip.getArrivalTime().toLocalDate())
                 && flightDuration.toHours() < 4) {
             throw new CustomException("Flights on the same day must be at least 4 hours long.", HttpStatus.BAD_REQUEST);

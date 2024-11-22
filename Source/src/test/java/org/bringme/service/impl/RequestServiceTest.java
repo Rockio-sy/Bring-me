@@ -61,7 +61,7 @@ public class RequestServiceTest {
         Request model = new Request(1L, 1, 1, 1, 1, 1, 2, "No comment", false, 0.1F);
         Item item = new Item(1L, "test", 1, 2, 2, 2, 2, "Comment", "Address", "photoURL", 1L);
         Trip trip = new Trip(1L, 1, 2, "Airport", 2,
-                LocalDateTime.of(2024, Month.APRIL, 3, 13, 43),
+                LocalDateTime.of(2026, Month.APRIL, 3, 13, 43),
                 LocalDateTime.of(2025, Month.APRIL, 3, 13, 43),
                 false, "No comment", 1L);
 

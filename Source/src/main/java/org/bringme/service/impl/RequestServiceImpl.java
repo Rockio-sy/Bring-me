@@ -57,7 +57,6 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    //TODO: Test required
     public RequestDTO saveRequest(RequestDTO request) {
 
         // get item, trip and requested user id
@@ -101,7 +100,6 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    //TODO: Test required
     public void approveRequest(Long userId, Long requestId) {
         Optional<Request> checkRequest = requestRepository.getRequestById(requestId);
         if (checkRequest.isEmpty()) {

@@ -44,8 +44,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
-    // TODO: Write the name for all tests
-    @DisplayName("Given valid multipart file, when save temp file, then return file name")
+    @DisplayName("Given valid multipart file, when saveTempFile, then return file name")
     void givenValidMultipartFile_whenSaveTempFile_thenReturnFileName() throws IOException {
         // Arrange
         MultipartFile mockFile = mock(MultipartFile.class);
@@ -72,7 +71,9 @@ public class ItemServiceImplTest {
         Files.deleteIfExists(savedFilePath);
     }
 
+
     @Test
+    @DisplayName("Given multipart file without extension, when saving temp file, then return FormatException")
     void givenMultipartFileWithoutExtension_whenSaveTempFile_thenReturnFormatException() throws IOException {
         MultipartFile mockFile = mock(MultipartFile.class);
         String originalFileName = "test_image";
@@ -87,6 +88,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DisplayName("Given multipart file with invalid format, when saving temp file, then return TypeException")
     void givenMultipartFileWitInvalidFormat_whenSaveTempFile_thenReturnTypeException() throws IOException {
         // Arrange
         MultipartFile mockFile = mock(MultipartFile.class);
@@ -102,6 +104,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DisplayName("Given valid item, when saving item, then return ItemDTO")
     void givenValidItem_whenSaveItem_thenReturnItemDTO() throws IOException {
 
         MultipartFile mockFile = mock(MultipartFile.class);
@@ -124,6 +127,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DisplayName("Given item with null image, when saving item, then return NotFoundException")
     void givenItemWitNullImage_whenSaveItem_thenReturnNotFoundException() {
 
         ItemDTO dto = new ItemDTO("Test_name", 1, 3, 2, 2, 2, "No com", "Address", null, 1L);
@@ -137,6 +141,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DisplayName("Given item without valid image, when saving item, then return ImageFormatException")
     void givenItemWithoutValidImage_whenSaveItem_thenReturnImageFormatException() {
 
         ItemDTO dto = new ItemDTO("Test_name", 1, 3, 2, 2, 2, "No com", "Address", "ada", 1L);
@@ -150,6 +155,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DisplayName("Given negative origin, when checking input, then return InvalidInputException")
     void givenNegativeOrigin_whenCheckInput_ReturnInvalidInputException() {
         ItemDTO dto = new ItemDTO("test", -1, 2, 2, 2, 2, "no comment", "add", null, 1L);
         CustomException ex = assertThrows(CustomException.class, () -> itemService.checkInput(dto));
@@ -158,6 +164,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DisplayName("Given negative destination, when checking input, then return InvalidInputException")
     void givenNegativeDestination_whenCheckInput_ReturnInvalidInputException() {
         ItemDTO dto = new ItemDTO("test", 4, -2, 2, 2, 2, "no comment", "add", null, 1L);
         CustomException ex = assertThrows(CustomException.class, () -> itemService.checkInput(dto));
@@ -166,6 +173,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DisplayName("Given negative weight, when checking input, then return InvalidInputException")
     void givenNegativeWeight_whenCheckInput_ReturnInvalidInputException() {
         ItemDTO dto = new ItemDTO("test", 4, 2, -2, 2, 2, "no comment", "add", null, 1L);
         CustomException ex = assertThrows(CustomException.class, () -> itemService.checkInput(dto));
@@ -174,6 +182,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DisplayName("Given negative height, when checking input, then return InvalidInputException")
     void givenNegativeHeight_whenCheckInput_ReturnInvalidInputException() {
         ItemDTO dto = new ItemDTO("test", 4, 2, 2, -2, 2, "no comment", "add", null, 1L);
         CustomException ex = assertThrows(CustomException.class, () -> itemService.checkInput(dto));
@@ -182,6 +191,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DisplayName("Given negative length, when checking input, then return InvalidInputException")
     void givenNegativeLength_whenCheckInput_ReturnInvalidInputException() {
         ItemDTO dto = new ItemDTO("test", 4, 2, 2, 2, -2, "no comment", "add", null, 1L);
         CustomException ex = assertThrows(CustomException.class, () -> itemService.checkInput(dto));
@@ -190,6 +200,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DisplayName("Given negative user id, when checking input, then return InvalidInputException")
     void givenNegativeUserId_whenCheckInput_ReturnInvalidInputException() {
         ItemDTO dto = new ItemDTO("test", 2, 2, 2, 2, 2, "no comment", "add", null, -2L);
         CustomException ex = assertThrows(CustomException.class, () -> itemService.checkInput(dto));
@@ -199,6 +210,7 @@ public class ItemServiceImplTest {
 
 
     @Test
+    @DisplayName("Given zero origin, when checking input, then return InvalidInputException")
     void givenZeroOrigin_whenCheckInput_ReturnInvalidInputException() {
         ItemDTO dto = new ItemDTO("test", 0, 2, 2, 2, 2, "no comment", "add", null, 1L);
         CustomException ex = assertThrows(CustomException.class, () -> itemService.checkInput(dto));
@@ -207,6 +219,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DisplayName("Given zero destination, when checking input, then return InvalidInputException")
     void givenZeroDestination_whenCheckInput_ReturnInvalidInputException() {
         ItemDTO dto = new ItemDTO("test", 2, 0, 2, 2, 2, "no comment", "add", null, 1L);
         CustomException ex = assertThrows(CustomException.class, () -> itemService.checkInput(dto));
@@ -215,6 +228,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DisplayName("Given zero weight, when checking input, then return InvalidInputException")
     void givenZeroWeight_whenCheckInput_ReturnInvalidInputException() {
         ItemDTO dto = new ItemDTO("test", 2, 2, 0, 2, 2, "no comment", "add", null, 1L);
         CustomException ex = assertThrows(CustomException.class, () -> itemService.checkInput(dto));
@@ -223,6 +237,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DisplayName("Given zero height, when checking input, then return InvalidInputException")
     void givenZeroHeight_whenCheckInput_ReturnInvalidInputException() {
         ItemDTO dto = new ItemDTO("test", 2, 2, 2, 0, 2, "no comment", "add", null, 1L);
         CustomException ex = assertThrows(CustomException.class, () -> itemService.checkInput(dto));
@@ -231,6 +246,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DisplayName("Given zero length, when checking input, then return InvalidInputException")
     void givenZeroLength_whenCheckInput_ReturnInvalidInputException() {
         ItemDTO dto = new ItemDTO("test", 2, 2, 2, 2, 0, "no comment", "add", null, 1L);
         CustomException ex = assertThrows(CustomException.class, () -> itemService.checkInput(dto));
@@ -239,6 +255,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DisplayName("Given zero user id, when checking input, then return InvalidInputException")
     void givenZeroUserId_whenCheckInput_ReturnInvalidInputException() {
         ItemDTO dto = new ItemDTO("test", 2, 2, 2, 2, 2, "no comment", "add", null, 0L);
         CustomException ex = assertThrows(CustomException.class, () -> itemService.checkInput(dto));
@@ -247,6 +264,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DisplayName("Given same directions, when checking input, then return InvalidInputException")
     void givenSameDirections_whenCheckInput_ReturnInvalidInputException() {
         ItemDTO dto = new ItemDTO("test", 1, 1, 2, 2, 2, "no comment", "add", null, 1L);
         CustomException ex = assertThrows(CustomException.class, () -> itemService.checkInput(dto));
@@ -255,6 +273,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DisplayName("Given three length, when checkInput, then return 'Invalid input' exception.")
     void givenThreeLength_whenCheckInput_ReturnInvalidInputException() {
         ItemDTO dto = new ItemDTO("test", 2, 2, 2, 2, 3, "no comment", "add", null, 1L);
         CustomException ex = assertThrows(CustomException.class, () -> itemService.checkInput(dto));
@@ -263,6 +282,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DisplayName("Given six weight, when checkInput, then return 'Invalid input' exception.")
     void givenSixWeight_whenCheckInput_ReturnInvalidInputException() {
         ItemDTO dto = new ItemDTO("test", 2, 2, 6, 2, 2, "no comment", "add", null, 1L);
         CustomException ex = assertThrows(CustomException.class, () -> itemService.checkInput(dto));
@@ -271,6 +291,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DisplayName("Given three length, when checking input, then return 'Invalid Input ' exception.")
     void givenThreeHeight_whenCheckInput_ReturnInvalidInputException() {
         ItemDTO dto = new ItemDTO("test", 2, 2, 2, 3, 2, "no comment", "add", null, 1L);
         CustomException ex = assertThrows(CustomException.class, () -> itemService.checkInput(dto));

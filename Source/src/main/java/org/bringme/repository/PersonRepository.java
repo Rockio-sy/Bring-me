@@ -19,5 +19,7 @@ public interface PersonRepository {
 
     Long save(Person model);
 
+    void unBandUser(Long id);
+
     void bandUser(int id);
 }

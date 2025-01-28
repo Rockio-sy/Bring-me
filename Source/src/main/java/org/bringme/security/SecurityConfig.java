@@ -2,10 +2,8 @@ package org.bringme.security;
 
 
 import org.bringme.filter.JwtFilter;
-import org.bringme.model.AuthUserDetails;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -40,9 +38,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/bring-me/auth/signup", "/bring-me/auth/login",
                                 "/bring-me/trips/all", "/bring-me/trips/filter/**", "/bring-me/trips/show/**", "/bring-me/items/all", "/bring-me/ver/**", "/bring-me/items/show/**", "/bring-me/items/filter/**").permitAll()
-                                .requestMatchers("/bring-me/p/a/**", "/bring-me/report/a/**").hasRole("ADMIN")
-                                .anyRequest().authenticated()
-                        )
+                        .requestMatchers("/bring-me/p/a/**", "/bring-me/report/a/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                )
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -58,12 +56,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

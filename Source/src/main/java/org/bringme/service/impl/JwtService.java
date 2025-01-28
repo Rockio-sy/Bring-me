@@ -73,20 +73,25 @@ public class JwtService {
                     .parser()
                     .verifyWith(getKey())
                     .build().parseSignedClaims(token).getPayload();
-        } catch (SignatureException e) {
-            throw new SignatureException("Invalid Signature");
-        } catch (MalformedJwtException e) {
-            throw new MalformedJwtException("Invalid token");
-        } catch (ExpiredJwtException e) {
-            throw new CustomException("Expired token", HttpStatus.UNAUTHORIZED);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Claims are empty");
-        } catch (UnsupportedJwtException e) {
-            throw new UnsupportedJwtException("Unsupported token");
+        } catch (JwtException | IllegalArgumentException e) {
+            // Catch all JWT related exceptions (like SignatureException, MalformedJwtException, etc.)
+            String errorMessage = "JWT Processing error";
+            if (e instanceof SignatureException) {
+                errorMessage = "Invalid Signature";
+            } else if (e instanceof MalformedJwtException) {
+                errorMessage = "Invalid token";
+            } else if (e instanceof ExpiredJwtException) {
+                errorMessage = "Expired token";
+            } else if (e instanceof UnsupportedJwtException) {
+                errorMessage = "Unsupported token";
+            } else if (e instanceof IllegalArgumentException) {
+                errorMessage = "Claims are empty";
+            }
+            throw new CustomException(errorMessage, HttpStatus.UNAUTHORIZED);
         }
     }
 
-    public String extractEmailOrPhone(String token) {
+            public String extractEmailOrPhone(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 

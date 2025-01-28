@@ -114,4 +114,9 @@ public class PersonServiceImpl implements PersonService {
         }
         personRepository.bandUser(userId);
     }
+    @Override
+    public void unBandUser(Long id){
+        // Needs contact with the user to get the ID, so the user always exist
+        personRepository.unBandUser(id);
+    }
 }

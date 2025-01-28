@@ -1,0 +1,1 @@
+ALTER TABLE requests ALTER COLUMN approvement_statue SET DEFAULT false;

@@ -38,12 +38,16 @@ public class AuthUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        String role = person.getRole();
+        if (role == null || role.isEmpty()) {
+            role = "USER";
+        }
         return List.of(new SimpleGrantedAuthority("ROLE_" + person.getRole().toUpperCase()));
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return person.getAccountStatus() == 1;
     }
 
     @Override

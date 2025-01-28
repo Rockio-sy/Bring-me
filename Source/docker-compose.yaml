@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      FLYWAY_MIGRATION_FILE: ${FLYWAY_MIGRATION_FILE}
+      FILE_UPLOAD_DIR: ${FILE_UPLOAD_DIR}
+      JWT_KEY : ${JWT_KEY}
+      EMAIL_HOST : ${EMAIL_HOST}
+      EMAIL_PORT : ${EMAIL_PORT}
+      EMAIL_USERNAME : ${EMAIL_USERNAME}
+      EMAIL_PASSWORD : ${EMAIL_PASSWORD}
+      DATA_SOURCE_URL : ${DATA_SOURCE_URL_DB}
+      DATA_SOURCE_USER: ${DATA_SOURCE_USER}
+      DATA_SOURCE_PASSWORD: ${DATA_SOURCE_PASSWORD}
+      DATA_SOURCE_NAME: ${DATA_SOURCE_NAME}
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_USER: ${DATA_SOURCE_USER}
+      POSTGRES_PASSWORD: ${DATA_SOURCE_PASSWORD}
+      POSTGRES_DB: ${DATA_SOURCE_NAME}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+networks:
+  app-network:
+
+volumes:
+  postgres_data:

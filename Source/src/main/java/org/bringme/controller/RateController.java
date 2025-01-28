@@ -6,6 +6,7 @@ import org.bringme.service.RateService;
 import org.bringme.service.impl.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -31,7 +32,7 @@ public class RateController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<HashMap<String, Object>> createNewRate(@RequestHeader(value = "Authorization") String header, @Valid @RequestBody RateDTO rate) {
+    public ResponseEntity<HashMap<String, Object>> createNewRate(@RequestHeader(value = "Authorization") String header, @Validated @RequestBody RateDTO rate) {
         HashMap<String, Object> response = new HashMap<>();
         Long userId = jwtService.extractUserIdAsLong(header.substring(7));
         rateService.checkRatingAvailability(userId, rate.ratedUserId());

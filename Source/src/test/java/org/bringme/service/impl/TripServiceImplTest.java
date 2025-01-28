@@ -188,8 +188,8 @@ class TripServiceImplTest {
     @DisplayName("Given a TripDTO with incompatible minutes, when validateTrip, then return 'Departure time cannot be in the past.' exception")
     void givenTripWithIncompatibleMinutes_whenValidateTrip_thenReturnDepartureTimeCannotBeInThePastException() {
         TripDTO dto = new TripDTO(2L, 1, 2, "Airport", 3,
-                LocalDateTime.of(2024, Month.DECEMBER, 3, 16, 0),
-                LocalDateTime.of(2024, Month.DECEMBER, 3, 13, 0),
+                LocalDateTime.of(2029, Month.DECEMBER, 3, 16, 0),
+                LocalDateTime.of(2029, Month.DECEMBER, 3, 13, 0),
                 false, "No comment", 1L);
 
         CustomException ex = assertThrows(CustomException.class, () -> tripService.validateTrip(dto));

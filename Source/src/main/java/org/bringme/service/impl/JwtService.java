@@ -74,7 +74,6 @@ public class JwtService {
                     .verifyWith(getKey())
                     .build().parseSignedClaims(token).getPayload();
         } catch (JwtException | IllegalArgumentException e) {
-            // Catch all JWT related exceptions (like SignatureException, MalformedJwtException, etc.)
             String errorMessage = "JWT Processing error";
             if (e instanceof SignatureException) {
                 errorMessage = "Invalid Signature";

@@ -2,6 +2,7 @@ package org.bringme.repository.impl;
 
 import org.bringme.model.Trip;
 import org.bringme.repository.TripRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -65,11 +66,29 @@ public class TripRepositoryImpl implements TripRepository {
     public List<Trip> getAll() {
         String sql = "SELECT * FROM trips";
         List<Trip> savedList = jdbcTemplate.query(sql, new TripRowMapper());
-        if (savedList.isEmpty()){
+        if (savedList.isEmpty()) {
             return null;
         }
         return savedList;
     }
+/*SELECT id FROM trips WHERE removed_at IS NULL AND origin = 966 AND destination = 926 AND destination_airport = 'SVO' AND empty_weight = 3 AND departure_time = '2026-12-26 05:56:38.867 ' AND arrival_time = '2027-11-22 05:56:38.867' AND transit =
+ TRUE AND passenger_id = 1;
+*/
+    @Override
+    public Long isExist(Trip trip) {
+        String sql = "SELECT id FROM trips WHERE removed_at IS NULL AND origin = ? AND destination = ? AND " +
+                "destination_airport = ? AND empty_weight = ? AND departure_time = ? AND arrival_time = ? AND transit = ? AND " +
+                "passenger_id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("id"),
+                    trip.getOrigin(), trip.getDestination(), trip.getDestinationAirport(),
+                    trip.getEmptyWeight(), trip.getDepartureTime(), trip.getArrivalTime(),
+                    trip.isTransit(), trip.getPassengerId());
+        }catch (EmptyResultDataAccessException e){
+            return null;
+        }
+    }
+
 
     @Override
     public List<Trip> filterByCountries(int origin, int destination) {

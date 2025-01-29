@@ -13,4 +13,6 @@ public interface PersonService {
     PersonDTO createNewUser(PersonDTO newUser);
 
     void bandUser(Long id);
+
+    void unBandUser(Long id);
 }

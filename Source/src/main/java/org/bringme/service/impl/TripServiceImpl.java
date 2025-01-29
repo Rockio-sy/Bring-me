@@ -26,11 +26,15 @@ public class TripServiceImpl implements TripService {
         this.converter = converter;
     }
 
+
     @Override
     public TripDTO saveTrip(TripDTO tripDto) {
         // Convert to Trip model
         Trip newTrip = converter.DTOtoTrip(tripDto);
 
+        if(isExist(newTrip) != null){
+            throw new CustomException("Trip already exist", HttpStatus.FORBIDDEN);
+        }
         Long generatedId = tripRepository.saveTrip(newTrip);
         if (generatedId == null) {
             throw new CustomException("Cannot create trip", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -50,6 +54,11 @@ public class TripServiceImpl implements TripService {
             throw new CustomException("Trip not found", HttpStatus.NO_CONTENT);
         }
         return converter.tripToDTO(savedTrip.get());
+    }
+
+    @Override
+    public Long isExist(Trip trip) {
+        return tripRepository.isExist(trip);
     }
 
     @Override
@@ -73,7 +82,6 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    //TODO: to be tested
     public void validateTrip(TripDTO requestTrip) {
 
         // 1. Check if origin and destination are the same

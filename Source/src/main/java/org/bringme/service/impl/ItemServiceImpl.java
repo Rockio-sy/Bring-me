@@ -93,7 +93,6 @@ public class ItemServiceImpl implements ItemService {
             responseItemDTO.setId(generatedId);
 
             return responseItemDTO;
-            //TODO: Catch spec Exception and throw the compatible message for it
         } catch (IOException e) {
             throw new CustomException("Failed create item : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (NullPointerException e) {

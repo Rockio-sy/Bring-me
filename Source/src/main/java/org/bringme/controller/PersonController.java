@@ -37,8 +37,7 @@ public class PersonController {
     @PutMapping("/change-password")
     public ResponseEntity<HashMap<String, Object>> updatePassword(@NotBlank @RequestHeader(value = "Authorization") String header,
                                                                   @NotBlank @RequestParam(name = "new") String newPassword,
-                                                                  @NotBlank @RequestParam(name = "old") String oldPassword)
-    {
+                                                                  @NotBlank @RequestParam(name = "old") String oldPassword) {
         HashMap<String, Object> responseMap = new HashMap<>();
 
         String token = header.substring(7);
@@ -61,8 +60,7 @@ public class PersonController {
     })
     @PostMapping("/a/new-user")
     public ResponseEntity<HashMap<String, Object>> createNewUserByAdmin(@RequestHeader(value = "Authorization") String header,
-                                                                        @Valid @RequestBody PersonDTO newUser)
-    {
+                                                                        @Valid @RequestBody PersonDTO newUser) {
         HashMap<String, Object> response = new HashMap<>();
         PersonDTO dto = personService.createNewUser(newUser);
         response.put("Message", "New person has been created.");
@@ -79,12 +77,13 @@ public class PersonController {
             @ApiResponse(responseCode = "404", description = "user not found")
     })
     @PutMapping("/a/band")
-    public ResponseEntity<HashMap<String, Object>> bandUser(@Valid @RequestParam("reportId") Long reportId){
+    public ResponseEntity<HashMap<String, Object>> bandUser(@Valid @RequestParam("reportId") Long reportId) {
         HashMap<String, Object> responseMap = new HashMap<>();
         personService.bandUser(reportId);
         responseMap.put("Message", "User banned successfully.");
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
+
     @Operation(summary = "Remove band on  user by admin", description = "needs admin role")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json")),
@@ -92,7 +91,7 @@ public class PersonController {
             @ApiResponse(responseCode = "400", description = "Bad request, invalid input"),
             @ApiResponse(responseCode = "401", description = "Token errors, unauthorized admin"),
     })
-    @PutMapping("/a/band")
+    @PutMapping("/a/unband")
     public ResponseEntity<HashMap<String, Object>> unBandUser(@Valid @RequestParam("reportId") Long reportId) {
         HashMap<String, Object> responseMap = new HashMap<>();
         personService.bandUser(reportId);
@@ -100,5 +99,4 @@ public class PersonController {
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
-
-    }
+}

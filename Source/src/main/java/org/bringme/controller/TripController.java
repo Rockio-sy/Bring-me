@@ -1,5 +1,9 @@
 package org.bringme.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.bringme.dto.TripDTO;
@@ -26,6 +30,15 @@ public class TripController {
         this.tripService = tripService;
     }
 
+    @Operation(summary = "Create new trip")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Internal server error"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized, token errors"),
+            @ApiResponse(responseCode = "400", description = "Bad request."),
+            @ApiResponse(responseCode = "403", description = "Already exists.")
+
+    })
     @PostMapping("/new")
     public ResponseEntity<HashMap<String, Object>> createNewTrip(@RequestHeader(value = "Authorization") String header, @RequestBody TripDTO requestTrip) {
         // Multi value map
@@ -44,6 +57,14 @@ public class TripController {
         return new ResponseEntity<>(responseMap, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Show specific trip")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Retrieved", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Internal server error."),
+            @ApiResponse(responseCode = "400", description = "Bad request."),
+            @ApiResponse(responseCode = "404", description = "Not found")
+
+    })
     @GetMapping("/show")
     public ResponseEntity<HashMap<String, Object>> getTripById(@RequestParam @Positive Long id) {
         // multi value map
@@ -56,6 +77,13 @@ public class TripController {
 
     }
 
+    @Operation(summary = "Show all trips")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Retrieved", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Internal server error."),
+            @ApiResponse(responseCode = "404", description = "No data")
+
+    })
     @GetMapping("/all")
     public ResponseEntity<HashMap<String, Object>> getAllTrips() {
         // Multi value map
@@ -67,6 +95,15 @@ public class TripController {
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
+
+    @Operation(summary = "Search filter for trips by countries")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Retrieved", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Internal server error."),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Not found")
+
+    })
     @GetMapping("/filter/by/countries")
     public ResponseEntity<HashMap<String, Object>> filterByCountries(@Valid @RequestParam("from") int origin, @Valid @RequestParam(name = "to") int destination) {
         // Multi-value map

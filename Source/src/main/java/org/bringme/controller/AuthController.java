@@ -46,7 +46,6 @@ public class AuthController {
         responseMap.put("Person", responsePerson);
         return new ResponseEntity<>(responseMap, HttpStatus.CREATED);
     }
-//git commit -m "JWT exception handling fixed, Auto-validated value Thrown spring exception fixed"
     @Operation(
             summary = "Login",
             description = "Login by email or phone"

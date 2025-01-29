@@ -63,10 +63,14 @@ public class DataSeeder implements CommandLineRunner {
             if (count == null || count == 0) {
                 String sql = "INSERT INTO trips (origin, destination, destination_airport, empty_weight, departure_time, arrival_time, transit, comments, passenger_id) " +
                         "VALUES " +
+
+                        // First record
                         "(1, 2, 'Airport', 2, (NOW() + INTERVAL '2 years' + INTERVAL '1 day')::TIMESTAMP, (NOW() + INTERVAL '2 years' + INTERVAL '3 day')::TIMESTAMP, " +
-                        "true, 'seed comment', (SELECT id FROM persons WHERE email = 'none@gmail.com'))," +
+                        "true, 'seed comment', (SELECT id FROM persons WHERE email = 'none@none.com'))," +
+
+                        // Second record
                         "(3, 4, 'Airport', 2, (NOW() + INTERVAL '2 years' + INTERVAL '1 day')::TIMESTAMP, (NOW() + INTERVAL '2 years' + INTERVAL '3 day')::TIMESTAMP, " +
-                        "true, 'seed comment', (SELECT id FROM persons WHERE email = 'none@gmail.com'))";
+                        "true, 'seed comment', (SELECT id FROM persons WHERE email = 'none@none.com'))";
 
                 jdbcTemplate.update(sql);
                 System.out.println("Development trips data has been seeded.");
@@ -88,8 +92,8 @@ public class DataSeeder implements CommandLineRunner {
             if (count == null || count == 0) {
                 String sql = "INSERT INTO items (name, origin, destination, user_id, weight, height, length, full_address, comments, photo)" +
                         "VALUES " +
-                        "('items1', 1, 2, (SELECT id FROM persons WHERE email = 'nonee@gmail.com'), 1, 1, 1, 'Full Address seed', 'seed comment', 'ITEM_item1-3e3ffef9-0754-4926-99f8-eee363b57def-1729650538812-.png')," +
-                        "('items2', 3, 4, (SELECT id FROM persons WHERE email = 'nonee@gmail.com'), 1, 1, 1, 'Full Address seed', 'seed comment', 'ITEM_item1-0669716b-9a26-4348-950b-9d5584b9910d-1729576564685-.png')";
+                        "('items1', 1, 2, (SELECT id FROM persons WHERE email = 'nonee@none.com'), 1, 1, 1, 'Full Address seed', 'seed comment', 'ITEM_item1-3e3ffef9-0754-4926-99f8-eee363b57def-1729650538812-.png')," +
+                        "('items2', 3, 4, (SELECT id FROM persons WHERE email = 'nonee@none.com'), 1, 1, 1, 'Full Address seed', 'seed comment', 'ITEM_item1-0669716b-9a26-4348-950b-9d5584b9910d-1729576564685-.png')";
                 jdbcTemplate.update(sql);
                 System.out.println("Development items data has been seeded.");
             } else {
@@ -109,19 +113,19 @@ public class DataSeeder implements CommandLineRunner {
             if (count == null || count == 0) {
                 String sql = "INSERT INTO requests(requester_user_id, requested_user_id, item_id, trip_id, origin, destination, comments, price)" +
                         "VALUES " +
-                        "((SELECT id FROM persons WHERE email = 'none@gmail.com'), " +
-                        "(SELECT id FROM persons WHERE email = 'nonee@gmail.com'), " +
-                        "(SELECT id FROM items WHERE name = 'items1' AND user_id = (SELECT id FROM persons WHERE email = 'nonee@gmail.com')), " +
-                        "(SELECT id FROM trips WHERE passenger_id = (SELECT id FROM persons WHERE email = 'none@gmail.com') LIMIT 1), " +
-                        "(SELECT origin FROM trips WHERE id = (SELECT id FROM trips WHERE passenger_id = (SELECT id FROM persons WHERE email = 'none@gmail.com') LIMIT 1)), " +
-                        "(SELECT destination FROM trips WHERE id = (SELECT id FROM trips WHERE passenger_id = (SELECT id FROM persons WHERE email = 'none@gmail.com') LIMIT 1)), " +
+                        "((SELECT id FROM persons WHERE email = 'none@none.com'), " +
+                        "(SELECT id FROM persons WHERE email = 'nonee@none.com'), " +
+                        "(SELECT id FROM items WHERE name = 'items1' AND user_id = (SELECT id FROM persons WHERE email = 'nonee@none.com')), " +
+                        "(SELECT id FROM trips WHERE passenger_id = (SELECT id FROM persons WHERE email = 'none@none.com') LIMIT 1), " +
+                        "(SELECT origin FROM trips WHERE id = (SELECT id FROM trips WHERE passenger_id = (SELECT id FROM persons WHERE email = 'none@none.com') LIMIT 1)), " +
+                        "(SELECT destination FROM trips WHERE id = (SELECT id FROM trips WHERE passenger_id = (SELECT id FROM persons WHERE email = 'none@none.com') LIMIT 1)), " +
                         "'Seed comment', 2.2)," +
-                        "((SELECT id FROM persons WHERE email = 'nonee@gmail.com'), " +
-                        "(SELECT id FROM persons WHERE email = 'none@gmail.com'), " +
-                        "(SELECT id FROM items WHERE name = 'items2' AND user_id = (SELECT id FROM persons WHERE email = 'nonee@gmail.com')), " +
-                        "(SELECT id FROM trips WHERE passenger_id = (SELECT id FROM persons WHERE email = 'none@gmail.com') OFFSET 1 LIMIT 1), " +
-                        "(SELECT origin FROM trips WHERE id = (SELECT id FROM trips WHERE passenger_id = (SELECT id FROM persons WHERE email = 'none@gmail.com') OFFSET 1 LIMIT 1)), " +
-                        "(SELECT destination FROM trips WHERE id = (SELECT id FROM trips WHERE passenger_id = (SELECT id FROM persons WHERE email = 'none@gmail.com') OFFSET 1 LIMIT 1)), " +
+                        "((SELECT id FROM persons WHERE email = 'nonee@none.com'), " +
+                        "(SELECT id FROM persons WHERE email = 'none@none.com'), " +
+                        "(SELECT id FROM items WHERE name = 'items2' AND user_id = (SELECT id FROM persons WHERE email = 'nonee@none.com')), " +
+                        "(SELECT id FROM trips WHERE passenger_id = (SELECT id FROM persons WHERE email = 'none@none.com') OFFSET 1 LIMIT 1), " +
+                        "(SELECT origin FROM trips WHERE id = (SELECT id FROM trips WHERE passenger_id = (SELECT id FROM persons WHERE email = 'none@none.com') OFFSET 1 LIMIT 1)), " +
+                        "(SELECT destination FROM trips WHERE id = (SELECT id FROM trips WHERE passenger_id = (SELECT id FROM persons WHERE email = 'none@none.com') OFFSET 1 LIMIT 1)), " +
                         "'Seed comment', 2.2)";
 
                 jdbcTemplate.update(sql);

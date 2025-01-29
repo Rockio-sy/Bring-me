@@ -75,6 +75,9 @@ public class RequestServiceImpl implements RequestService {
             request.setRequestedUserId(trip.get().getPassengerId());
         } else if (Objects.equals(trip.get().getPassengerId(), request.getRequesterUserId())) {
             request.setRequestedUserId(item.get().getUser_id());
+        }else{
+            throw new CustomException("Trip or Item do not belong to the current user (who is requesting)", HttpStatus.FORBIDDEN);
+
         }
 
         request.setOrigin(item.get().getOrigin());
@@ -89,12 +92,15 @@ public class RequestServiceImpl implements RequestService {
         // Convert to DTO
         RequestDTO responseRequest = converter.requestToDTO(modelRequest);
 
+        // Set the generated id to the response request
+        responseRequest.setId(generatedId);
+
         emailService.sendEmail("Your request has been created", "New Request", (request.getRequesterUserId()));
         emailService.sendEmail("Someone is requesting you, check the website for more info", "New Request", request.getRequestedUserId());
-        notificationService.saveNotification((request.getRequesterUserId().intValue()), "Your request has been created", request.getId().intValue());
-        notificationService.saveNotification((request.getRequestedUserId().intValue()), "Someone is requesting you, check the website for more info", request.getId().intValue());
-        // Set the generated id
-        responseRequest.setId(generatedId);
+
+        notificationService.saveNotification((request.getRequesterUserId().intValue()), "Your request has been created", responseRequest.getId().intValue());
+        notificationService.saveNotification((request.getRequestedUserId().intValue()), "Someone is requesting you, check the website for more info", responseRequest.getId().intValue());
+
 
         return responseRequest;
     }
@@ -125,6 +131,7 @@ public class RequestServiceImpl implements RequestService {
         notificationService.saveNotification((checkRequest.get().getRequestedUserId()), "You have approved request", requestId.intValue());
     }
 
+    //TODO:Check the isExist function
     @Override
     public void isExist(Integer itemId, Integer tripId) {
         Long id = requestRepository.isExists(itemId, tripId);

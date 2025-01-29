@@ -73,11 +73,10 @@ public class RequestRepositoryImpl implements RequestRepository {
 
     @Override
     public Long isExists(Integer itemId, Integer tripId) {
-        String sql = "SELECT id FROM requests WHERE item_id = ? AND trip_id = ?";
+        String sql = "SELECT id FROM requests WHERE item_id = ? AND trip_id = ? AND removed_at IS NULL";
         try {
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("id"), itemId, tripId);
         } catch (EmptyResultDataAccessException e) {
-            System.out.println(e.getMessage());
             return null;
         }
     }

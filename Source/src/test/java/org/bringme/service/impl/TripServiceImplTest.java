@@ -39,19 +39,20 @@ class TripServiceImplTest {
     @DisplayName("Given a TripDTO, when saveTrip, then return TripDTO.")
     void givenTrip_whenSaveTrip_thenReturnTripDTO() {
         // Arrange
-        TripDTO dto = new TripDTO(2L, 1, 2, "Airport", 2,
+        TripDTO dto = new TripDTO(8L, 1, 2, "Airport", 2,
                 LocalDateTime.of(2024, Month.APRIL, 3, 13, 43),
                 LocalDateTime.of(2025, Month.APRIL, 3, 13, 43),
-                false, "No comment", 1L);
-        Trip model = new Trip(2L, 1, 2, "Airport", 2,
+                false, "No comment", 99L);
+        Trip model = new Trip(8L, 1, 2, "Airport", 2,
                 LocalDateTime.of(2024, Month.APRIL, 3, 13, 43),
                 LocalDateTime.of(2025, Month.APRIL, 3, 13, 43),
-                false, "No comment", 1L);
+                false, "No comment", 99L);
 
         // Act
         when(converter.DTOtoTrip(dto)).thenReturn(model);
         when(tripRepository.saveTrip(model)).thenReturn(1L);
         when(converter.tripToDTO(model)).thenReturn(dto);
+        when(tripRepository.isExist(model)).thenReturn(null);
 
         TripDTO resp = tripService.saveTrip(dto);
 
@@ -59,7 +60,7 @@ class TripServiceImplTest {
     }
 
     @Test
-    @DisplayName("Given a TripDTO, when saveTrip, then return 'Cannot create trip' exception.")
+    @DisplayName("Given a TripDTO, when saveTrip, then return 'Trip already exists' exception.")
     void givenTrip_whenSaveTrip_thenReturnCannotCreateTripException() {
         // Arrange
         TripDTO dto = new TripDTO(2L, 1, 2, "Airport", 2,
@@ -78,8 +79,8 @@ class TripServiceImplTest {
         CustomException ex = assertThrows(CustomException.class, () -> tripService.saveTrip(dto));
 
         // Assert
-        assertEquals("Cannot create trip", ex.getMessage());
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, ex.getStatus());
+        assertEquals("Trip already exist", ex.getMessage());
+        assertEquals(HttpStatus.FORBIDDEN, ex.getStatus());
     }
 
     @Test

@@ -95,7 +95,11 @@ public class PersonRepositoryImpl implements PersonRepository {
         }
     }
 
-    // TODO: I have to set it for 15 days or less (How?)
+    @Override
+    public void unBandUser(Long id){
+        String sql = "UPDATE persons SET account_status = 1 WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
     @Override
     public void bandUser(int id) {
         String sql = "UPDATE persons SET account_status = 2 WHERE id = ?";

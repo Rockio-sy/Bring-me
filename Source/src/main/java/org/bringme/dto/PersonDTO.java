@@ -19,7 +19,6 @@ public class PersonDTO {
     private String password;
     @NotNull
     private int accountStatus;
-    @NotBlank
     private String role;
 
     public PersonDTO() {

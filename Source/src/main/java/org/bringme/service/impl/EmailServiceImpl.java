@@ -45,7 +45,7 @@ public class EmailServiceImpl implements EmailService {
         } catch (MessagingException | UnsupportedEncodingException e) {
             throw new CustomException("Email is not sent", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        // TODO: Do not forget to set the code for temporary period
+        // TODO: Set the code for temporary period
         emailRepository.saveCode(email, code);
     }
 
@@ -75,7 +75,7 @@ public class EmailServiceImpl implements EmailService {
             helper.setText(message, true);
             mailSender.send(mimeMessage);
         } catch (MessagingException | UnsupportedEncodingException e) {
-            System.out.println(e.getMessage());
+            throw new CustomException("Cannot send then email: \n"+e.getMessage(), HttpStatus.CONFLICT);
         }
         System.out.println("Email Sent to:"+person.get().getFirstName());
     }

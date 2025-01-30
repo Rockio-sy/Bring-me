@@ -2,6 +2,9 @@ package org.bringme.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+/**
+ * Countries model to handle the response drop-down list
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Country {
     private int id;

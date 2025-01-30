@@ -1,10 +1,23 @@
 package org.bringme.model;
 
+/**
+ * Model of how hte notification entity represented in the database
+ */
 public class Notification {
     private Long id;
+    /**
+     * Owner of the notification
+     */
     private int userId ;
     private String content;
+    /**
+     * Read \ Unread
+     */
     private int marked;
+
+    /**
+     * On which request notification should be sent
+     */
     private int requestId;
 
     public Notification(){}

@@ -7,7 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-
+/**
+ * Specific {@link UserDetails} class handles authentication operation
+ */
 public class AuthUserDetails implements UserDetails {
     private final Person person;
 

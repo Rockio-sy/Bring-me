@@ -1,5 +1,9 @@
 package org.bringme.model;
 
+
+/**
+ * Model of how the Person entity represented in the database
+ */
 public class Person {
     private Long id;
     private String firstName;
@@ -8,11 +12,17 @@ public class Person {
     private String email;
     private String phone;
     private String password;
-    // Account status
-    // 0 --> Not verified
-    // 1 --> Verified
-    // 2 --> Baned
+    /**
+     * Account status:<p>
+     * 0 --> Not verified <p>
+     * 1 --> Verified <p>
+     * 2 --> Baned
+     */
     private int accountStatus;
+    /**
+     * Admin <p>
+     * User
+     */
     private String role;
 
 

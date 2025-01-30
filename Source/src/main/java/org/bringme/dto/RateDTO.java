@@ -2,6 +2,14 @@ package org.bringme.dto;
 
 import jakarta.validation.constraints.*;
 
+/**
+ *
+ * @param id Rate id primary key
+ * @param ratedUserId User that has been rated
+ * @param comment To write under the rate value
+ * @param value Rate value
+ * @param requestId Because of it user has been rated
+ */
 public record RateDTO(Long id,
                       @Positive(message = "No such user") int ratedUserId,
                       String comment,

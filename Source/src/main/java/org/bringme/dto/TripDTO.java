@@ -10,10 +10,19 @@ import java.time.LocalDateTime;
 
 public class TripDTO {
     private Long id;
+    /**
+     * Place where trip started
+     */
     @Positive(message = " Origin country not found")
     private int origin;
+    /**
+     * Finish point of the trip
+     */
     @Positive(message = "Destination country not found")
     private int destination;
+    /**
+     * Airport place from it to go (it could be a space or anything else if the trip is not by flight)
+     */
     @NotBlank(message = "Destination airport cannot be blank")
     private String destinationAirport;
     @Positive (message = "Weight cannot be negative or 0")
@@ -22,10 +31,16 @@ public class TripDTO {
     private LocalDateTime arrivalTime;
     @NotNull
     private LocalDateTime departureTime;
+    /**
+     * Direct road\not direct road
+     */
     @NotNull
     private boolean transit;
     @NotBlank(message = "Comments cannot be blank")
     private String comments;
+    /**
+     * Owner of the trip
+     */
     private Long passengerId;
 
     public TripDTO() {

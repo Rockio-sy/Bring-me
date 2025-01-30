@@ -4,6 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public class PersonDTO {
+    /**
+     * User's unique id primary key
+     */
     private Long id;
     @NotBlank
     private String firstName;
@@ -17,8 +20,17 @@ public class PersonDTO {
     private String phone;
     @NotBlank
     private String password;
+    /**
+     * 0 -- not verified.<p>
+     * 1 -- Verified.<p>
+     * 2 -- Banned .
+     */
     @NotNull
     private int accountStatus;
+    /**
+     * Admin<p>
+     * User
+     */
     private String role;
 
     public PersonDTO() {

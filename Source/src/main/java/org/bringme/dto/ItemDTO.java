@@ -3,13 +3,25 @@ package org.bringme.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * Item DTO class to handle requests and response of item operations
+ */
 public class ItemDTO {
 
+    /**
+     * Unique ID Primary key
+     */
     private Long id;
     @NotBlank(message = "Name cannot be empty")
     private String name;
+    /**
+     * The place where item is located
+     */
     @NotNull(message = "Country not found")
     private int origin;
+    /**
+     * The place where item should be delegated
+     */
     @NotNull(message = "Country not found")
     private int destination;
     @NotNull(message = "Invalid weight")
@@ -20,17 +32,27 @@ public class ItemDTO {
     private float length;
     @NotBlank(message = "Write comments")
     private String comments;
+    /**
+     * Details of the address to where item should be delegated
+     */
     @NotBlank(message = "Address should be inserted")
     private String detailedOriginAddress;
     @NotBlank(message = "No photo found")
     private String photo;
 
+    /**
+     * Owner id
+     */
     private Long user_id;
 
     // Self constructor
-    public ItemDTO(){}
+    public ItemDTO() {
+    }
 
-    // Response CreateNewItem constructor
+    /**
+     * Response CreateNewItem constructor
+     */
+
     public ItemDTO(Long id, String name, int origin, int destination, float weight, float height, float length, String comments, String detailedOriginAddress, String photo, Long user_id) {
         this.id = id;
         this.name = name;
@@ -45,7 +67,9 @@ public class ItemDTO {
         this.user_id = user_id;
     }
 
-    // Request CreateNewUser constructor
+    /**
+     * Request CreateNewUser constructor
+     */
     public ItemDTO(String name, int origin, int destination, float weight, float height, float length, String comments, String detailedOriginAddress, String photo, Long user_id) {
         this.name = name;
         this.origin = origin;
@@ -65,7 +89,7 @@ public class ItemDTO {
         return id;
     }
 
-    public void setId( Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

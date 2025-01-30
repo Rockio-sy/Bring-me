@@ -2,11 +2,24 @@ package org.bringme.dto;
 
 import jakarta.validation.constraints.NotNull;
 
+
 public class ReportDTO {
     private Long id;
+    /**
+     * On which report has been sent
+     */
     private int requestId;
+    /**
+     * User who wrote\send the report
+     */
     private int reporterUserId;
+    /**
+     * User who has been reported
+     */
     private int reportedUserId;
+    /**
+     * Admin who answered
+     */
     private int answeredById;
     private String content;
     private String answer;

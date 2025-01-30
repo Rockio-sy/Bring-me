@@ -8,19 +8,34 @@ public class RequestDTO {
 
     private Long id;
 
+    /**
+     * User who applied the request
+     */
     private Long requesterUserId;
 
+    /**
+     * User who received the request
+     */
     private Long requestedUserId;
     @NotNull
     private Integer itemId;
     @NotNull
     private Integer tripId;
 
+    /**
+     * Place where to meet or take the item
+     */
     private Integer origin;
 
+    /**
+     * Place to where delegate
+     */
     private Integer destination;
     @NotBlank
     private String comments;
+    /**
+     * Approvement (done by the requested)
+     */
     private boolean approvement;
     @NotNull
     private float price;

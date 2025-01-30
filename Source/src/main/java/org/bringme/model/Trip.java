@@ -2,16 +2,36 @@ package org.bringme.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * Model of how the trip entity represented in the database
+ */
 public class Trip {
     private Long id;
+    /**
+     * Start point of the trip
+     */
     private int origin;
+    /**
+     * Finish point of the trip
+     */
     private int destination;
+
+    /**
+     * Airport if exists, anything if other
+     */
     private String destinationAirport;
     private float emptyWeight;
     private LocalDateTime arrivalTime;
     private LocalDateTime departureTime;
+
+    /**
+     * Direct road \ indirect road
+     */
     private boolean transit;
     private String comments;
+    /**
+     * Owner of the trip
+     */
     private Long passengerId;
 
     public Trip(){}

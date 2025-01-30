@@ -1,14 +1,43 @@
 package org.bringme.model;
 
+/**
+ * Model of how the request entity represented in the database
+ */
 public class Request {
     private Long id;
+    /**
+     * User who asks for request
+     */
     private Integer requesterUserId;
+
+    /**
+     * User who received the request
+     */
     private Integer requestedUserId;
+    /**
+     * On which item
+     */
     private Integer itemId;
+    /**
+     * On which trip
+     */
     private Integer tripId;
+
+    /**
+     * PLace to meet, where item is located
+     */
     private Integer origin;
+
+    /**
+     * Place to delegate, destination of trip and item
+     */
     private Integer destination;
     private String comments;
+
+    /**
+     * True - approved <p>
+     * False - Not approved
+     */
     private boolean approvement;
     private float price;
 

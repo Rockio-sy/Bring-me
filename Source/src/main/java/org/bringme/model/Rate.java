@@ -1,10 +1,22 @@
 package org.bringme.model;
 
+
+/**
+ * Model of how the rate entity represented in the database
+ */
 public class Rate {
     private Long id;
     private String comments;
     private int value;
+
+    /**
+     * User who has been rated
+     */
     private int userId ;
+
+    /**
+     * On which request, user has been rated.
+     */
     private int requestId;
 
     public Rate(){}

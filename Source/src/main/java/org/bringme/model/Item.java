@@ -1,14 +1,27 @@
 package org.bringme.model;
 
+
+/**
+ * Model of how the Item entity represented in the database
+ */
 public class Item {
     private Long id;
     private String name;
+    /**
+     * Where the item located
+     */
     private int origin;
+    /**
+     * To where item has been delegated
+     */
     private int destination;
     private float weight;
     private float height;
     private float length;
     private String comments;
+    /**
+     * Details of the address where item located
+     */
     private String detailedOriginAddress;
     private String photo;
     private Long user_id;

@@ -1,10 +1,27 @@
 package org.bringme.model;
 
+/**
+ * Model of how the report entity represented in the database
+ */
 public class Report {
     private Long id;
+    /**
+     * On which request, implemented report
+     */
     private int requestId;
+    /**
+     * User, who sent\wrote the report
+     */
     private int reporterUserId;
+
+    /**
+     * User who has been reported
+     */
     private int reportedUserId;
+
+    /**
+     * Admin who answered the report (it can be null if the report isn't answered yet)
+     */
     private int answeredById;
     private String content;
     private String answer;

@@ -4,9 +4,16 @@ import org.bringme.dto.*;
 import org.bringme.model.*;
 import org.springframework.stereotype.Component;
 
+/**
+ * Converters functions to convert from DTO to DAO and vice versa
+ */
 @Component
 public class Converter {
-    // ItemDTO class to Item class
+
+    /**
+     * @param itemDTO to be converted
+     * @return {@link Item} object
+     */
     public Item DTOtoItem(ItemDTO itemDTO){
         return new Item(
                 null,
@@ -23,7 +30,10 @@ public class Converter {
         );
     }
 
-    // Item class to ItemDTO
+    /**
+     * @param item Entity to be converted
+     * @return {@link ItemDTO} object
+     */
     public ItemDTO itemToDTO(Item item){
         return new ItemDTO(
                 item.getId(),
@@ -39,7 +49,12 @@ public class Converter {
                 item.getUser_id());
     }
 
-    // TripDTO class to Trip class
+
+    /**
+     *
+     * @param tripDTO to be converted
+     * @return {@link Trip} object
+     */
     public Trip DTOtoTrip(TripDTO tripDTO){
         Trip trip= new Trip();
         trip.setId(null);
@@ -55,7 +70,11 @@ public class Converter {
         return trip;
     }
 
-    // Trip class to TripDTO class
+    /**
+     *
+     * @param trip to be converted
+     * @return {@link TripDTO} object
+     */
     public TripDTO tripToDTO(Trip trip){
         return new TripDTO(
                 trip.getId(),
@@ -71,7 +90,11 @@ public class Converter {
         );
     }
 
-    // Request class to RequestDTO class
+    /**
+     *
+     * @param request to be converted
+     * @return {@link RequestDTO} object
+     */
     public RequestDTO requestToDTO(Request request){
         RequestDTO dto = new RequestDTO();
         dto.setId(request.getId());
@@ -87,7 +110,11 @@ public class Converter {
         return dto;
     }
 
-    // RequestDTO class to Request class
+    /**
+     *
+     * @param requestDTO to be converted
+     * @return {@link Request} object
+     */
     public Request DTOtoRequest(RequestDTO requestDTO){
         Request newRequest = new Request();
         newRequest.setId(null);
@@ -103,7 +130,10 @@ public class Converter {
         return newRequest;
     }
 
-    // PersonDTO class to Person class
+    /**
+     * @param personDTO  to be converted
+     * @return {@link Person} object
+     */
     public Person DTOtoPerson(PersonDTO personDTO){
         Person newPerson = new Person();
         newPerson.setId(null);
@@ -117,7 +147,11 @@ public class Converter {
         return newPerson;
     }
 
-    // Person class to PersonDTO class
+    /**
+     *
+     * @param person model to be converted
+     * @return {@link PersonDTO} object
+     */
     public PersonDTO personToDTO(Person person){
         PersonDTO dto = new PersonDTO();
         dto.setId(person.getId());
@@ -130,6 +164,13 @@ public class Converter {
         return dto;
     }
 
+    /**
+     * Specified converter to {@link Person} model for {@link org.bringme.controller.RequestController#getUserDetails(java.lang.String, int) getUserDetailes endpoint}
+     *
+     * @param person Model representing the person.
+     * @return {@link PersonDTO} with name, address, email, and phone only.
+     */
+
     public PersonDTO personToDetails(Person person){
         PersonDTO dto = new PersonDTO();
         dto.setFirstName(person.getFirstName());
@@ -140,10 +181,19 @@ public class Converter {
         return dto;
     }
 
+    /**
+     * @param model notification model to be converted
+     * @return {@link NotificationDTO} object
+     */
     public NotificationDTO notificationToDTO(Notification model){
         return new NotificationDTO(model.getId(), model.getUserId(), model.getContent(), model.isMarked(), model.getRequestId());
     }
 
+    /**
+     *
+     * @param model {@link Report} model to be converted
+     * @return {@link ReportDTO} object
+     */
     public ReportDTO reportToDTO(Report model){
         ReportDTO dto = new ReportDTO();
         dto.setId(model.getId());
@@ -156,6 +206,11 @@ public class Converter {
         return dto;
     }
 
+    /**
+     *
+     * @param reportDTO to be converted
+     * @return {@link Report} object
+     */
     public Report DTOtoReport(ReportDTO reportDTO){
         Report model = new Report();
         model.setId(reportDTO.getId());
@@ -168,10 +223,20 @@ public class Converter {
         return model;
     }
 
+    /**
+     *
+     * @param r {@link Rate} to be converted
+     * @return {@link RateDTO} object
+     */
     public RateDTO rateToDTO(Rate r) {
         return new RateDTO(r.getId(), r.getUserId(), r.getComments(), r.getValue(), r.getRequestId());
     }
 
+    /**
+     *
+     * @param r {@link RateDTO} to be converted
+     * @return {@link Rate} object
+     */
     public Rate DTOtoRate(RateDTO r){
         Rate model = new Rate();
         model.setValue(r.value());

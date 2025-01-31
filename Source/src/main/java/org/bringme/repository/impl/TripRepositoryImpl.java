@@ -26,6 +26,11 @@ public class TripRepositoryImpl implements TripRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    /**
+     * Save new trip into database
+     * @param trip model of {@link Trip } to be saved
+     * @return ID of saved trip
+     */
     @Override
     public Long saveTrip(Trip trip) {
         String sql = "INSERT INTO trips(origin, destination, destination_airport, empty_weight," +
@@ -54,6 +59,13 @@ public class TripRepositoryImpl implements TripRepository {
         }
     }
 
+
+    /**
+     * Retrieves a specific trip by its ID.
+     *
+     * @param id the ID of the trip
+     * @return an {@link Optional} containing the {@link Trip} if found, otherwise empty
+     */
     @Override
     public Optional<Trip> getById(Long id) {
         String sql = "SELECT * FROM trips WHERE id = ?";
@@ -62,6 +74,11 @@ public class TripRepositoryImpl implements TripRepository {
                 .findFirst();
     }
 
+    /**
+     * Retrieves all trips from the database.
+     *
+     * @return a list of all {@link Trip} objects, or {@code null} if no trips are found
+     */
     @Override
     public List<Trip> getAll() {
         String sql = "SELECT * FROM trips";
@@ -71,9 +88,13 @@ public class TripRepositoryImpl implements TripRepository {
         }
         return savedList;
     }
-/*SELECT id FROM trips WHERE removed_at IS NULL AND origin = 966 AND destination = 926 AND destination_airport = 'SVO' AND empty_weight = 3 AND departure_time = '2026-12-26 05:56:38.867 ' AND arrival_time = '2027-11-22 05:56:38.867' AND transit =
- TRUE AND passenger_id = 1;
-*/
+
+    /**
+     * Checks if a specific trip exists in the database.
+     *
+     * @param trip the {@link Trip} object containing trip details
+     * @return the ID of the existing trip if found, otherwise {@code null}
+     */
     @Override
     public Long isExist(Trip trip) {
         String sql = "SELECT id FROM trips WHERE removed_at IS NULL AND origin = ? AND destination = ? AND " +
@@ -89,7 +110,13 @@ public class TripRepositoryImpl implements TripRepository {
         }
     }
 
-
+    /**
+     * Filters trips based on origin and destination country codes.
+     *
+     * @param origin      the origin country code
+     * @param destination the destination country code
+     * @return a list of {@link Trip} objects that match the given criteria
+     */
     @Override
     public List<Trip> filterByCountries(int origin, int destination) {
         String sql = "SELECT * FROM trips WHERE origin = ? AND destination = ?";

@@ -1,8 +1,7 @@
 package org.bringme.controller;
 
 
-import io.jsonwebtoken.JwtException;
-import org.bringme.service.exceptions.CustomException;
+import org.bringme.exceptions.CustomException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

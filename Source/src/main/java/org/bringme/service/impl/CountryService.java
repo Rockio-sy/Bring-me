@@ -1,7 +1,7 @@
 package org.bringme.service.impl;
 
 import org.bringme.model.Country;
-import org.bringme.service.exceptions.CustomException;
+import org.bringme.exceptions.CustomException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,6 +14,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class CountryService {
+    /**
+     * Get all countries from the file.<p>File: /src/main/resources/countries.json
+     * @return List of {@link Country}
+     */
     public List<Country> getCountries(){
         try {
             InputStream inputStream = new ClassPathResource("countries.json").getInputStream();

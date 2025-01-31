@@ -1,10 +1,10 @@
 package org.bringme.service.impl;
 
 import org.bringme.dto.TripDTO;
+import org.bringme.exceptions.CustomException;
 import org.bringme.model.Trip;
 import org.bringme.repository.TripRepository;
 import org.bringme.service.TripService;
-import org.bringme.service.exceptions.CustomException;
 import org.bringme.utils.Converter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -26,13 +26,20 @@ public class TripServiceImpl implements TripService {
         this.converter = converter;
     }
 
-
+    /**
+     * Saves a new trip if it does not already exist in the database.
+     *
+     * @param tripDto The trip details to be saved.
+     * @return A TripDTO object containing the saved trip details, including the generated ID.
+     * @throws CustomException If the trip already exists, throws FORBIDDEN exception.
+     *                         If there is an internal error during saving, throws INTERNAL_SERVER_ERROR exception.
+     */
     @Override
     public TripDTO saveTrip(TripDTO tripDto) {
         // Convert to Trip model
         Trip newTrip = converter.DTOtoTrip(tripDto);
 
-        if(isExist(newTrip) != null){
+        if (isExist(newTrip) != null) {
             throw new CustomException("Trip already exist", HttpStatus.FORBIDDEN);
         }
         Long generatedId = tripRepository.saveTrip(newTrip);
@@ -46,6 +53,13 @@ public class TripServiceImpl implements TripService {
         return responseTrip;
     }
 
+    /**
+     * Retrieves a trip by its ID from the database.
+     *
+     * @param id The ID of the trip to retrieve.
+     * @return A TripDTO object containing the trip details.
+     * @throws CustomException If the trip is not found, throws NO_CONTENT exception.
+     */
     @Override
     public TripDTO getById(Long id) {
         // Get trip from database
@@ -56,11 +70,23 @@ public class TripServiceImpl implements TripService {
         return converter.tripToDTO(savedTrip.get());
     }
 
+    /**
+     * Checks if a trip already exists in the database.
+     *
+     * @param trip The trip to check for existence.
+     * @return The ID of the trip if it exists, null otherwise.
+     */
     @Override
     public Long isExist(Trip trip) {
         return tripRepository.isExist(trip);
     }
 
+    /**
+     * Retrieves all trips from the database.
+     *
+     * @return A list of TripDTO objects representing all trips.
+     * @throws CustomException If no trips are found, throws NO_CONTENT exception.
+     */
     @Override
     public List<TripDTO> getAllTrips() {
         // Get list from database
@@ -81,6 +107,12 @@ public class TripServiceImpl implements TripService {
         return responseList;
     }
 
+    /**
+     * Validates the trip data to ensure that it adheres to the necessary constraints.
+     *
+     * @param requestTrip The trip data to validate.
+     * @throws CustomException If any validation fails, throws BAD_REQUEST exception with a relevant message.
+     */
     @Override
     public void validateTrip(TripDTO requestTrip) {
 
@@ -113,6 +145,14 @@ public class TripServiceImpl implements TripService {
         }
     }
 
+    /**
+     * Filters trips based on origin and destination country IDs.
+     *
+     * @param origin      The origin country ID.
+     * @param destination The destination country ID.
+     * @return A list of TripDTO objects representing trips that match the specified origin and destination.
+     * @throws CustomException If no trips are found, throws NO_CONTENT exception.
+     */
     @Override
     public List<TripDTO> filterByCountries(int origin, int destination) {
         // Get data from database

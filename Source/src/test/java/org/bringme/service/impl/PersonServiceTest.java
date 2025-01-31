@@ -4,7 +4,7 @@ package org.bringme.service.impl;
 import org.bringme.dto.PersonDTO;
 import org.bringme.model.Person;
 import org.bringme.repository.PersonRepository;
-import org.bringme.service.exceptions.CustomException;
+import org.bringme.exceptions.CustomException;
 import org.bringme.utils.Converter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +16,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import javax.management.relation.Role;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;

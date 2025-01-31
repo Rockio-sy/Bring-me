@@ -1,11 +1,10 @@
 package org.bringme.service.impl;
 
-import jakarta.websocket.EncodeException;
 import org.bringme.dto.ItemDTO;
+import org.bringme.exceptions.CustomException;
 import org.bringme.model.Item;
 import org.bringme.repository.ItemRepository;
 import org.bringme.service.ItemService;
-import org.bringme.service.exceptions.CustomException;
 import org.bringme.utils.Converter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +34,14 @@ public class ItemServiceImpl implements ItemService {
         this.converter = converter;
     }
 
+    /**
+     * Retrieves all items from the database. If no items are found, throws an exception with HTTP status
+     * {@code 204 NO_CONTENT}.
+     *
+     * @return {@link List} of {@link ItemDTO} The list of items from the database, mapped to {@link ItemDTO}.
+     * @throws CustomException If no data is found in the database, an exception with HTTP status
+     *                         {@code 204 NO_CONTENT} is thrown.
+     */
     @Override
     public List<ItemDTO> getAll() {
         // Get from database
@@ -52,6 +59,15 @@ public class ItemServiceImpl implements ItemService {
         return responseList;
     }
 
+    /**
+     * Retrieves an item by its ID. If the item is not found, throws an exception with HTTP status
+     * {@code 404 NOT_FOUND}.
+     *
+     * @param id The ID of the item to retrieve.
+     * @return {@link ItemDTO} The item mapped to a {@link ItemDTO}.
+     * @throws CustomException If the item with the provided ID is not found, an exception with HTTP status
+     *                         {@code 404 NOT_FOUND} is thrown.
+     */
     @Override
     public ItemDTO getItemById(Long id) {
         // Check if item exists
@@ -62,6 +78,15 @@ public class ItemServiceImpl implements ItemService {
         return converter.itemToDTO(model.get());
     }
 
+    /**
+     * Saves a new item by validating the input, generating a modified file name for the photo,
+     * moving the file to the upload directory, and saving the item in the database.
+     *
+     * @param itemDTO The {@link ItemDTO} object containing item data to be saved.
+     * @return {@link ItemDTO} The saved item with the generated ID and updated photo name.
+     * @throws CustomException If any error occurs during file handling or database operations,
+     *                         an exception is thrown with appropriate HTTP status.
+     */
     @Override
     public ItemDTO saveItem(ItemDTO itemDTO) {
 
@@ -102,6 +127,14 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
+    /**
+     * Saves a temporary file to the upload directory, generating a unique file name.
+     *
+     * @param image The {@link MultipartFile} to save.
+     * @return {@link String} The file name of the saved temporary file.
+     * @throws CustomException If any error occurs during file saving, an exception is thrown with HTTP status
+     *                         {@code 500 INTERNAL_SERVER_ERROR}.
+     */
     @Override
     public String saveTempFile(MultipartFile image) {
         try {
@@ -120,6 +153,16 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
+    /**
+     * Filters and retrieves items based on the origin and destination country IDs.
+     * If no items are found, throws an exception with HTTP status {@code 204 NO_CONTENT}.
+     *
+     * @param origin      The origin country ID.
+     * @param destination The destination country ID.
+     * @return {@link List} of {@link ItemDTO} The filtered list of items.
+     * @throws CustomException If no items matching the filter are found, an exception with HTTP status
+     *                         {@code 204 NO_CONTENT} is thrown.
+     */
     @Override
     public List<ItemDTO> filterByCountries(int origin, int destination) {
 
@@ -135,6 +178,14 @@ public class ItemServiceImpl implements ItemService {
         return response;
     }
 
+    /**
+     * Validates the input for an item, checking length, weight, height, origin, destination, and user ID.
+     * Throws an exception with HTTP status {@code 400 BAD_REQUEST} if invalid input is found.
+     *
+     * @param requestItem The {@link ItemDTO} object containing the item data to validate.
+     * @throws CustomException If the input is invalid, an exception with HTTP status
+     *                         {@code 400 BAD_REQUEST} is thrown.
+     */
     @Override
     public void checkInput(ItemDTO requestItem) {
         if (requestItem.getLength() <= 0 || requestItem.getWeight() <= 0 || requestItem.getHeight() <= 0
@@ -145,6 +196,15 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
+    /**
+     * Checks the media file (image) for validity by verifying if the file is empty, checking its metadata,
+     * ensuring the file size is under 2MB, and confirming the content type is either PNG or JPEG.
+     * If valid, saves the file temporarily and returns the file name.
+     *
+     * @param image The {@link MultipartFile} to check and save.
+     * @return {@link String} The file name of the saved temporary file.
+     * @throws CustomException If the file is invalid, an exception is thrown with appropriate HTTP status.
+     */
     @Override
     public String checkMediaFile(MultipartFile image) {
         if (image.isEmpty()) {
@@ -175,6 +235,14 @@ public class ItemServiceImpl implements ItemService {
         return tempFileName;
     }
 
+    /**
+     * Extracts and returns the file extension of the provided image file.
+     *
+     * @param image The {@link MultipartFile} to extract the extension from.
+     * @return {@link String} The file extension of the image.
+     * @throws CustomException If the file format is invalid or the extension cannot be extracted,
+     *                         an exception with HTTP status {@code 415 UNSUPPORTED_MEDIA_TYPE} is thrown.
+     */
     @NotNull
     private String extractExtension(MultipartFile image) {
         assert uploadDir != null && !uploadDir.trim().isEmpty() : "Upload directory is not configured.";

@@ -5,7 +5,7 @@ import org.bringme.model.Rate;
 import org.bringme.repository.PersonRepository;
 import org.bringme.repository.RateRepository;
 import org.bringme.repository.RequestRepository;
-import org.bringme.service.exceptions.CustomException;
+import org.bringme.exceptions.CustomException;
 import org.bringme.utils.Converter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

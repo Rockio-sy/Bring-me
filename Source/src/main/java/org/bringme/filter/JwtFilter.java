@@ -4,7 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.bringme.service.exceptions.CustomException;
+import org.bringme.exceptions.CustomException;
 import org.bringme.service.impl.JwtService;
 import org.bringme.service.impl.MyUserDetailService;
 import org.jetbrains.annotations.NotNull;

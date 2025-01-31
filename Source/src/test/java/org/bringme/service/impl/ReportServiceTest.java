@@ -5,7 +5,7 @@ import org.bringme.model.Report;
 import org.bringme.model.Request;
 import org.bringme.repository.ReportRepository;
 import org.bringme.repository.RequestRepository;
-import org.bringme.service.exceptions.CustomException;
+import org.bringme.exceptions.CustomException;
 import org.bringme.utils.Converter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

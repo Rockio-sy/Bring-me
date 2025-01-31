@@ -1,6 +1,7 @@
 package org.bringme.service.impl;
 
 import org.bringme.dto.RequestDTO;
+import org.bringme.exceptions.CustomException;
 import org.bringme.model.Item;
 import org.bringme.model.Request;
 import org.bringme.model.Trip;
@@ -10,7 +11,6 @@ import org.bringme.repository.TripRepository;
 import org.bringme.service.EmailService;
 import org.bringme.service.NotificationService;
 import org.bringme.service.RequestService;
-import org.bringme.service.exceptions.CustomException;
 import org.bringme.utils.Converter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -39,6 +39,14 @@ public class RequestServiceImpl implements RequestService {
         this.notificationService = notificationService;
     }
 
+
+    /**
+     * Retrieves all requests associated with the specified user.
+     *
+     * @param userId The ID of the user whose requests are to be retrieved.
+     * @return A list of RequestDTO objects representing the user's requests.
+     * @throws CustomException If no requests are found, throws a NO_CONTENT exception.
+     */
     @Override
     public List<RequestDTO> getAll(Long userId) {
         List<Request> requestList = requestRepository.getAll(userId);
@@ -56,6 +64,14 @@ public class RequestServiceImpl implements RequestService {
         return resposneList;
     }
 
+    /**
+     * Saves a new request after validating its associated item and trip.
+     *
+     * @param request The request DTO to be saved.
+     * @return A RequestDTO object representing the saved request with the generated ID.
+     * @throws CustomException If the item or trip is not found or if directions are incompatible.
+     * @throws CustomException If the user is not authorized to make the request.
+     */
     @Override
     public RequestDTO saveRequest(RequestDTO request) {
 
@@ -75,7 +91,7 @@ public class RequestServiceImpl implements RequestService {
             request.setRequestedUserId(trip.get().getPassengerId());
         } else if (Objects.equals(trip.get().getPassengerId(), request.getRequesterUserId())) {
             request.setRequestedUserId(item.get().getUser_id());
-        }else{
+        } else {
             throw new CustomException("Trip or Item do not belong to the current user (who is requesting)", HttpStatus.FORBIDDEN);
 
         }
@@ -105,6 +121,13 @@ public class RequestServiceImpl implements RequestService {
         return responseRequest;
     }
 
+    /**
+     * Approves the specified request by its requestId.
+     *
+     * @param userId    The ID of the user approving the request.
+     * @param requestId The ID of the request to be approved.
+     * @throws CustomException If the request is not found or if the user is not the requested user.
+     */
     @Override
     public void approveRequest(Long userId, Long requestId) {
         Optional<Request> checkRequest = requestRepository.getRequestById(requestId);
@@ -131,7 +154,13 @@ public class RequestServiceImpl implements RequestService {
         notificationService.saveNotification((checkRequest.get().getRequestedUserId()), "You have approved request", requestId.intValue());
     }
 
-    //TODO:Check the isExist function
+    /**
+     * Checks if a request already exists for the specified item and trip.
+     *
+     * @param itemId The ID of the item.
+     * @param tripId The ID of the trip.
+     * @throws CustomException If a request already exists for the specified item and trip.
+     */
     @Override
     public void isExist(Integer itemId, Integer tripId) {
         Long id = requestRepository.isExists(itemId, tripId);
@@ -140,6 +169,13 @@ public class RequestServiceImpl implements RequestService {
         }
     }
 
+    /**
+     * Retrieves all sent requests by the specified user.
+     *
+     * @param userId The ID of the user whose sent requests are to be retrieved.
+     * @return A list of RequestDTO objects representing the sent requests.
+     * @throws CustomException If no sent requests are found, throws a NO_CONTENT exception.
+     */
     @Override
     public List<RequestDTO> getSentRequests(Long userId) {
         // Get data from database
@@ -159,6 +195,15 @@ public class RequestServiceImpl implements RequestService {
         return response;
     }
 
+    /**
+     * Filters requests by the specified origin and destination.
+     *
+     * @param userId      The ID of the user whose requests are to be filtered.
+     * @param origin      The origin location of the requests.
+     * @param destination The destination location of the requests.
+     * @return A list of RequestDTO objects matching the specified origin and destination.
+     * @throws CustomException If no matching requests are found, throws a NO_CONTENT exception.
+     */
     @Override
     public List<RequestDTO> filterByDirections(Long userId, int origin, int destination) {
         // Get data from database
@@ -177,6 +222,13 @@ public class RequestServiceImpl implements RequestService {
         return response;
     }
 
+    /**
+     * Retrieves all received requests for the specified user.
+     *
+     * @param userId The ID of the user whose received requests are to be retrieved.
+     * @return A list of RequestDTO objects representing the received requests.
+     * @throws CustomException If no received requests are found, throws a NO_CONTENT exception.
+     */
     @Override
     public List<RequestDTO> getReceivedRequests(Long userId) {
         // Get data from database
@@ -196,7 +248,13 @@ public class RequestServiceImpl implements RequestService {
         return response;
     }
 
-
+    /**
+     * Filters requests by their approval status.
+     *
+     * @param userId The ID of the user whose requests are to be filtered.
+     * @return A list of RequestDTO objects that are filtered by their approval status.
+     * @throws CustomException If no matching requests are found, throws a NO_CONTENT exception.
+     */
     @Override
     public List<RequestDTO> filterByApprovement(Long userId) {
         // Get data from database
@@ -216,6 +274,13 @@ public class RequestServiceImpl implements RequestService {
         return response;
     }
 
+    /**
+     * Filters requests that are currently waiting for approval.
+     *
+     * @param userId The ID of the user whose requests are to be filtered.
+     * @return A list of RequestDTO objects representing requests that are waiting for approval.
+     * @throws CustomException If no matching requests are found, throws a NO_CONTENT exception.
+     */
     @Override
     public List<RequestDTO> filterByWait(Long userId) {
         // Get data from database
@@ -235,6 +300,14 @@ public class RequestServiceImpl implements RequestService {
         return response;
     }
 
+    /**
+     * Checks if there is a common request between a guest and a host.
+     *
+     * @param guestId The ID of the guest.
+     * @param hostId  The ID of the host.
+     * @return true if a common request exists; otherwise, throws a CustomException with a BAD_REQUEST status.
+     * @throws CustomException If no common request is found between the guest and host.
+     */
     @Override
     public boolean isThereCommonRequest(Long guestId, int hostId) {
         if (requestRepository.isThereCommonRequest(guestId, hostId)) {
@@ -243,6 +316,13 @@ public class RequestServiceImpl implements RequestService {
         return true;
     }
 
+    /**
+     * Retrieves a request by its unique requestId.
+     *
+     * @param id The ID of the request to retrieve.
+     * @return A Request object representing the requested request.
+     * @throws CustomException If the request is not found, throws a NOT_FOUND exception.
+     */
     @Override
     public Request getRequestById(Long id) {
         Optional<Request> newRequest = requestRepository.getRequestById(id);

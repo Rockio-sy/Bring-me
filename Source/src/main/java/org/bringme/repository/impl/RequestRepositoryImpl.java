@@ -19,7 +19,6 @@ import java.util.Optional;
 @Repository
 public class RequestRepositoryImpl implements RequestRepository {
 
-    //Fix the repository and handel Exceptions
     private final JdbcTemplate jdbcTemplate;
 
     public RequestRepositoryImpl(JdbcTemplate jdbcTemplate) {

@@ -3,7 +3,7 @@ package org.bringme.service.impl;
 import org.bringme.dto.ItemDTO;
 import org.bringme.model.Item;
 import org.bringme.repository.ItemRepository;
-import org.bringme.service.exceptions.CustomException;
+import org.bringme.exceptions.CustomException;
 import org.bringme.utils.Converter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

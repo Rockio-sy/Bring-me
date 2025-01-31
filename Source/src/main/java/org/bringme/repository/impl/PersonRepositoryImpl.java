@@ -15,6 +15,10 @@ import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Implementation of {@link PersonRepository} using JDBC.
+ * Provides CRUD operations and account management for Person entities.
+ */
 @Repository
 public class PersonRepositoryImpl implements PersonRepository {
 
@@ -24,7 +28,12 @@ public class PersonRepositoryImpl implements PersonRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
+    /**
+     * Retrieves a Person by their ID.
+     *
+     * @param id The ID of the person.
+     * @return An {@link Optional} containing the Person if found, otherwise empty.
+     */
     @Override
     public Optional<Person> getById(Long id) {
         String sql = "SELECT * FROM persons WHERE id = ?";
@@ -34,31 +43,60 @@ public class PersonRepositoryImpl implements PersonRepository {
     }
 
 
+    /**
+     * Retrieves a Person by their email.
+     *
+     * @param email The email of the person.
+     * @return An {@link Optional} containing the Person if found, otherwise empty.
+     */
     @Override
     public Optional<Person> getByEmail(String email) {
         String sql = "SELECT * FROM persons WHERE email = ?";
         return jdbcTemplate.query(sql, new PersonRowMapper(), email).stream().findFirst();
     }
 
-
+    /**
+     * Retrieves a Person by their phone number.
+     *
+     * @param phone The phone number of the person.
+     * @return An {@link Optional} containing the Person if found, otherwise empty.
+     */
     @Override
     public Optional<Person> getByPhone(String phone) {
         String sql = "SELECT * FROM persons WHERE phone=?";
         return jdbcTemplate.query(sql, new PersonRowMapper(), phone).stream().findFirst();
     }
 
+    /**
+     * Updates the password of a given user.
+     *
+     * @param userId The ID of the user.
+     * @param newPassword The new password to be set.
+     * @return Number of rows affected.
+     */
     @Override
     public int updatePassword(Long userId, String newPassword) {
         String sql = "UPDATE persons SET password = ? WHERE id = ?";
         return jdbcTemplate.update(sql, newPassword, userId);
     }
 
+    /**
+     * Verifies a user's account by updating the verification status.
+     *
+     * @param id The ID of the user to verify.
+     */
     @Override
     public void verifyAccount(Long id) {
         String sql = "UPDATE persons SET verification = 1 WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
+    /**
+     * Retrieves a user's ID using either their email or phone number.
+     *
+     * @param emailOrPhone The email or phone number of the user.
+     * @return The user ID if found, otherwise null.
+     */
     @Override
     public Long getIdByEmailOrPhone(String emailOrPhone) {
         String sql = "SELECT id FROM persons WHERE email = ? OR phone = ?";
@@ -69,7 +107,12 @@ public class PersonRepositoryImpl implements PersonRepository {
             return null;
         }
     }
-
+    /**
+     * Saves a new Person to the database.
+     *
+     * @param model The Person object to save.
+     * @return The generated ID of the saved person, or null if an error occurred.
+     */
     @Override
     public Long save(Person model) {
         String sql = "INSERT INTO persons (first_name, last_name, address, email, phone, password, role)" +
@@ -94,18 +137,31 @@ public class PersonRepositoryImpl implements PersonRepository {
             return null;
         }
     }
-
+    /**
+     * Unbans a user by updating their account status.
+     *
+     * @param id The ID of the user to unban.
+     */
     @Override
     public void unBandUser(Long id){
         String sql = "UPDATE persons SET account_status = 1 WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    /**
+     * Bans a user by updating their account status.
+     *
+     * @param id The ID of the user to ban.
+     */
     @Override
     public void bandUser(int id) {
         String sql = "UPDATE persons SET account_status = 2 WHERE id = ?";
         jdbcTemplate.update(sql, Integer.toUnsignedLong(id));
     }
 
+    /**
+     * RowMapper implementation for mapping ResultSet rows to Person objects.
+     */
     private static final class PersonRowMapper implements RowMapper<Person> {
         @Override
         public Person mapRow(ResultSet rs, int rowNum) throws SQLException {

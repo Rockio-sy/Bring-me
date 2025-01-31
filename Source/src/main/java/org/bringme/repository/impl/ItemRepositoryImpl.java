@@ -1,6 +1,7 @@
 package org.bringme.repository.impl;
 
 import org.bringme.model.Item;
+import org.bringme.model.Person;
 import org.bringme.repository.ItemRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -24,12 +25,21 @@ public class ItemRepositoryImpl implements ItemRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    /**
+     * List all items saved in database
+     * @return List of {@link Item}
+     */
     @Override
     public List<Item> getAll() {
         String sql = "SELECT * FROM items";
         return jdbcTemplate.query(sql, new ItemRowMapper());
     }
 
+    /**
+     * Get item by id
+     * @param id of {@link Item}
+     * @return {@link Item} if exists
+     */
     @Override
     public Optional<Item> getById(Long id) {
         String sql = "SELECT * FROM items WHERE id = ?";
@@ -38,6 +48,11 @@ public class ItemRepositoryImpl implements ItemRepository {
                 .findFirst();
     }
 
+    /**
+     * Save new item into the database
+     * @param item to be saved
+     * @return ID save {@link Item}
+     */
     @Override
     public Long saveItem(Item item) {
 //        System.out.println("DEBUG:\n In Repository:\n\t function : saveItem.");
@@ -71,6 +86,12 @@ public class ItemRepositoryImpl implements ItemRepository {
         }
     }
 
+    /**
+     * Get all countries from specific country to specific country
+     * @param origin start country
+     * @param destination finish country
+     * @return List of {@link Item}
+     */
     @Override
     public List<Item> filterByCountries(int origin, int destination) {
         String sql = "SELECT * FROM items WHERE origin = ? AND destination = ?";

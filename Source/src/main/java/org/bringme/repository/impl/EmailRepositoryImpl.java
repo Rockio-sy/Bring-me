@@ -1,5 +1,6 @@
 package org.bringme.repository.impl;
 
+import org.bringme.model.Person;
 import org.bringme.repository.EmailRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,6 +15,11 @@ public class EmailRepositoryImpl implements EmailRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    /**
+     * Save the code temporary
+     * @param email of {@link Person}
+     * @param code verification
+     */
     @Override
     public void saveCode(String email, String code) {
         String checkSql = "SELECT id FROM verification WHERE email = ?";
@@ -31,6 +37,11 @@ public class EmailRepositoryImpl implements EmailRepository {
         jdbcTemplate.update(updateSql, code, email);
     }
 
+    /**
+     * Get the verification code to check with user's input.
+     * @param email of {@link Person}
+     * @return Verification code
+     */
     @Override
     public String getCode(String email) {
         String sql = "SElECT code FROM verification WHERE email = ?";

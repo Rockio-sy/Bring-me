@@ -1,8 +1,12 @@
+
 # Bring-Me: A Spring Web Application
 
 **Bring-Me** is a Spring-based web application designed to connect people who need to send items with those willing to carry them. Whether you're sending a package or going on a trip, Bring-Me helps make the process easier and more efficient.
 
 ## Technologies Used  
+### Java Version
+- **openjdk 21.0.5 2024-10-15** –Java version
+
 ### Core Framework  
 - **Spring Boot 3.3.5** – Main framework for application development  
 - **Spring Boot Security** – Handles authentication and authorization  
@@ -74,33 +78,33 @@ cd Bring-me
 
 ## Build  
 
-**Note:** > Tests will run automatically during the build process. You can skip the tests by adding the flag:  
-```sh
--Dmaven.test.skip=true
-```
+**Note:**  Tests will run automatically during the build process. You can skip the tests by adding the flag:  
+`-Dmaven.test.skip=true`
 
->To build the project, run:  
-```sh
+
+To build the project, run:  
+```
 mvn install
 ```
 
 ## Clean  
 
->To clean the project, use:  
-```sh
+To clean the project, use:  
+```
 mvn clean
 ```
 
 ## Run  
 
 ### By Docker  
-**Note:** >This will run the application in the **developing** profile. You can change the profile in the `Dockerfile`.  
+**Note:**  This will run the application in the **developing** profile. You can change the profile in the `Dockerfile`.  
 
 ```sh
 docker-compose up --build
 ```
 
-**Note for Linux users:** >Running Docker may require **sudo** privileges.  
+**Note for Linux users:**  
+>Running Docker may require **sudo** privileges.  
 
 ### Locally (Maven)  
 
@@ -113,5 +117,3 @@ mvn spring-boot:run
 ```sh
 mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
-
-

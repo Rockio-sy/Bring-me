@@ -17,14 +17,18 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+
+import static org.springframework.web.util.WebUtils.getRealPath;
 
 @Service
 public class ItemServiceImpl implements ItemService {
 
     @Value("${file.upload-dir}")
     private String uploadDir;
+
 
     private final ItemRepository itemRepository;
     private final Converter converter;
@@ -139,11 +143,8 @@ public class ItemServiceImpl implements ItemService {
     public String saveTempFile(MultipartFile image) {
         try {
             String extension = extractExtension(image);
-            // Generate file name
             String fileName = "TEMP_" + UUID.randomUUID() + "_" + System.currentTimeMillis() + extension;
-            // Create file path
             String filePath = Paths.get(uploadDir, fileName).toString();
-            // Write file
             Files.write(Paths.get(filePath), image.getBytes());
             return fileName;
         } catch (IOException e) {

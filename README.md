@@ -117,3 +117,5 @@ mvn spring-boot:run
 ```sh
 mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
+### Endpoints examples
+You can check the examples of some endpoints here [Postman_Collections](https://github.com/Rockio-sy/Bring-me/tree/main/Postman_Collections)

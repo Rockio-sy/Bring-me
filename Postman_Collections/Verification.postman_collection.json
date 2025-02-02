@@ -1,0 +1,68 @@
+{
+	"info": {
+		"_postman_id": "bd483278-38a4-42cb-aae1-32af7f4b4015",
+		"name": "Verification",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37130829"
+	},
+	"item": [
+		{
+			"name": "Get Code",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/bring-me/ver/code?email=sender@sajx.net",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bring-me",
+						"ver",
+						"code"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "sender@sajx.net"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Set a code",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/bring-me/ver/code?email=sender@sajx.net&code=846338",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bring-me",
+						"ver",
+						"code"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "sender@sajx.net"
+						},
+						{
+							"key": "code",
+							"value": "846338"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

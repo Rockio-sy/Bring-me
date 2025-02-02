@@ -1,0 +1,223 @@
+{
+	"info": {
+		"_postman_id": "77082c40-a29e-44dc-b14b-ebd06296cc86",
+		"name": "Requests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37130829"
+	},
+	"item": [
+		{
+			"name": "Create new request",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI2Iiwic3ViIjoic2VuZGVyQHNhangubmV0Iiwicm9sZSI6IlVzZXIiLCJpYXQiOjE3Mzg0MTkzMDQsImV4cCI6MTczODQ1NTMwNH0.NB42FwVqG90GH7UBV4xCeGyAlE49n_M447ejh4n3dbVKx6eHOYnOfSYHpvubqqAfwRK7RjFRKyYrlzDqbBA6kg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"itemId\": 4,\n  \"tripId\": 3,\n  \"origin\": 0,\n  \"destination\": 0,\n  \"comments\": \"Can wait till 2 days\",\n  \"price\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/bring-me/request/new",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bring-me",
+						"request",
+						"new"
+					]
+				},
+				"description": "Requested user will receive an email with message :\n\n`Someone is requesting you, check the website for more info`  \na link to the request can be added."
+			},
+			"response": []
+		},
+		{
+			"name": "Check received requests",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI1Iiwic3ViIjoicGFzc2VuZ2VyQHNhangubmV0Iiwicm9sZSI6IlVzZXIiLCJpYXQiOjE3Mzg0MTkxOTEsImV4cCI6MTczODQ1NTE5MX0.l8M_SXa8YKrOS-ZzYSl7bxjMEyyF3KdNWKjwb1ENphfjmQOwwoh-z0eX-vKaKGq7f185T67GHLXGvLiPax7dZQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/bring-me/request/filter/by/received",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bring-me",
+						"request",
+						"filter",
+						"by",
+						"received"
+					]
+				},
+				"description": "Requested user can check new requests"
+			},
+			"response": []
+		},
+		{
+			"name": "Cheak not-approved requests",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI2Iiwic3ViIjoic2VuZGVyQHNhangubmV0Iiwicm9sZSI6IlVzZXIiLCJpYXQiOjE3Mzg0MTkzMDQsImV4cCI6MTczODQ1NTMwNH0.NB42FwVqG90GH7UBV4xCeGyAlE49n_M447ejh4n3dbVKx6eHOYnOfSYHpvubqqAfwRK7RjFRKyYrlzDqbBA6kg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/bring-me/request/filter/wait",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bring-me",
+						"request",
+						"filter",
+						"wait"
+					]
+				},
+				"description": "Requester user can check the requests on wait list"
+			},
+			"response": []
+		},
+		{
+			"name": "Show request",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI2Iiwic3ViIjoic2VuZGVyQHNhangubmV0Iiwicm9sZSI6IlVzZXIiLCJpYXQiOjE3Mzg0MTkzMDQsImV4cCI6MTczODQ1NTMwNH0.NB42FwVqG90GH7UBV4xCeGyAlE49n_M447ejh4n3dbVKx6eHOYnOfSYHpvubqqAfwRK7RjFRKyYrlzDqbBA6kg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/bring-me/request/spec/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bring-me",
+						"request",
+						"spec",
+						"3"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "3",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Approve request",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI1Iiwic3ViIjoicGFzc2VuZ2VyQHNhangubmV0Iiwicm9sZSI6IlVzZXIiLCJpYXQiOjE3Mzg0MTkxOTEsImV4cCI6MTczODQ1NTE5MX0.l8M_SXa8YKrOS-ZzYSl7bxjMEyyF3KdNWKjwb1ENphfjmQOwwoh-z0eX-vKaKGq7f185T67GHLXGvLiPax7dZQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/bring-me/request/approve/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bring-me",
+						"request",
+						"approve",
+						"3"
+					]
+				},
+				"description": "Email will be received about approvement"
+			},
+			"response": []
+		},
+		{
+			"name": "Show contact",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI1Iiwic3ViIjoicGFzc2VuZ2VyQHNhangubmV0Iiwicm9sZSI6IlVzZXIiLCJpYXQiOjE3Mzg0MTkxOTEsImV4cCI6MTczODQ1NTE5MX0.l8M_SXa8YKrOS-ZzYSl7bxjMEyyF3KdNWKjwb1ENphfjmQOwwoh-z0eX-vKaKGq7f185T67GHLXGvLiPax7dZQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/bring-me/request/contact/5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bring-me",
+						"request",
+						"contact",
+						"5"
+					]
+				},
+				"description": "If there is no \"Approved\" common request between 2 users, they cannot see the contacts"
+			},
+			"response": []
+		}
+	]
+}

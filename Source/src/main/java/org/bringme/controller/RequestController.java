@@ -1,6 +1,7 @@
 package org.bringme.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -8,6 +9,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.bringme.dto.PersonDTO;
 import org.bringme.dto.RequestDTO;
+import org.bringme.model.Person;
 import org.bringme.model.Request;
 import org.bringme.service.PersonService;
 import org.bringme.service.RequestService;
@@ -191,13 +193,14 @@ public class RequestController {
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
-    @Operation(summary = "Make contact visible", description = "After approved the request, requester can check the contact of the requested person")
+    @Operation(summary = "Make contact visible", parameters = @Parameter(name = "id", description = "Person ID"),description = "After approved the request, requester can check the contact of the requested person")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Retrieved", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Internal server error"),
             @ApiResponse(responseCode = "401", description = "Unauthorized, token errors"),
             @ApiResponse(responseCode = "403", description = "No data")
     })
+    //TODO: CHECK IF USERS HAVE COMMON REQUEST
     @GetMapping("/contact/{id}")
     public ResponseEntity<HashMap<String, Object>> getUserDetails(@Valid @RequestHeader(value = "Authorization") String header, @Positive @PathVariable(value = "id") int hostId) {
         HashMap<String, Object> responseMap = new HashMap<>();

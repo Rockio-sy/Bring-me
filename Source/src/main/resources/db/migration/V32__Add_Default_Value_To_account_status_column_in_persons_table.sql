@@ -1,0 +1,1 @@
+ALTER TABLE persons ALTER COLUMN account_status SET DEFAULT 1;

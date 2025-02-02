@@ -10,7 +10,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: dev
       FLYWAY_MIGRATION_FILE: ${FLYWAY_MIGRATION_FILE}
-      FILE_UPLOAD_DIR: ${FILE_UPLOAD_DIR}
+      FILE_UPLOAD_DIR: /app/photos
       JWT_KEY : ${JWT_KEY}
       EMAIL_HOST : ${EMAIL_HOST}
       EMAIL_PORT : ${EMAIL_PORT}

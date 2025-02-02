@@ -1,0 +1,73 @@
+{
+	"info": {
+		"_postman_id": "26265f42-1fec-4c04-a9a3-0502022073f9",
+		"name": "Trips",
+		"description": "Trips endpints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37130829"
+	},
+	"item": [
+		{
+			"name": "Create a trip",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI1Iiwic3ViIjoicGFzc2VuZ2VyQHNhangubmV0Iiwicm9sZSI6IlVzZXIiLCJpYXQiOjE3Mzg0MTkxOTEsImV4cCI6MTczODQ1NTE5MX0.l8M_SXa8YKrOS-ZzYSl7bxjMEyyF3KdNWKjwb1ENphfjmQOwwoh-z0eX-vKaKGq7f185T67GHLXGvLiPax7dZQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"origin\": 1,\n  \"destination\": 963,\n  \"destinationAirport\": \"DAM\",\n  \"emptyWeight\": 1,\n  \"arrivalTime\": \"2029-02-01T05:36:29.190Z\",\n  \"departureTime\": \"2026-02-01T05:36:29.190Z\",\n  \"transit\": true,\n  \"comments\": \"Breakable things\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/bring-me/trips/new",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bring-me",
+						"trips",
+						"new"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all trips",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/bring-me/trips/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bring-me",
+						"trips",
+						"all"
+					]
+				},
+				"description": "Retrieve trips from database  \n**Note:** **`The trips that are listed are only example saved manually in dev profile, the directions and time should be correct`**"
+			},
+			"response": []
+		}
+	]
+}

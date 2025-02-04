@@ -6,7 +6,7 @@
 *.log
 
 # IDE files and configurations
-/home/rockio/مخصص/Bring-me/.idea
+../.idea
 .idea/
 *.iml
 *.ipr

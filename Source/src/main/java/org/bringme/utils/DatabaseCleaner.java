@@ -20,12 +20,11 @@ public class DatabaseCleaner {
     /**
      * Cleans database by soft remove the verification codes that created in {@link org.bringme.service.EmailService#sendVerificationCode(String)
      * sendVerifcationCode} after more than 30 min
-     * Function implemented every day at 00:00
+     * Function implemented every day at 00:00 in {@link org.bringme.scheduler.Scheduler Scheduler}
      * @throws SQLException If database couldn't run it
      */
     public void cleanExpiredVerificationCode() throws SQLException{
         String sql = "UPDATE verification SET removed_at = CURRENT_TIMESTAMP WHERE (CURRENT_TIMESTAMP - created_at) > INTERVAL '30 minutes'";
         jdbcTemplate.update(sql);
-        System.out.println("Cleaned");
     }
 }

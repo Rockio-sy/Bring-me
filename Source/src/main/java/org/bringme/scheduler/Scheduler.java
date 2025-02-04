@@ -14,6 +14,9 @@ public class Scheduler {
         this.databaseCleaner = databaseCleaner;
     }
 
+    /**
+     * Repeat called functions everyday
+     */
     @Scheduled(cron = "0 0 0 * * ?")
     public void daily() {
         try {

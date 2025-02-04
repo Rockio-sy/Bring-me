@@ -53,7 +53,6 @@ public class EmailServiceImpl implements EmailService {
         } catch (MessagingException | UnsupportedEncodingException e) {
             throw new CustomException("Email is not sent", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        // TODO: Set the code for temporary period
         emailRepository.saveCode(email, code);
     }
 

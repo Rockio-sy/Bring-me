@@ -1,6 +1,5 @@
 package org.bringme.dto;
 
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -17,9 +16,9 @@ public class RequestDTO {
      * User who received the request
      */
     private Long requestedUserId;
-    @NotNull
+    @NotNull(message = "Item id cannot be null")
     private Integer itemId;
-    @NotNull
+    @NotNull(message = "Trip id cannot be null")
     private Integer tripId;
 
     /**
@@ -31,20 +30,23 @@ public class RequestDTO {
      * Place to where delegate
      */
     private Integer destination;
-    @NotBlank
+    @NotBlank(message = "Add any comment")
     private String comments;
     /**
      * Approvement (done by the requested)
      */
     private boolean approvement;
-    @NotNull
+    @NotNull(message = "Price cannot be null")
     private float price;
+
+    @NotNull(message = "Currency cannot be blank or null.")
+    private String currency;
 
     public RequestDTO() {
     }
 
     // Response CreateNewRequest constructor
-    public RequestDTO(Long id, Long requesterUserId, Long requestedUserId, Integer itemId, Integer tripId, Integer origin, Integer destination, String comments, boolean approvement, float price) {
+    public RequestDTO(Long id, Long requesterUserId, Long requestedUserId, Integer itemId, Integer tripId, Integer origin, Integer destination, String comments, boolean approvement, float price, String currency) {
         this.id = id;
         this.requesterUserId = requesterUserId;
         this.requestedUserId = requestedUserId;
@@ -55,15 +57,23 @@ public class RequestDTO {
         this.comments = comments;
         this.approvement = approvement;
         this.price = price;
+        this.currency = currency;
     }
-
-    // JSON Request CreateNewRequest constructor
     // TODO: Add currency to the entity to use it with price
-    public RequestDTO( Integer itemId, Integer tripId, String comments, float price) {
+    public RequestDTO(Integer itemId, Integer tripId, String comments, float price, String currency) {
         this.itemId = itemId;
         this.tripId = tripId;
         this.comments = comments;
         this.price = price;
+        this.currency = currency;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency){
+        this.currency = currency;
     }
 
     public Long getId() {
@@ -74,7 +84,7 @@ public class RequestDTO {
         this.id = id;
     }
 
-    public  Long getRequesterUserId() {
+    public Long getRequesterUserId() {
         return requesterUserId;
     }
 

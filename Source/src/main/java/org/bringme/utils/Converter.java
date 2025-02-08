@@ -107,6 +107,7 @@ public class Converter {
         dto.setComments(request.getComments());
         dto.setApprovement(request.isApprovement());
         dto.setPrice(request.getPrice());
+        dto.setCurrency(request.getCurrency());
         return dto;
     }
 
@@ -127,6 +128,7 @@ public class Converter {
         newRequest.setComments(requestDTO.getComments());
         newRequest.setApprovement(requestDTO.isApprovement());
         newRequest.setPrice(requestDTO.getPrice());
+        newRequest.setCurrency(requestDTO.getCurrency());
         return newRequest;
     }
 

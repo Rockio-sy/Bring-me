@@ -43,7 +43,7 @@ public class ReportServiceTest {
     void givenValidReportWithUserId_whenValidateReportForm_thenReturnTrue() {
         //Arrange
         ReportDTO form = new ReportDTO(1, "Content");
-        Request request = new Request(1L, 1, 2, 1, 1, 1, 2, "Comment", true, 1.2F);
+        Request request = new Request(1L, 1, 2, 1, 1, 1, 2, "Comment", true, 1.2F, "Dollar");
 
         // Act
         when(requestRepository.getRequestById(any(Long.class))).thenReturn(Optional.of(request));
@@ -60,7 +60,7 @@ public class ReportServiceTest {
     void givenInvalidReportFormWithUserId_whenValidateReportForm_thenReturnBAD_REQUESTException() {
         //Arrange
         ReportDTO form = new ReportDTO(1, "Content");
-        Request request = new Request(1L, 3, 2, 1, 1, 1, 2, "Comment", true, 1.2F);
+        Request request = new Request(1L, 3, 2, 1, 1, 1, 2, "Comment", true, 1.2F, "Dollar");
 
         // Act
         when(requestRepository.getRequestById(any(Long.class))).thenReturn(Optional.of(request));
@@ -77,7 +77,7 @@ public class ReportServiceTest {
     void givenValidReportForm_whenCreateNewReport_thenReturnRequestIsNotApprovedException() {
         //Arrange
         ReportDTO form = new ReportDTO(1, "Content");
-        Request request = new Request(1L, 1, 2, 1, 1, 1, 2, "Comment", false, 1.2F);
+        Request request = new Request(1L, 1, 2, 1, 1, 1, 2, "Comment", false, 1.2F, "Dollar");
 
         // Act
         when(requestRepository.getRequestById(any(Long.class))).thenReturn(Optional.of(request));
@@ -93,7 +93,7 @@ public class ReportServiceTest {
     @DisplayName("Given valid report form with user id, when create new report, then return ReportDTO")
     void givenValidReportFormWithUserId_whenCreateNewReport_thenReturnReportDTO() {
         ReportDTO form = new ReportDTO(1, "Content");
-        Request request = new Request(1L, 3, 2, 1, 1, 1, 2, "Comment", true, 1.2F);
+        Request request = new Request(1L, 3, 2, 1, 1, 1, 2, "Comment", true, 1.2F, "Dollar");
 
         when(requestRepository.getRequestById(any(Long.class))).thenReturn(Optional.of(request));
         when(reportRepository.save(any(Report.class))).thenReturn(1L);
@@ -109,7 +109,7 @@ public class ReportServiceTest {
     @DisplayName("Given valid report form, when createNewReport, then return 'Error creating the report' Exception")
     void givenValidReportForm_whenCreateNewReport_thenReturnErrorCreatingTheReportException() {
         ReportDTO form = new ReportDTO(1, "Content");
-        Request request = new Request(1L, 3, 2, 1, 1, 1, 2, "Comment", true, 1.2F);
+        Request request = new Request(1L, 3, 2, 1, 1, 1, 2, "Comment", true, 1.2F, "Dollar");
 
         when(requestRepository.getRequestById(any(Long.class))).thenReturn(Optional.of(request));
         when(reportRepository.save(any(Report.class))).thenReturn(null);

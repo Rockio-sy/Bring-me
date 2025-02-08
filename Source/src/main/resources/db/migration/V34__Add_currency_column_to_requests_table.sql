@@ -1,0 +1,1 @@
+ALTER TABLE requests ADD COLUMN currency VARCHAR(50)  NOT NULL;

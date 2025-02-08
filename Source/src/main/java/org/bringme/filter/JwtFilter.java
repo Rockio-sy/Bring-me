@@ -83,7 +83,7 @@ public class JwtFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         } catch (CustomException ex) {
-            // If there's a JWT error, send the response with the CustomException
+            // IF there is an error with JWT, it will be sent as CustomException
             response.setStatus(ex.getStatus().value());
             response.setContentType("application/json");
             response.getWriter().write("{\"message\": \"" + ex.getMessage() + "\"}");

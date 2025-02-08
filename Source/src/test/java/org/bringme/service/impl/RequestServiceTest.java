@@ -54,8 +54,8 @@ public class RequestServiceTest {
     @DisplayName("Given valid RequestDTO, when saveRequest, then return RequestDTO")
     void givenValidRequestDTO_whenSaveRequest_thenReturnRequestDTO(){
         // Arrange
-        RequestDTO dto = new RequestDTO(2L, 1L, 1L, 1, 1, 1, 2, "No comment", false, 0.1F);
-        Request model = new Request(1L, 1, 1, 1, 1, 1, 2, "No comment", false, 0.1F);
+        RequestDTO dto = new RequestDTO(2L, 1L, 1L, 1, 1, 1, 2, "No comment", false, 0.1F, "Dollar");
+        Request model = new Request(1L, 1, 1, 1, 1, 1, 2, "No comment", false, 0.1F, "Dollar");
         Item item = new Item(1L, "test", 1, 2, 2, 2, 2, "Comment", "Address", "photoURL", 1L);
         Trip trip = new Trip(1L, 1, 2, "Airport", 2,
                 LocalDateTime.of(2026, Month.APRIL, 3, 13, 43),
@@ -82,7 +82,7 @@ public class RequestServiceTest {
     @Test
     @DisplayName("Given requestDTO, when saveRequest, then return 'Item or trip are not found' exception.")
     void givenRequestDTO_whenSaveRequest_thenReturnItemOrTripNotFoundException(){
-        RequestDTO dto = new RequestDTO(2L, 1L, 1L, 1, 1, 1, 2, "No comment", false, 0.1F);
+        RequestDTO dto = new RequestDTO(2L, 1L, 1L, 1, 1, 1, 2, "No comment", false, 0.1F, "Dollar");
 
         when(itemRepository.getById(any(Long.class))).thenReturn(Optional.empty());
 
@@ -95,7 +95,7 @@ public class RequestServiceTest {
     @DisplayName("Given RequestDTO with incompatible directions(Origin), when saveRequest, then return 'Directions are incompatible' exception.")
     void givenRequestDTO_whenSaveRequest_thenReturnDirectionsAreIncompatibleException(){
         // Arrange
-        RequestDTO dto = new RequestDTO(2L, 1L, 1L, 1, 1, 1, 2, "No comment", false, 0.1F);
+        RequestDTO dto = new RequestDTO(2L, 1L, 1L, 1, 1, 1, 2, "No comment", false, 0.1F, "Dollar");
         Item item = new Item(1L, "test", 1, 3, 2, 2, 2, "Comment", "Address", "photoURL", 1L);
         Trip trip = new Trip(1L, 2, 3, "Airport", 2,
                 LocalDateTime.of(2024, Month.APRIL, 3, 13, 43),
@@ -116,7 +116,7 @@ public class RequestServiceTest {
     @DisplayName("Given RequestDTO with incompatible directions(Destination), when saveRequest, then return 'Directions are incompatible' exception.")
     void givenRequestDTOWithIncompatibleOrigins_whenSaveRequest_thenReturnDirectionsAreIncompatibleException(){
         // Arrange
-        RequestDTO dto = new RequestDTO(2L, 1L, 1L, 1, 1, 1, 2, "No comment", false, 0.1F);
+        RequestDTO dto = new RequestDTO(2L, 1L, 1L, 1, 1, 1, 2, "No comment", false, 0.1F, "Dollar");
         Item item = new Item(1L, "test", 1, 4, 2, 2, 2, "Comment", "Address", "photoURL", 1L);
         Trip trip = new Trip(1L, 1, 3, "Airport", 2,
                 LocalDateTime.of(2024, Month.APRIL, 3, 13, 43),

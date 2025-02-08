@@ -111,7 +111,7 @@ public class DataSeeder implements CommandLineRunner {
         try {
             Long count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM requests", Long.class);
             if (count == null || count == 0) {
-                String sql = "INSERT INTO requests(requester_user_id, requested_user_id, item_id, trip_id, origin, destination, comments, price)" +
+                String sql = "INSERT INTO requests(requester_user_id, requested_user_id, item_id, trip_id, origin, destination, comments, price, currency)" +
                         "VALUES " +
                         "((SELECT id FROM persons WHERE email = 'none@none.com'), " +
                         "(SELECT id FROM persons WHERE email = 'nonee@none.com'), " +
@@ -119,14 +119,14 @@ public class DataSeeder implements CommandLineRunner {
                         "(SELECT id FROM trips WHERE passenger_id = (SELECT id FROM persons WHERE email = 'none@none.com') LIMIT 1), " +
                         "(SELECT origin FROM trips WHERE id = (SELECT id FROM trips WHERE passenger_id = (SELECT id FROM persons WHERE email = 'none@none.com') LIMIT 1)), " +
                         "(SELECT destination FROM trips WHERE id = (SELECT id FROM trips WHERE passenger_id = (SELECT id FROM persons WHERE email = 'none@none.com') LIMIT 1)), " +
-                        "'Seed comment', 2.2)," +
+                        "'Seed comment', 2.2, 'Dollar')," +
                         "((SELECT id FROM persons WHERE email = 'nonee@none.com'), " +
                         "(SELECT id FROM persons WHERE email = 'none@none.com'), " +
                         "(SELECT id FROM items WHERE name = 'items2' AND user_id = (SELECT id FROM persons WHERE email = 'nonee@none.com')), " +
                         "(SELECT id FROM trips WHERE passenger_id = (SELECT id FROM persons WHERE email = 'none@none.com') OFFSET 1 LIMIT 1), " +
                         "(SELECT origin FROM trips WHERE id = (SELECT id FROM trips WHERE passenger_id = (SELECT id FROM persons WHERE email = 'none@none.com') OFFSET 1 LIMIT 1)), " +
                         "(SELECT destination FROM trips WHERE id = (SELECT id FROM trips WHERE passenger_id = (SELECT id FROM persons WHERE email = 'none@none.com') OFFSET 1 LIMIT 1)), " +
-                        "'Seed comment', 2.2)";
+                        "'Seed comment', 2.2, 'Dollar')";
 
                 jdbcTemplate.update(sql);
                 System.out.println("Development requests data has been seeded.");

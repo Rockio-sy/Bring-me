@@ -40,10 +40,13 @@ public class Request {
      */
     private boolean approvement;
     private float price;
+    private String currency;
 
     public Request(){}
 
-    public Request(Long id, Integer requesterUserId, Integer requestedUserId, Integer itemId, Integer tripId, Integer origin, Integer destination, String comments, boolean approvement, float price) {
+
+
+    public Request(Long id, Integer requesterUserId, Integer requestedUserId, Integer itemId, Integer tripId, Integer origin, Integer destination, String comments, boolean approvement, float price, String currency) {
         this.id = id;
         this.requesterUserId = requesterUserId;
         this.requestedUserId = requestedUserId;
@@ -54,6 +57,15 @@ public class Request {
         this.comments = comments;
         this.approvement = approvement;
         this.price = price;
+        this.currency = currency;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
     public Long getId() {

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -219,7 +220,11 @@ public class RequestRepositoryImpl implements RequestRepository {
             newRequest.setApprovement(rs.getBoolean("approvement_statue"));
             newRequest.setPrice(rs.getFloat("price"));
             newRequest.setComments(rs.getString("comments"));
+            newRequest.setCurrency(rs.getString("currency"));
             return newRequest;
         }
     }
+
+
+
 }

@@ -45,7 +45,7 @@ mvn spring-boot:run
 Check Postman endpoints collection in [Postman Collections](https://github.com/Rockio-sy/Bring-me/tree/main/Postman_Collections)
 
 # Arch
-Check more about the application architecture in 
+Check more about the application architecture in [Readme.md](https://github.com/Rockio-sy/Bring-me/blob/67b4e756089f592af2cfea4e19449d3d71292204/Docs/README.md)
 
 ## Stack
 

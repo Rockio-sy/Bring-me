@@ -3,45 +3,57 @@
 
 **Bring-Me** is a Spring-based web application designed to connect people who need to send items with those willing to carry them. Whether you're sending a package or going on a trip, Bring-Me helps make the process easier and more efficient.
 
-## Technologies Used  
-### Java Version
+
+# Get started
+```
+git clone https://github.com/Rockio-sy/Bring-me.git
+```
+### Rename .env.example to .env with valid values
+````shell
+cd Source
+nano .env.example
+mv .env.example .env
+````
+
+### Docker 
+```shell
+cd Source
+sudo docker-compose up --build
+```
+**Note**: Docker will run the application in dev profile, you can change it in the Dockerfile
+
+### Try
+```shell
+curl -X 'GET'   'http://localhost:8080/bring-me/trips/all'   -H 'accept: application/json' | json_pp
+```
+## Swagger UI
+Check [Swagger UI](http://localhost:8080/swagger-ui/index.html#/)
+to check all endpoints (make sure the application is running), <br>**NOTE** It asks for http authentication.<br>
+**email**: none@none.com<br>
+**Password**: 12345678s
+## Locally
+#### 1. Development Profile
+```sh
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+```
+#### 2. Production
+
+```sh
+mvn spring-boot:run
+```
+## Endpoints examples
+Check Postman endpoints collection in [Postman Collections](https://github.com/Rockio-sy/Bring-me/tree/main/Postman_Collections)
+
+# Arch
+Check more about the application architecture in 
+
+## Stack
+
 - **openjdk 21.0.5 2024-10-15** –Java version
-
-### Core Framework  
 - **Spring Boot 3.3.5** – Main framework for application development  
-- **Spring Boot Security** – Handles authentication and authorization  
-- **Spring Boot Validation** – Provides validation support  
-- **Spring Boot Web** – REST API development  
-
-### Database & Persistence  
-- **PostgreSQL 42.7.3** – Relational database  
-- **Spring Boot JDBC** – Database interaction support  
-- **Flyway 10.14.0** – Database migration tool  
-
-### API Documentation  
-- **Springdoc OpenAPI 2.1.0** – Generates OpenAPI documentation  
-- **Springfox Swagger UI 3.0.0** – API documentation interface  
-
-### JSON Processing  
-- **Jackson Databind 2.15.0** – JSON serialization and deserialization  
-- **Jackson Annotations 2.15.0** – JSON annotation support  
-- **Jackson Core 2.15.0** – Core JSON processing library  
-
-### Security & Authentication  
-- **Spring Security** – Provides authentication and security features  
-- **JWT (JJWT 0.12.6)** – JSON Web Token implementation  
-
-### Environment Configuration  
-- **Java-Dotenv 5.2.2** – Loads environment variables from `.env` file  
-
-### Logging  
-- **Logback Classic 1.5.6** – Logging framework  
-
-### Build & Dependency Management  
+- **PostgreSQL 42.7.3** – Relational database   
+- **Flyway 10.14.0** – Database migration tool   
 - **Maven** – Build automation and dependency management  
-
-### Testing  
-- **Spring Boot Starter Test** – Testing utilities for unit and integration tests  
 
 
 ## How It Works
@@ -69,53 +81,3 @@
 ---
 
 **Note:** This process is reciprocal. If Person 2 wishes to post a trip instead, Person 1 can search for compatible trips to find something to send along the way.
-
-## Clone 
-```
-git clone https://github.com/Rockio-sy/Bring-me.git
-cd Bring-me
-```
-
-## Build  
-
-**Note:**  Tests will run automatically during the build process. You can skip the tests by adding the flag:  
-`-Dmaven.test.skip=true`
-
-
-To build the project, run:  
-```
-mvn install
-```
-
-## Clean  
-
-To clean the project, use:  
-```
-mvn clean
-```
-
-## Run  
-
-### By Docker  
-**Note:**  This will run the application in the **developing** profile. You can change the profile in the `Dockerfile`.  
-
-```sh
-docker-compose up --build
-```
-
-**Note for Linux users:**  
->Running Docker may require **sudo** privileges.  
-
-### Locally (Maven)  
-
-#### 1. Production  
-```sh
-mvn spring-boot:run
-```
-
-#### 2. Development Profile  
-```sh
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
-```
-### Endpoints examples
-You can check the examples of some endpoints here [Postman_Collections](https://github.com/Rockio-sy/Bring-me/tree/main/Postman_Collections)

@@ -9,4 +9,5 @@
 ![logo-no-background.png](Logo%2Fpng%2Flogo-no-background.png)
 
 # Wireframe
-[Check here](Wireframes%2Fversion2%2FWireframes-V2.drawio.html)
+CLone then 
+[Check here](https://github.com/Rockio-sy/Bring-me/blob/2ed3c76fcba1dc9681dc8293aa347db8765ab0b9/Docs/Wireframes/version2/Wireframes-V2.drawio.html)

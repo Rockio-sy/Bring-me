@@ -3,7 +3,7 @@
 
 **Bring-Me** is a Spring-based web application designed to connect people who need to send items with those willing to carry them. Whether you're sending a package or going on a trip, Bring-Me helps make the process easier and more efficient.
 
-
+![Bring-me_exp.jpg](Docs%2FWireframes%2FBring-me_exp.jpg)
 # Get started
 ```
 git clone https://github.com/Rockio-sy/Bring-me.git

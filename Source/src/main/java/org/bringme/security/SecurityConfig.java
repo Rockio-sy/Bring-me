@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -42,7 +41,6 @@ public class SecurityConfig {
         this.jwtFilter = jwtFilter;
     }
 
-
     /**
      * Configures the security filter chain for handling authentication and authorization.
      * <ul>
@@ -67,7 +65,10 @@ public class SecurityConfig {
                         .requestMatchers("/bring-me/p/a/**", "/bring-me/report/a/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults())
+                .formLogin(form -> form
+                        .loginProcessingUrl("/bring-me/auth/login")
+                        .failureUrl("/login?error=true")
+                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -111,6 +112,7 @@ public class SecurityConfig {
 
     /**
      * Tool to encode entered password.
+     *
      * @return class of {@link BCryptPasswordEncoder}
      */
     @Bean

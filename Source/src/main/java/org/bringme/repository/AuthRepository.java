@@ -10,5 +10,5 @@ public interface AuthRepository {
     Long savePerson(Person person);
     Long getIdByEmailOrPhone(String emailOrPhone);
 
-    boolean isVerified(String s);
+    boolean isVerified(String emailOrPhone);
 }

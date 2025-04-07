@@ -1,16 +1,18 @@
 package org.bringme.service.impl;
 
-import org.bringme.dto.PersonDTO;
 import org.bringme.dto.AuthLogin;
+import org.bringme.dto.PersonDTO;
+import org.bringme.exceptions.*;
 import org.bringme.model.Person;
 import org.bringme.repository.AuthRepository;
 import org.bringme.service.AuthService;
-import org.bringme.exceptions.CustomException;
 import org.bringme.utils.Converter;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -53,15 +55,14 @@ public class AuthServiceImpl implements AuthService {
         modelPerson.setPassword(hashPass);
 
         // Get generated ID
-        Long generatedId = authRepository.savePerson(modelPerson);
-        if (generatedId == null) {
-            throw new CustomException("Problem while creating the account", HttpStatus.INTERNAL_SERVER_ERROR);
+        try {
+            Long generatedId = authRepository.savePerson(modelPerson);
+            requestPerson.setId(generatedId);
+            requestPerson.setAccountStatus(1);
+            return requestPerson;
+        } catch (DataAccessException e) {
+            throw new CannotGetIdOfInsertDataException("SignUp", e);
         }
-
-        // Convert to DTO
-        requestPerson.setId(generatedId);
-        requestPerson.setAccountStatus(1);
-        return requestPerson;
     }
 
     /**
@@ -76,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
     public void isExist(String emailOrPhone) {
         Optional<Person> person = authRepository.getByEmailOrPhone(emailOrPhone);
         if (person.isPresent()) {
-            throw new CustomException("User already exist(used resources)", HttpStatus.CONFLICT);
+            throw new UserAlreadyExistsException(emailOrPhone);
         }
     }
 
@@ -86,19 +87,20 @@ public class AuthServiceImpl implements AuthService {
      *
      * @param emailOrPhone The email or phone number of the user to retrieve.
      * @return {@link PersonDTO} The {@link PersonDTO} containing the user's data,
-     *                           with the password field set to {@code null}.
+     * with the password field set to {@code null}.
      * @throws CustomException None (returns {@code null} if user not found, no exception thrown).
      */
     @Override
     public PersonDTO getByEmailOrPhone(String emailOrPhone) {
         Optional<Person> person = authRepository.getByEmailOrPhone(emailOrPhone);
         if (person.isEmpty()) {
-            return null;
+            throw new UsernameNotFoundException("User not found");
         }
         PersonDTO response = converter.personToDTO(person.get());
         response.setPassword(null);
         return response;
     }
+
     /**
      * Generates an authentication token for the user based on provided login data
      * (email or phone and password). If credentials are valid, the token is generated and returned.
@@ -117,16 +119,16 @@ public class AuthServiceImpl implements AuthService {
         if (authentication.isAuthenticated()) {
             Optional<Person> personToInclude = authRepository.getByEmailOrPhone(loginData.emailOrPhone());
             if (personToInclude.isEmpty()) {
-                throw new CustomException("User not found", HttpStatus.NOT_FOUND);
+                throw new UsernameNotFoundException("user not found");
             }
             token = jwtService.generateToken(personToInclude.get(), loginData.emailOrPhone());
-
-        }
-        if (token == null) {
-            throw new CustomException("Invalid credentials", HttpStatus.FORBIDDEN);
+            if (token == null) {
+                throw new NullTokenGeneratedException(personToInclude.get().getId());
+            }
         }
         return token;
     }
+
     /**
      * Checks if the user's email or phone is verified.
      * If not verified, throws an exception.
@@ -138,9 +140,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void isValidated(AuthLogin loginData) {
         if (!authRepository.isVerified(loginData.emailOrPhone())) {
-            throw new CustomException("Email verification needed", HttpStatus.FORBIDDEN);
+            throw new UnverifiedEmailException(loginData.emailOrPhone());
         }
     }
+
     /**
      * Checks if the provided email or phone already exists in the system.
      * If either is found, throws a conflict exception.
@@ -152,11 +155,11 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public void checkEmailAndPhone(String email, String phone) {
-        if(authRepository.getByEmailOrPhone(email).isPresent()){
-            throw new CustomException("User already existed", HttpStatus.CONFLICT);
+        if (authRepository.getByEmailOrPhone(email).isPresent()) {
+            throw new UserAlreadyExistsException(email);
         }
-        if(authRepository.getByEmailOrPhone(phone).isPresent()){
-            throw new CustomException("User already existed", HttpStatus.CONFLICT);
+        if (authRepository.getByEmailOrPhone(phone).isPresent()) {
+            throw new UserAlreadyExistsException(phone);
         }
     }
 }

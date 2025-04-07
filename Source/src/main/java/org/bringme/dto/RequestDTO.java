@@ -59,7 +59,6 @@ public class RequestDTO {
         this.price = price;
         this.currency = currency;
     }
-    // TODO: Add currency to the entity to use it with price
     public RequestDTO(Integer itemId, Integer tripId, String comments, float price, String currency) {
         this.itemId = itemId;
         this.tripId = tripId;

@@ -1,8 +1,8 @@
 package org.bringme.repository.impl;
 
+import org.bringme.exceptions.CannotGetIdOfInsertDataException;
 import org.bringme.model.Person;
 import org.bringme.repository.PersonRepository;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -70,7 +70,7 @@ public class PersonRepositoryImpl implements PersonRepository {
     /**
      * Updates the password of a given user.
      *
-     * @param userId The ID of the user.
+     * @param userId      The ID of the user.
      * @param newPassword The new password to be set.
      * @return Number of rows affected.
      */
@@ -100,13 +100,10 @@ public class PersonRepositoryImpl implements PersonRepository {
     @Override
     public Long getIdByEmailOrPhone(String emailOrPhone) {
         String sql = "SELECT id FROM persons WHERE email = ? OR phone = ?";
-        try {
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("id"), emailOrPhone, emailOrPhone);
-        } catch (EmptyResultDataAccessException e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("id"), emailOrPhone, emailOrPhone);
     }
+
+
     /**
      * Saves a new Person to the database.
      *
@@ -132,18 +129,18 @@ public class PersonRepositoryImpl implements PersonRepository {
                 return ps;
             }, keyHolder);
             return Objects.requireNonNull(keyHolder.getKey()).longValue();
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-            return null;
+        } catch (Exception e) {
+            throw new CannotGetIdOfInsertDataException("SavePerson", e);
         }
     }
+
     /**
      * Unbans a user by updating their account status.
      *
      * @param id The ID of the user to unban.
      */
     @Override
-    public void unBandUser(Long id){
+    public void unBandUser(Long id) {
         String sql = "UPDATE persons SET account_status = 1 WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
@@ -177,5 +174,4 @@ public class PersonRepositoryImpl implements PersonRepository {
             return newPerson;
         }
     }
-
 }

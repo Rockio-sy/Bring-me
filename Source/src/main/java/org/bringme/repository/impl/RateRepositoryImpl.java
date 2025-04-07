@@ -1,7 +1,9 @@
 package org.bringme.repository.impl;
 
+import org.bringme.exceptions.CannotGetIdOfInsertDataException;
 import org.bringme.model.Rate;
 import org.bringme.repository.RateRepository;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -60,9 +62,8 @@ public class RateRepositoryImpl implements RateRepository {
 
             // Return the generated key (ID of the inserted row)
             return keyHolder.getKey() != null ? keyHolder.getKey().longValue() : null;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+        } catch (DataAccessException e) {
+            throw new CannotGetIdOfInsertDataException("SaveRate", e);
         }
     }
 

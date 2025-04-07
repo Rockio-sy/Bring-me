@@ -1,7 +1,7 @@
 package org.bringme.repository.impl;
 
+import org.bringme.exceptions.CannotGetIdOfInsertDataException;
 import org.bringme.model.Item;
-import org.bringme.model.Person;
 import org.bringme.repository.ItemRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -81,8 +81,7 @@ public class ItemRepositoryImpl implements ItemRepository {
             // Retrieve and return the generated ID
             return Objects.requireNonNull(keyHolder.getKey()).longValue();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+            throw new CannotGetIdOfInsertDataException("SaveItem", e);
         }
     }
 

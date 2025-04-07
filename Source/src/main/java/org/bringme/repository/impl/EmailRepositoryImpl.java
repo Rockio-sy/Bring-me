@@ -26,7 +26,6 @@ public class EmailRepositoryImpl implements EmailRepository {
         try {
             jdbcTemplate.queryForObject(checkSql, (rs, rowNum) -> rs.getLong("id"), email);
 
-
         } catch (EmptyResultDataAccessException e) {
             String insertSql = "INSERT INTO verification(code, email) VALUES" +
                     "(?, ?)";

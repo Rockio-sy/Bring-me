@@ -2,11 +2,15 @@ package org.bringme.service.impl;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.bringme.exceptions.DataBaseException;
+import org.bringme.exceptions.InvalidVerificationCodeException;
+import org.bringme.exceptions.CannotSendingEmailException;
 import org.bringme.model.Person;
 import org.bringme.repository.EmailRepository;
 import org.bringme.repository.PersonRepository;
 import org.bringme.service.EmailService;
 import org.bringme.exceptions.CustomException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -51,7 +55,7 @@ public class EmailServiceImpl implements EmailService {
             helper.setText("Thank you for using \"Bring-Me\"\nYour verification code is: " + code + ".\n", true);
             mailSender.send(mimeMessage);
         } catch (MessagingException | UnsupportedEncodingException e) {
-            throw new CustomException("Email is not sent", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CannotSendingEmailException(e, email, "verification code");
         }
         emailRepository.saveCode(email, code);
     }
@@ -69,10 +73,14 @@ public class EmailServiceImpl implements EmailService {
     public void validateCode(String userInput, String email) {
         String originalCode = emailRepository.getCode(email);
         if (!originalCode.equals(userInput)) {
-            throw new CustomException("Invalid code", HttpStatus.BAD_REQUEST);
+            throw new InvalidVerificationCodeException(email);
         }
-        Long userId = personRepository.getIdByEmailOrPhone(email);
-        personRepository.verifyAccount(userId);
+        try{
+            Long userId = personRepository.getIdByEmailOrPhone(email);
+            personRepository.verifyAccount(userId);
+        }catch (DataAccessException e){
+            throw new DataBaseException(e);
+        }
     }
 
     /**
@@ -84,6 +92,7 @@ public class EmailServiceImpl implements EmailService {
      * @param requesterUserId The ID of the user to whom the email will be sent.
      * @throws CustomException If the email cannot be sent, an exception with HTTP status
      *                         {@code 409 CONFLICT} is thrown.
+     *
      */
     @Override
     public void sendEmail(String message, String subject, Long requesterUserId) {
@@ -101,9 +110,8 @@ public class EmailServiceImpl implements EmailService {
             helper.setText(message, true);
             mailSender.send(mimeMessage);
         } catch (MessagingException | UnsupportedEncodingException e) {
-            throw new CustomException("Cannot send then email: \n"+e.getMessage(), HttpStatus.CONFLICT);
+            throw new CannotSendingEmailException(e, person.get().getEmail(), "notifying");
         }
-        System.out.println("Email Sent to:"+person.get().getFirstName());
     }
 
     /**

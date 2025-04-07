@@ -1,7 +1,9 @@
 package org.bringme.repository.impl;
 
+import org.bringme.exceptions.CannotGetIdOfInsertDataException;
 import org.bringme.model.Trip;
 import org.bringme.repository.TripRepository;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -28,6 +30,7 @@ public class TripRepositoryImpl implements TripRepository {
 
     /**
      * Save new trip into database
+     *
      * @param trip model of {@link Trip } to be saved
      * @return ID of saved trip
      */
@@ -53,9 +56,8 @@ public class TripRepositoryImpl implements TripRepository {
                 return ps;
             }, keyHolder);
             return Objects.requireNonNull(keyHolder.getKey()).longValue();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+        } catch (DataAccessException e) {
+            throw new CannotGetIdOfInsertDataException("SaveTrip", e);
         }
     }
 
@@ -105,7 +107,7 @@ public class TripRepositoryImpl implements TripRepository {
                     trip.getOrigin(), trip.getDestination(), trip.getDestinationAirport(),
                     trip.getEmptyWeight(), trip.getDepartureTime(), trip.getArrivalTime(),
                     trip.isTransit(), trip.getPassengerId());
-        }catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }

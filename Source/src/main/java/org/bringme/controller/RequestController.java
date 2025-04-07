@@ -201,7 +201,6 @@ public class RequestController {
             @ApiResponse(responseCode = "403", description = "No data")
     })
 
-    //TODO: CHECK IF USERS HAVE COMMON REQUEST
     @GetMapping("/contact/{id}")
     public ResponseEntity<HashMap<String, Object>> getUserDetails(@Valid @RequestHeader(value = "Authorization") String header, @Positive @PathVariable(value = "id") int hostId) {
         HashMap<String, Object> responseMap = new HashMap<>();

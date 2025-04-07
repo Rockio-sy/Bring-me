@@ -1,5 +1,6 @@
 package org.bringme.service.impl;
 
+import org.bringme.exceptions.CannotFetchCountriesException;
 import org.bringme.model.Country;
 import org.bringme.exceptions.CustomException;
 import org.springframework.core.io.ClassPathResource;
@@ -29,8 +30,7 @@ public class CountryService {
             return objectMapper.readValue(inputStream, objectMapper.getTypeFactory().constructCollectionType(List.class, Country.class));
         }
         catch (IOException e){
-            System.out.println(e.getMessage());
-            throw new CustomException("Couldn't load countries", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CannotFetchCountriesException(e);
         }
     }
 }

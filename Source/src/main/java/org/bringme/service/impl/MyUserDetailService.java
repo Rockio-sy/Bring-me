@@ -42,7 +42,7 @@ public class MyUserDetailService implements UserDetailsService {
         Optional<Person> user = authRepository.getByEmailOrPhone(emailOrPhone);
 
         if (user.isEmpty()) {
-            throw new CustomException("User nor found", HttpStatus.UNAUTHORIZED);
+            throw new CustomException("User not found", HttpStatus.UNAUTHORIZED);
         }
 
         if (user.get().getAccountStatus() > 1) {

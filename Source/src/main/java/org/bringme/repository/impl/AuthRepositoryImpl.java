@@ -2,7 +2,6 @@ package org.bringme.repository.impl;
 
 import org.bringme.model.Person;
 import org.bringme.repository.AuthRepository;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -24,35 +23,30 @@ public class AuthRepositoryImpl implements AuthRepository {
     }
 
     /**
-     *
      * @param person {@link Person} entity that will be saved
      * @return Saved user's id
      */
     @Override
     public Long savePerson(Person person) {
-        String sql = "INSERT INTO persons (first_name, last_name, address, email, phone, password) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO persons (first_name, last_name, address, email, phone, password)" +
+                " VALUES" +
+                " (?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        try {
-            jdbcTemplate.update(connection -> {
-                PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-                ps.setString(1, person.getFirstName());
-                ps.setString(2, person.getLastName());
-                ps.setString(3, person.getAddress());
-                ps.setString(4, person.getEmail());
-                ps.setString(5, person.getPhone());
-                ps.setString(6, person.getPassword());
-                return ps;
-            }, keyHolder);
-            return Objects.requireNonNull(keyHolder.getKey()).longValue();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
 
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, person.getFirstName());
+            ps.setString(2, person.getLastName());
+            ps.setString(3, person.getAddress());
+            ps.setString(4, person.getEmail());
+            ps.setString(5, person.getPhone());
+            ps.setString(6, person.getPassword());
+            return ps;
+        }, keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     /**
-     *
      * @param emailOrPhone of {@link Person}
      * @return {@link Person} if exists
      */
@@ -66,40 +60,26 @@ public class AuthRepositoryImpl implements AuthRepository {
 
 
     /**
-     *
      * @param emailOrPhone of {@link Person}
      * @return {@link Person}'s ID if exists
      */
     @Override
     public Long getIdByEmailOrPhone(String emailOrPhone) {
         String sql = "SELECT id FROM persons WHERE email = ? OR phone = ?";
-
-        try {
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("id"), emailOrPhone, emailOrPhone);
-        } catch (EmptyResultDataAccessException e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getLong("id"), emailOrPhone, emailOrPhone);
     }
 
     /**
      * Checks if user's account is verified
+     *
      * @param emailOrPhone of {@link Person}
      * @return True or false
      */
     @Override
     public boolean isVerified(String emailOrPhone) {
         String sql = "SELECT verification FROM persons WHERE email=? OR phone = ?";
-        try {
-            int status = Objects.requireNonNull(jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("verification"), emailOrPhone, emailOrPhone));
-            if(status > 0){
-                return true;
-            }
-        }catch (EmptyResultDataAccessException e){
-            System.out.println(e.getMessage());
-            return false;
-        }
-        return false;
+        int status = Objects.requireNonNull(jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt("verification"), emailOrPhone, emailOrPhone));
+        return status > 0;
     }
 
 

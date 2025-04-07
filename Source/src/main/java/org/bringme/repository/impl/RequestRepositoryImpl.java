@@ -1,5 +1,6 @@
 package org.bringme.repository.impl;
 
+import org.bringme.exceptions.NoCommonRequestException;
 import org.bringme.model.Request;
 import org.bringme.repository.RequestRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -200,8 +200,7 @@ public class RequestRepositoryImpl implements RequestRepository {
         try {
             return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, (rs, numRow) -> (rs.getBoolean(1)), guestId.intValue(), hostId, hostId, guestId.intValue()));
         } catch (EmptyResultDataAccessException e) {
-            System.out.println(e.getMessage());
-            return false;
+            throw new NoCommonRequestException(guestId, hostId, e);
         }
     }
 
@@ -224,7 +223,6 @@ public class RequestRepositoryImpl implements RequestRepository {
             return newRequest;
         }
     }
-
 
 
 }

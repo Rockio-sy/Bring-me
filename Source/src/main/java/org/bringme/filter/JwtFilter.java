@@ -65,6 +65,14 @@ public class JwtFilter extends OncePerRequestFilter {
         String emailOrPhone = null;
 
         try {
+            // TODO: Check the authentication process, it doesn't read the user after login from Browser and Postman
+//            if (request.getServletPath().equals("/auth/login") ||
+//                    request.getServletPath().equals("/auth/signup")) {
+//                logger.info("Skipping token validation for public endpoint: " + request.getServletPath());
+//                filterChain.doFilter(request, response);
+//                return;
+//            }
+
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 token = authHeader.substring(7);
                 emailOrPhone = jwtService.extractEmailOrPhone(token);
@@ -92,7 +100,7 @@ public class JwtFilter extends OncePerRequestFilter {
             // If any other exception occurs, handle it here
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setContentType("application/json");
-            response.getWriter().write("{\"message\":"+ex.getMessage()+"}");
+            response.getWriter().write("{\"message\":" + ex.getMessage() + "}");
         }
     }
 }

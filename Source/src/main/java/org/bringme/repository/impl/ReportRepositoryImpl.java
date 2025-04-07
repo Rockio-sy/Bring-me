@@ -1,7 +1,9 @@
 package org.bringme.repository.impl;
 
+import org.bringme.exceptions.CannotGetIdOfInsertDataException;
 import org.bringme.model.Report;
 import org.bringme.repository.ReportRepository;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -46,9 +48,8 @@ public class ReportRepositoryImpl implements ReportRepository {
             }, keyHolder);
 
             return Objects.requireNonNull(keyHolder.getKey()).longValue();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+        } catch (DataAccessException e) {
+            throw new CannotGetIdOfInsertDataException("SaveReport", e);
         }
     }
 

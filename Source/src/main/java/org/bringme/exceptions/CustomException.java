@@ -1,27 +1,41 @@
 package org.bringme.exceptions;
 
+import org.slf4j.event.Level;
 import org.springframework.http.HttpStatus;
 
-public class CustomException extends RuntimeException {
-    private final String message;
+public abstract class CustomException extends RuntimeException {
+    private final String responseMessage;
+    private final String logMessage;
+    private final Level logLevel;
     private final HttpStatus status;
 
-    /**
-     * Custom exception to send it as HTTP response by {@link org.bringme.controller.ControllerAdvice Advicer}
-     * @param message The content of response
-     * @param status HTTP status code.
-     */
-    public CustomException(String message, HttpStatus status) {
-        super(message);
-        this.message = message;
+    public CustomException(String responseMessage, String logMessage, Level logLevel, HttpStatus status, Throwable cause) {
+        super(responseMessage, cause);
+        this.responseMessage = responseMessage;
+        this.logMessage = logMessage;
+        this.logLevel = logLevel;
         this.status = status;
+
     }
+
 
     public HttpStatus getStatus() {
         return status;
     }
 
     public String getMessage() {
-        return message;
+        return responseMessage;
+    }
+
+    public String getResponseMessage() {
+        return responseMessage;
+    }
+
+    public String getLogMessage() {
+        return logMessage;
+    }
+
+    public Level getLogLevel() {
+        return logLevel;
     }
 }

@@ -65,6 +65,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String emailOrPhone = null;
 
         try {
+            // TODO Save the logs in file for production, show them in the console for dev profiles
             // TODO: Check the authentication process, it doesn't read the user after login from Browser and Postman
 //            if (request.getServletPath().equals("/auth/login") ||
 //                    request.getServletPath().equals("/auth/signup")) {

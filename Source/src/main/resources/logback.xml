@@ -1,0 +1,22 @@
+<configuration>
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n" />
+    <property name="LOG_PATH" value="target/logs" />
+
+    <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/myapp.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeBasedRollingPolicy">
+            <maxFileSize>10KB</maxFileSize>
+            <fileNamePattern>${LOG_PATH}/app.%i.log</fileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="ROLLING_FILE" />
+    </root>
+</configuration>

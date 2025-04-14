@@ -134,7 +134,7 @@ public class AuthServiceImpl implements AuthService {
      * If not verified, throws an exception.
      *
      * @param loginData The {@link AuthLogin} object containing the email/phone and password.
-     * @throws CustomException If the user's email or phone is not verified,
+     * @throws UnverifiedEmailException If the user's email or phone is not verified,
      *                         a {@code 403 FORBIDDEN} exception with the message "Email verification needed" is thrown.
      */
     @Override

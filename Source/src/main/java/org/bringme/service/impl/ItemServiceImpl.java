@@ -1,12 +1,13 @@
 package org.bringme.service.impl;
 
 import org.bringme.dto.ItemDTO;
-import org.bringme.exceptions.CustomException;
+import org.bringme.exceptions.*;
 import org.bringme.model.Item;
 import org.bringme.repository.ItemRepository;
 import org.bringme.service.ItemService;
 import org.bringme.utils.Converter;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,11 +18,8 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-
-import static org.springframework.web.util.WebUtils.getRealPath;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -43,8 +41,8 @@ public class ItemServiceImpl implements ItemService {
      * {@code 204 NO_CONTENT}.
      *
      * @return {@link List} of {@link ItemDTO} The list of items from the database, mapped to {@link ItemDTO}.
-     * @throws CustomException If no data is found in the database, an exception with HTTP status
-     *                         {@code 204 NO_CONTENT} is thrown.
+     * @throws NotFoundException If no data is found in the database, an exception with HTTP status
+     *                               {@code 204 NO_CONTENT} is thrown.
      */
     @Override
     public List<ItemDTO> getAll() {
@@ -52,7 +50,7 @@ public class ItemServiceImpl implements ItemService {
         List<Item> dataBaseList = itemRepository.getAll();
 
         if (dataBaseList.isEmpty()) {
-            throw new CustomException("No data", HttpStatus.NO_CONTENT);
+            throw new NotFoundException("No data found", "items");
         }
 
         List<ItemDTO> responseList = new ArrayList<>();
@@ -69,15 +67,15 @@ public class ItemServiceImpl implements ItemService {
      *
      * @param id The ID of the item to retrieve.
      * @return {@link ItemDTO} The item mapped to a {@link ItemDTO}.
-     * @throws CustomException If the item with the provided ID is not found, an exception with HTTP status
-     *                         {@code 404 NOT_FOUND} is thrown.
+     * @throws NotFoundException If the item with the provided ID is not found, an exception with HTTP status
+     *                               {@code 404 NOT_FOUND} is thrown.
      */
     @Override
     public ItemDTO getItemById(Long id) {
         // Check if item exists
         Optional<Item> model = itemRepository.getById(id);
         if (model.isEmpty()) {
-            throw new CustomException("Item not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Item not found", "one item");
         }
         return converter.itemToDTO(model.get());
     }
@@ -123,11 +121,11 @@ public class ItemServiceImpl implements ItemService {
 
             return responseItemDTO;
         } catch (IOException e) {
-            throw new CustomException("Failed create item : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new FailureCreationItemException("Failed to create item", e, "saveItem");
         } catch (NullPointerException e) {
-            throw new CustomException("image not found: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            throw new ImageException("image not found", "Image not found in item saving operation", Level.WARN, HttpStatus.BAD_REQUEST, null);
         } catch (StringIndexOutOfBoundsException e) {
-            throw new CustomException("Image format error: " + e.getMessage(), HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+            throw new ImageException("Image format error", "Image formatting error while save item operation", Level.WARN, HttpStatus.BAD_REQUEST, null);
         }
     }
 
@@ -136,8 +134,8 @@ public class ItemServiceImpl implements ItemService {
      *
      * @param image The {@link MultipartFile} to save.
      * @return {@link String} The file name of the saved temporary file.
-     * @throws CustomException If any error occurs during file saving, an exception is thrown with HTTP status
-     *                         {@code 500 INTERNAL_SERVER_ERROR}.
+     * @throws FailureCreationItemException If any error occurs during file saving, an exception is thrown with HTTP status
+     *                                      {@code 500 INTERNAL_SERVER_ERROR}.
      */
     @Override
     public String saveTempFile(MultipartFile image) {
@@ -148,9 +146,11 @@ public class ItemServiceImpl implements ItemService {
             Files.write(Paths.get(filePath), image.getBytes());
             return fileName;
         } catch (IOException e) {
-            throw new CustomException("Failed to save file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (IllegalStateException e) {
-            throw new CustomException("Upload directory issue: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new FailureCreationItemException("Cannot save the image", e, "Save temp file");
+            // This exception had been commented, check if we need it, if any error occurred
+//        } catch (IllegalStateException e) {
+//            throw new CustomException("Upload directory issue: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
         }
     }
 
@@ -161,7 +161,7 @@ public class ItemServiceImpl implements ItemService {
      * @param origin      The origin country ID.
      * @param destination The destination country ID.
      * @return {@link List} of {@link ItemDTO} The filtered list of items.
-     * @throws CustomException If no items matching the filter are found, an exception with HTTP status
+     * @throws NotFoundException If no items matching the filter are found, an exception with HTTP status
      *                         {@code 204 NO_CONTENT} is thrown.
      */
     @Override
@@ -169,7 +169,7 @@ public class ItemServiceImpl implements ItemService {
 
         List<Item> data = itemRepository.filterByCountries(origin, destination);
         if (data.isEmpty()) {
-            throw new CustomException("Not found", HttpStatus.NO_CONTENT);
+            throw new NotFoundException("No data found", "filter items by countries");
         }
         List<ItemDTO> response = new ArrayList<>();
         for (Item item : data) {
@@ -184,7 +184,7 @@ public class ItemServiceImpl implements ItemService {
      * Throws an exception with HTTP status {@code 400 BAD_REQUEST} if invalid input is found.
      *
      * @param requestItem The {@link ItemDTO} object containing the item data to validate.
-     * @throws CustomException If the input is invalid, an exception with HTTP status
+     * @throws InputValidationException If the input is invalid, an exception with HTTP status
      *                         {@code 400 BAD_REQUEST} is thrown.
      */
     @Override
@@ -193,7 +193,7 @@ public class ItemServiceImpl implements ItemService {
                 || requestItem.getLength() > 2 || requestItem.getWeight() > 5 || requestItem.getHeight() > 2
                 || requestItem.getOrigin() == requestItem.getDestination() || requestItem.getUser_id() <= 0
                 || requestItem.getOrigin() <= 0 || requestItem.getDestination() <= 0) {
-            throw new CustomException("Invalid input", HttpStatus.BAD_REQUEST);
+            throw new InputValidationException("Item's input error");
         }
     }
 
@@ -204,12 +204,14 @@ public class ItemServiceImpl implements ItemService {
      *
      * @param image The {@link MultipartFile} to check and save.
      * @return {@link String} The file name of the saved temporary file.
-     * @throws CustomException If the file is invalid, an exception is thrown with appropriate HTTP status.
+     * @throws MediaFileException If the file is invalid, an exception is thrown with appropriate HTTP status.
      */
+
+    // TODO: Create one MediaFileException that accepts the response message and throwable cause, and use it with every exception handler in this class.
     @Override
     public String checkMediaFile(MultipartFile image) {
         if (image.isEmpty()) {
-            throw new CustomException("File is empty", HttpStatus.BAD_REQUEST);
+            throw new MediaFileException("File is empty", HttpStatus.BAD_REQUEST);
         }
 
         if (image.getOriginalFilename() == null || image.getContentType() == null) {

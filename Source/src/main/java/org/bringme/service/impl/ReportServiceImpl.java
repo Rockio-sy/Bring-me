@@ -1,14 +1,14 @@
 package org.bringme.service.impl;
 
 import org.bringme.dto.ReportDTO;
-import org.bringme.exceptions.CustomException;
+import org.bringme.exceptions.*;
 import org.bringme.model.Report;
 import org.bringme.model.Request;
 import org.bringme.repository.ReportRepository;
 import org.bringme.repository.RequestRepository;
 import org.bringme.service.ReportService;
 import org.bringme.utils.Converter;
-import org.springframework.http.HttpStatus;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -41,16 +41,16 @@ public class ReportServiceImpl implements ReportService {
         Optional<Request> requestModel = requestRepository.getRequestById(requestId);
 
         if (requestModel.isEmpty()) {
-            throw new CustomException("Request doesn't exist", HttpStatus.BAD_REQUEST);
+            throw new NotFoundException("Request doesn't exist", "ReportService::validateReportForm");
         }
 
         if (!requestModel.get().isApprovement()) {
-            throw new CustomException("Request is not approved", HttpStatus.BAD_REQUEST);
+            throw new RequestNotApprovedException("Request is not approved", userID);
         }
 
         if (!(userID.intValue() == (requestModel.get().getRequesterUserId())
                 || userID.intValue() == (requestModel.get().getRequestedUserId()))) {
-            throw new CustomException("User doesn't belong to this request", HttpStatus.FORBIDDEN);
+            throw new OperationDoesntBelongToUser("User doesn't belong to this request", userID);
         }
         return true;
     }
@@ -70,7 +70,7 @@ public class ReportServiceImpl implements ReportService {
 
         // Extract reporter and reported users
         if (requestModel.isEmpty()) {
-            throw new CustomException("Request not found", HttpStatus.BAD_REQUEST);
+            throw new NotFoundException("Request not found", "ReportService::createNewReport");
         }
         var request = requestModel.get();
         int reporter;
@@ -85,12 +85,14 @@ public class ReportServiceImpl implements ReportService {
 
         // Save report in database
         Report model = new Report(requestId.intValue(), reporter, reported, form.getContent());
-        Long reportId = reportRepository.save(model);
-        if (reportId == null) {
-            throw new CustomException("Error creating the report", HttpStatus.INTERNAL_SERVER_ERROR);
+        try {
+            Long reportId = reportRepository.save(model);
+
+            model.setId(reportId);
+            return converter.reportToDTO(model);
+        }catch (EmptyResultDataAccessException e){
+            throw new CannotGetIdOfInsertDataException("ReportServiceImpl::CreateNewReport", e);
         }
-        model.setId(reportId);
-        return converter.reportToDTO(model);
     }
 
     /**
@@ -103,7 +105,7 @@ public class ReportServiceImpl implements ReportService {
     public List<ReportDTO> getAll() {
         List<Report> data = reportRepository.getAll();
         if (data.isEmpty()) {
-            throw new CustomException("No data", HttpStatus.NO_CONTENT);
+            throw new NotFoundException("No data", "ReportService::getAll");
         }
         List<ReportDTO> response = new ArrayList<>();
         for (Report re : data) {
@@ -123,7 +125,7 @@ public class ReportServiceImpl implements ReportService {
     public List<ReportDTO> getNotAnswered() {
         List<Report> data = reportRepository.getNotAnswered();
         if (data.isEmpty()) {
-            throw new CustomException("No data", HttpStatus.NO_CONTENT);
+            throw new NotFoundException("No data", "ReportService::getNotAnswered");
         }
         List<ReportDTO> response = new ArrayList<>();
         for (Report re : data) {
@@ -144,7 +146,7 @@ public class ReportServiceImpl implements ReportService {
     public ReportDTO getSpecific(Long id) {
         Optional<Report> data = reportRepository.getSpecific(id);
         if (data.isEmpty()) {
-            throw new CustomException("Report doesn't exist", HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Report doesn't exist", "ReportService::getSpecific");
         }
         return converter.reportToDTO(data.get());
     }
@@ -161,10 +163,10 @@ public class ReportServiceImpl implements ReportService {
     public void answerReport(Long adminId, Long reportId, String answer) {
         Optional<Report> check = reportRepository.getById(reportId);
         if (check.isEmpty()) {
-            throw new CustomException("Report doesn't exist", HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Report doesn't exist", "ReportService::getSpecific");
         }
         if (!(check.get().getAnswer().isEmpty())) {
-            throw new CustomException("Report already answered", HttpStatus.FORBIDDEN);
+            throw new ReportAlreadyAnsweredException();
         }
         reportRepository.answerReport(reportId, adminId, answer);
     }

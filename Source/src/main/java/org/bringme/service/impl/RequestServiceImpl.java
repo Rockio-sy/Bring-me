@@ -1,7 +1,7 @@
 package org.bringme.service.impl;
 
 import org.bringme.dto.RequestDTO;
-import org.bringme.exceptions.CustomException;
+import org.bringme.exceptions.*;
 import org.bringme.model.Item;
 import org.bringme.model.Request;
 import org.bringme.model.Trip;
@@ -12,7 +12,6 @@ import org.bringme.service.EmailService;
 import org.bringme.service.NotificationService;
 import org.bringme.service.RequestService;
 import org.bringme.utils.Converter;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -51,7 +50,7 @@ public class RequestServiceImpl implements RequestService {
     public List<RequestDTO> getAll(Long userId) {
         List<Request> requestList = requestRepository.getAll(userId);
         if (requestList.isEmpty()) {
-            throw new CustomException("No content", HttpStatus.NO_CONTENT);
+            throw new NotFoundException("No content", "RequestServiceImp::getAll");
         }
 
         // Convert to DTO
@@ -79,11 +78,11 @@ public class RequestServiceImpl implements RequestService {
         Optional<Item> item = itemRepository.getById(request.getItemId().longValue());
         Optional<Trip> trip = tripRepository.getById(request.getTripId().longValue());
         if (item.isEmpty() || trip.isEmpty()) {
-            throw new CustomException("Item or trip are not found", HttpStatus.FORBIDDEN);
+            throw new NotFoundException("Item or trip are not found", "RequestServiceImp::saveRequest");
         }
 
         if (item.get().getOrigin() != trip.get().getOrigin() || item.get().getDestination() != trip.get().getDestination()) {
-            throw new CustomException("Directions are incompatible", HttpStatus.FORBIDDEN);
+            throw new LogicDirectionsOrTimeException("Directions are incompatible");
         }
 
         // Set values of requested user id, trip and item to save in the database
@@ -92,7 +91,7 @@ public class RequestServiceImpl implements RequestService {
         } else if (Objects.equals(trip.get().getPassengerId(), request.getRequesterUserId())) {
             request.setRequestedUserId(item.get().getUser_id());
         } else {
-            throw new CustomException("Trip or Item do not belong to the current user (who is requesting)", HttpStatus.FORBIDDEN);
+            throw new OperationDoesntBelongToUser("Trip or Item do not belong to the current user (who is requesting)", request.getRequesterUserId());
 
         }
 
@@ -132,11 +131,11 @@ public class RequestServiceImpl implements RequestService {
     public void approveRequest(Long userId, Long requestId) {
         Optional<Request> checkRequest = requestRepository.getRequestById(requestId);
         if (checkRequest.isEmpty()) {
-            throw new CustomException("Request not found", HttpStatus.BAD_REQUEST);
+            throw new NotFoundException("Request not found", "RequestServiceImp::approveRequest");
         }
         // Check if the user is the requested
         if (!checkRequest.get().getRequestedUserId().equals(userId.intValue())) {
-            throw new CustomException("Current user is not the requested user", HttpStatus.BAD_REQUEST);
+            throw new OperationDoesntBelongToUser("Current user is not the requested user", userId);
         }
         requestRepository.approveRequest(requestId);
 
@@ -165,7 +164,7 @@ public class RequestServiceImpl implements RequestService {
     public void isExist(Integer itemId, Integer tripId) {
         Long id = requestRepository.isExists(itemId, tripId);
         if (id != null) {
-            throw new CustomException("Request already exist", HttpStatus.CONFLICT);
+            throw new AlreadyExistedException("Request already exist", "Request");
         }
     }
 
@@ -182,7 +181,7 @@ public class RequestServiceImpl implements RequestService {
         List<Request> data = requestRepository.getSentRequests(userId);
 
         if (data.isEmpty()) {
-            throw new CustomException("No content", HttpStatus.NO_CONTENT);
+            throw new NotFoundException("No content", "RequestServiceImp::getSentRequests");
         }
 
         List<RequestDTO> response = new ArrayList<>();
@@ -210,7 +209,7 @@ public class RequestServiceImpl implements RequestService {
         List<Request> data = requestRepository.getByDirections(userId, origin, destination);
 
         if (data.isEmpty()) {
-            throw new CustomException("No content", HttpStatus.NO_CONTENT);
+            throw new NotFoundException("No content", "RequestServiceImp::filterByDirections");
         }
 
         List<RequestDTO> response = new ArrayList<>();
@@ -235,7 +234,7 @@ public class RequestServiceImpl implements RequestService {
         List<Request> data = requestRepository.getReceivedRequests(userId);
 
         if (data.isEmpty()) {
-            throw new CustomException("No content", HttpStatus.NO_CONTENT);
+            throw new NotFoundException("No content", "RequestServiceImp::getReceivedRequests");
         }
 
         List<RequestDTO> response = new ArrayList<>();
@@ -261,7 +260,7 @@ public class RequestServiceImpl implements RequestService {
         List<Request> data = requestRepository.filterByApprovement(userId);
 
         if (data.isEmpty()) {
-            throw new CustomException("No content", HttpStatus.NO_CONTENT);
+            throw new NotFoundException("No content", "RequestServiceImp::filterByApprovement");
         }
 
         List<RequestDTO> response = new ArrayList<>();
@@ -287,7 +286,7 @@ public class RequestServiceImpl implements RequestService {
         List<Request> data = requestRepository.filterByWait(userId);
 
         if (data.isEmpty()) {
-            throw new CustomException("No content", HttpStatus.NO_CONTENT);
+            throw new NotFoundException("No content", "RequestServiceImp::filterByWait");
         }
 
         List<RequestDTO> response = new ArrayList<>();
@@ -311,7 +310,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public boolean isThereCommonRequest(Long guestId, int hostId) {
         if (requestRepository.isThereCommonRequest(guestId, hostId)) {
-            throw new CustomException("No common request", HttpStatus.BAD_REQUEST);
+            throw new NoCommonRequestException((long)hostId, guestId.intValue());
         }
         return true;
     }
@@ -327,7 +326,7 @@ public class RequestServiceImpl implements RequestService {
     public Request getRequestById(Long id) {
         Optional<Request> newRequest = requestRepository.getRequestById(id);
         if (newRequest.isEmpty()) {
-            throw new CustomException("Not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Not found", "RequestServiceImp::getRequestById");
         }
         return newRequest.get();
     }

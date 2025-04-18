@@ -200,7 +200,7 @@ public class RequestRepositoryImpl implements RequestRepository {
         try {
             return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, (rs, numRow) -> (rs.getBoolean(1)), guestId.intValue(), hostId, hostId, guestId.intValue()));
         } catch (EmptyResultDataAccessException e) {
-            throw new NoCommonRequestException(guestId, hostId, e);
+            throw new NoCommonRequestException(guestId, hostId);
         }
     }
 

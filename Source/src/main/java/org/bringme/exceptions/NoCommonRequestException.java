@@ -4,7 +4,7 @@ import org.slf4j.event.Level;
 import org.springframework.http.HttpStatus;
 
 public class NoCommonRequestException extends CustomException{
-    public NoCommonRequestException(Long firstId, int secondId, Throwable cause){
+    public NoCommonRequestException(Long firstId, int secondId){
         super(
                 "No common request with chosen user",
                 String.format("User with id=%s tried to check user's data with id=%s", firstId, secondId),

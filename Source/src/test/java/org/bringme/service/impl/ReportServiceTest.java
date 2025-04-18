@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 
 import java.util.Optional;
@@ -85,7 +86,7 @@ public class ReportServiceTest {
         CustomException ex = assertThrows(CustomException.class, () -> reportService.validateReportForm(form, 1L));
 
         assertEquals("Request is not approved", ex.getMessage());
-        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+        assertEquals(HttpStatus.FORBIDDEN, ex.getStatus());
         verify(requestRepository, times(1)).getRequestById(any(Long.class));
     }
 
@@ -112,11 +113,11 @@ public class ReportServiceTest {
         Request request = new Request(1L, 3, 2, 1, 1, 1, 2, "Comment", true, 1.2F, "Dollar");
 
         when(requestRepository.getRequestById(any(Long.class))).thenReturn(Optional.of(request));
-        when(reportRepository.save(any(Report.class))).thenReturn(null);
+        when(reportRepository.save(any(Report.class))).thenThrow(EmptyResultDataAccessException.class);
         when(converter.reportToDTO(any(Report.class))).thenReturn(new ReportDTO(1L, 1, 1, 2, 3, "comment", "answer"));
 
         CustomException ex = assertThrows(CustomException.class, () -> reportService.createNewReport(form, 2L));
-        assertEquals("Error creating the report", ex.getMessage());
+        assertEquals("Unexpected error", ex.getMessage());
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, ex.getStatus());
         verify(requestRepository, times(1)).getRequestById(any(Long.class));
     }
@@ -144,7 +145,7 @@ public class ReportServiceTest {
 
         CustomException ex = assertThrows(CustomException.class, () -> reportService.answerReport(1L, 1L, "answer"));
         assertEquals("Report doesn't exist", ex.getMessage());
-        assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
+        assertEquals(HttpStatus.NO_CONTENT, ex.getStatus());
 
 
         verify(reportRepository, never()).answerReport(1L, 1L, "answer");
@@ -160,8 +161,8 @@ public class ReportServiceTest {
         when(reportRepository.getById(any(Long.class))).thenReturn(Optional.of(model));
 
         CustomException ex = assertThrows(CustomException.class, () -> reportService.answerReport(1L, 1L, "answer"));
-        assertEquals("Report already answered", ex.getMessage());
-        assertEquals(HttpStatus.FORBIDDEN, ex.getStatus());
+        assertEquals("Report Already answered", ex.getMessage());
+        assertEquals(HttpStatus.CONFLICT, ex.getStatus());
 
         verify(reportRepository, never()).answerReport(1L, 1L, "answer");
     }

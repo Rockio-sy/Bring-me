@@ -1,11 +1,13 @@
 package org.bringme.service.impl;
 
+import org.apache.juli.logging.Log;
 import org.bringme.dto.TripDTO;
-import org.bringme.exceptions.CustomException;
+import org.bringme.exceptions.*;
 import org.bringme.model.Trip;
 import org.bringme.repository.TripRepository;
 import org.bringme.service.TripService;
 import org.bringme.utils.Converter;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -40,17 +42,18 @@ public class TripServiceImpl implements TripService {
         Trip newTrip = converter.DTOtoTrip(tripDto);
 
         if (isExist(newTrip) != null) {
-            throw new CustomException("Trip already exist", HttpStatus.FORBIDDEN);
+            throw new AlreadyExistedException("Trip already exist", "Trip");
         }
-        Long generatedId = tripRepository.saveTrip(newTrip);
-        if (generatedId == null) {
-            throw new CustomException("Cannot create trip", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        try {
+            Long generatedId = tripRepository.saveTrip(newTrip);
 
-        // Convert to TripDTO then return
-        TripDTO responseTrip = converter.tripToDTO(newTrip);
-        responseTrip.setId(generatedId);
-        return responseTrip;
+            // Convert to TripDTO then return
+            TripDTO responseTrip = converter.tripToDTO(newTrip);
+            responseTrip.setId(generatedId);
+            return responseTrip;
+        } catch (EmptyResultDataAccessException e) {
+            throw new CannotGetIdOfInsertDataException("saveTrip", e);
+        }
     }
 
     /**
@@ -65,7 +68,7 @@ public class TripServiceImpl implements TripService {
         // Get trip from database
         Optional<Trip> savedTrip = tripRepository.getById(id);
         if (savedTrip.isEmpty()) {
-            throw new CustomException("Trip not found", HttpStatus.NO_CONTENT);
+            throw new NotFoundException("Trip not found", "TripService::getById");
         }
         return converter.tripToDTO(savedTrip.get());
     }
@@ -94,7 +97,7 @@ public class TripServiceImpl implements TripService {
 
         //Check if list is empty
         if (savedList.isEmpty()) {
-            throw new CustomException("No content", HttpStatus.NO_CONTENT);
+            throw new NotFoundException("No content", "TripServiceImpl::getAllTrips");
         }
 
         // Convert every trip to DTO class and save it in new list
@@ -118,30 +121,30 @@ public class TripServiceImpl implements TripService {
 
         // 1. Check if origin and destination are the same
         if (requestTrip.getOrigin() == requestTrip.getDestination()) {
-            throw new CustomException("Origin and destination cannot be the same.", HttpStatus.BAD_REQUEST);
+            throw new LogicDirectionsOrTimeException("Origin and destination cannot be the same.");
         }
 
         // 2. Check if origin, destination, empty weight, or passenger ID is zero
         if (requestTrip.getOrigin() == 0 || requestTrip.getDestination() == 0
                 || requestTrip.getEmptyWeight() == 0 || requestTrip.getPassengerId() == 0) {
-            throw new CustomException("Origin, destination, empty weight, and passenger ID must be non-zero.", HttpStatus.BAD_REQUEST);
+            throw new LogicDirectionsOrTimeException("Origin, destination, empty weight, and passenger ID must be non-zero.");
         }
 
         // 4. Check if departure time is in the past
         if (requestTrip.getDepartureTime().isBefore(LocalDateTime.now())) {
-            throw new CustomException("Departure time cannot be in the past.", HttpStatus.BAD_REQUEST);
+            throw new LogicDirectionsOrTimeException("Departure time cannot be in the past.");
         }
 
         // 5. Check if arrival time is before departure time
         if (requestTrip.getArrivalTime().isBefore(requestTrip.getDepartureTime())) {
-            throw new CustomException("Arrival time cannot be before departure time.", HttpStatus.BAD_REQUEST);
+            throw new LogicDirectionsOrTimeException("Arrival time cannot be before departure time.");
         }
 
         // 6. Optional: Ensure flights on the same day are at least 4 hours apart
         Duration flightDuration = Duration.between(requestTrip.getDepartureTime(), requestTrip.getArrivalTime());
         if (requestTrip.getDepartureTime().toLocalDate().equals(requestTrip.getArrivalTime().toLocalDate())
                 && flightDuration.toHours() < 4) {
-            throw new CustomException("Flights on the same day must be at least 4 hours long.", HttpStatus.BAD_REQUEST);
+            throw new LogicDirectionsOrTimeException("Flights on the same day must be at least 4 hours long.");
         }
     }
 
@@ -160,7 +163,7 @@ public class TripServiceImpl implements TripService {
 
         // Check
         if (data.isEmpty()) {
-            throw new CustomException("No content", HttpStatus.NO_CONTENT);
+            throw new NotFoundException("No content", "TripServiceImpl::filterByCountries");
         }
 
         // Convert

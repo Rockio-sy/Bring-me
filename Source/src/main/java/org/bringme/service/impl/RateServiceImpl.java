@@ -1,6 +1,9 @@
 package org.bringme.service.impl;
 
 import org.bringme.dto.RateDTO;
+import org.bringme.exceptions.CannotGetIdOfInsertDataException;
+import org.bringme.exceptions.NoCommonRequestException;
+import org.bringme.exceptions.NotFoundException;
 import org.bringme.model.Rate;
 import org.bringme.repository.PersonRepository;
 import org.bringme.repository.RateRepository;
@@ -8,6 +11,7 @@ import org.bringme.repository.RequestRepository;
 import org.bringme.service.RateService;
 import org.bringme.exceptions.CustomException;
 import org.bringme.utils.Converter;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -37,11 +41,11 @@ public class RateServiceImpl implements RateService {
     @Override
     public List<RateDTO> getAllRates(int userId) {
         if (personRepository.getById(Integer.toUnsignedLong(userId)).isEmpty()) {
-            throw new CustomException("User not found", HttpStatus.BAD_REQUEST);
+            throw new NotFoundException("User not found", "RateServiceImpl::getAllRates");
         }
         List<Rate> data = rateRepository.getAll(userId);
         if (data.isEmpty()) {
-            throw new CustomException("No data", HttpStatus.NO_CONTENT);
+            throw new NotFoundException("No data found", "RateServiceImpl::getAllRates");
         }
         List<RateDTO> response = new ArrayList<>();
         for (Rate r : data) {
@@ -61,7 +65,7 @@ public class RateServiceImpl implements RateService {
     @Override
     public void checkRatingAvailability(Long userId, int ratedUserId) {
         if(!requestRepository.isThereCommonRequest(userId, ratedUserId)){
-            throw new CustomException("No common requests", HttpStatus.BAD_REQUEST);
+            throw new NoCommonRequestException(userId, ratedUserId);
         }
     }
     /**
@@ -74,10 +78,14 @@ public class RateServiceImpl implements RateService {
     @Override
     public RateDTO createNewRate(RateDTO rate) {
         Rate model = converter.DTOtoRate(rate);
-        Long id = rateRepository.save(model);
-        if(id == null){
-            throw new CustomException("Cannot create the rate", HttpStatus.INTERNAL_SERVER_ERROR);
+        try{
+            Long id = rateRepository.save(model);
+            model.setId(id);
+            return converter.rateToDTO(model);
+        }catch (EmptyResultDataAccessException e){
+            throw new CannotGetIdOfInsertDataException("CreateNewUser", e);
         }
-        return converter.rateToDTO(model);
+
+
     }
 }

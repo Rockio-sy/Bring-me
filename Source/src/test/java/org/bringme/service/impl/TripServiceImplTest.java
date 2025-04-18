@@ -41,11 +41,11 @@ class TripServiceImplTest {
         // Arrange
         TripDTO dto = new TripDTO(8L, 1, 2, "Airport", 2,
                 LocalDateTime.of(2024, Month.APRIL, 3, 13, 43),
-                LocalDateTime.of(2025, Month.APRIL, 3, 13, 43),
+                LocalDateTime.of(2050, Month.APRIL, 3, 13, 43),
                 false, "No comment", 99L);
         Trip model = new Trip(8L, 1, 2, "Airport", 2,
                 LocalDateTime.of(2024, Month.APRIL, 3, 13, 43),
-                LocalDateTime.of(2025, Month.APRIL, 3, 13, 43),
+                LocalDateTime.of(2050, Month.APRIL, 3, 13, 43),
                 false, "No comment", 99L);
 
         // Act
@@ -65,12 +65,12 @@ class TripServiceImplTest {
         // Arrange
         TripDTO dto = new TripDTO(2L, 1, 2, "Airport", 2,
                 LocalDateTime.of(2026, Month.APRIL, 3, 13, 43),
-                LocalDateTime.of(2025, Month.APRIL, 3, 13, 43),
+                LocalDateTime.of(2050, Month.APRIL, 3, 13, 43),
                 false, "No comment", 1L);
 
         Trip model = new Trip(2L, 1, 2, "Airport", 2,
                 LocalDateTime.of(2026, Month.APRIL, 3, 13, 43),
-                LocalDateTime.of(2025, Month.APRIL, 3, 13, 43),
+                LocalDateTime.of(2050, Month.APRIL, 3, 13, 43),
                 false, "No comment", 1L);
 
         // Act
@@ -80,15 +80,15 @@ class TripServiceImplTest {
 
         // Assert
         assertEquals("Trip already exist", ex.getMessage());
-        assertEquals(HttpStatus.FORBIDDEN, ex.getStatus());
+        assertEquals(HttpStatus.CONFLICT, ex.getStatus());
     }
 
     @Test
     @DisplayName("Given a TripDTO, when validateTrip, then no return")
     void givenTrip_whenValidateTrip_thenNoReturn() {
         TripDTO dto = new TripDTO(2L, 1, 2, "Airport", 2,
-                LocalDateTime.of(2026, Month.APRIL, 3, 13, 43),
-                LocalDateTime.of(2025, Month.APRIL, 3, 13, 43),
+                LocalDateTime.of(2060, Month.APRIL, 3, 13, 43),
+                LocalDateTime.of(2050, Month.APRIL, 3, 13, 43),
                 false, "No comment", 1L);
 
         assertDoesNotThrow(() -> tripService.validateTrip(dto));
@@ -99,7 +99,7 @@ class TripServiceImplTest {
     void givenTripWithSameDirections_whenValidateTrip_thenReturnOriginAndDestinationCannotBeTheSameException() {
         TripDTO dto = new TripDTO(2L, 1, 1, "Airport", 2,
                 LocalDateTime.of(2026, Month.APRIL, 3, 13, 43),
-                LocalDateTime.of(2025, Month.APRIL, 3, 13, 43),
+                LocalDateTime.of(2050, Month.APRIL, 3, 13, 43),
                 false, "No comment", 1L);
 
         CustomException ex = assertThrows(CustomException.class, () -> tripService.validateTrip(dto));
@@ -112,7 +112,7 @@ class TripServiceImplTest {
     void givenTripWithZeroValueForOrigin_whenValidateTrip_thenReturnOriginDestinationEmptyWeightAndPassengerIdMustBeNonZeroException() {
         TripDTO dto = new TripDTO(2L, 0, 1, "Airport", 2,
                 LocalDateTime.of(2026, Month.APRIL, 3, 13, 43),
-                LocalDateTime.of(2025, Month.APRIL, 3, 13, 43),
+                LocalDateTime.of(2050, Month.APRIL, 3, 13, 43),
                 false, "No comment", 1L);
 
         CustomException ex = assertThrows(CustomException.class, () -> tripService.validateTrip(dto));
@@ -125,7 +125,7 @@ class TripServiceImplTest {
     void givenTripWithZeroValueForDestination_whenValidateTrip_thenReturnOriginDestinationEmptyWeightAndPassengerIdMustBeNonZeroException() {
         TripDTO dto = new TripDTO(2L, 1, 0, "Airport", 2,
                 LocalDateTime.of(2026, Month.APRIL, 3, 13, 43),
-                LocalDateTime.of(2025, Month.APRIL, 3, 13, 43),
+                LocalDateTime.of(2050, Month.APRIL, 3, 13, 43),
                 false, "No comment", 1L);
 
         CustomException ex = assertThrows(CustomException.class, () -> tripService.validateTrip(dto));
@@ -138,7 +138,7 @@ class TripServiceImplTest {
     void givenTripWithZeroValueForEmptyWeight_whenValidateTrip_thenReturnOriginDestinationEmptyWeightAndPassengerIdMustBeNonZeroException() {
         TripDTO dto = new TripDTO(2L, 1, 2, "Airport", 0,
                 LocalDateTime.of(2026, Month.APRIL, 3, 13, 43),
-                LocalDateTime.of(2025, Month.APRIL, 3, 13, 43),
+                LocalDateTime.of(2050, Month.APRIL, 3, 13, 43),
                 false, "No comment", 1L);
 
         CustomException ex = assertThrows(CustomException.class, () -> tripService.validateTrip(dto));
@@ -151,7 +151,7 @@ class TripServiceImplTest {
     void givenTripWithZeroValueForPassengerId_whenValidateTrip_thenReturnOriginDestinationEmptyWeightAndPassengerIdMustBeNonZeroException() {
         TripDTO dto = new TripDTO(2L, 1, 2, "Airport", 3,
                 LocalDateTime.of(2026, Month.APRIL, 3, 13, 43),
-                LocalDateTime.of(2025, Month.APRIL, 3, 13, 43),
+                LocalDateTime.of(2050, Month.APRIL, 3, 13, 43),
                 false, "No comment", 0L);
 
         CustomException ex = assertThrows(CustomException.class, () -> tripService.validateTrip(dto));

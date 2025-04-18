@@ -1,6 +1,7 @@
 package org.bringme.controller;
 
 
+import io.jsonwebtoken.JwtException;
 import org.bringme.exceptions.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,4 +84,8 @@ public class ControllerAdvice {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<String> JwtHandler(JwtException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
 }

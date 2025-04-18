@@ -4,6 +4,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import org.bringme.exceptions.CustomException;
+import org.bringme.exceptions.NullTokenGeneratedException;
 import org.bringme.model.Person;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -135,7 +136,7 @@ public class JwtService {
             } else if (e instanceof IllegalArgumentException) {
                 errorMessage = "Claims are empty";
             }
-            throw new CustomException(errorMessage, HttpStatus.UNAUTHORIZED);
+            throw new JwtException(errorMessage);
         }
     }
 

@@ -1,5 +1,7 @@
 package org.bringme.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Component;
 @Profile("dev")
 public class DataSeeder implements CommandLineRunner {
     private final JdbcTemplate jdbcTemplate;
+    private final Logger log = LoggerFactory.getLogger(DataSeeder.class);
+
 
     public DataSeeder(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -30,7 +34,7 @@ public class DataSeeder implements CommandLineRunner {
     /**
      * Insert data into Person table.
      * Set a valid email in the email field (it will be used in verification)
-     * #Passwrod = 12345678
+     * #Passwrod = 12345678s
      * */
     public void seedPersons() {
         // Check if the 'users' table is empty
@@ -45,12 +49,12 @@ public class DataSeeder implements CommandLineRunner {
                         "('Admin', 'seed', 'Admin address', 'admin@admin.com', 123123, '$2a$10$pLZOXjzMO6wMrrzZOci9JeNZHr425gc1KLqeQms1Q5klXEvbJzzkO', 1, 1, 'Admin')";
                 // Password is 12345678s
                 jdbcTemplate.update(sql);
-                System.out.println("Development person data has been seeded.");
+                log.info("Development person data has been seeded");
             } else {
-                System.out.println("Data already exists.");
+                log.info("Development person data already been seeded.");
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.error("Error seeding development person data: {}", e.getMessage());
         }
     }
 
@@ -73,12 +77,12 @@ public class DataSeeder implements CommandLineRunner {
                         "true, 'seed comment', (SELECT id FROM persons WHERE email = 'none@none.com'))";
 
                 jdbcTemplate.update(sql);
-                System.out.println("Development trips data has been seeded.");
+                log.info("Development trips data has been seeded.");
             } else {
-                System.out.println("Data already exists.");
+                log.info("Development trips data already been seeded.");
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.error("Error seeding development trips data {}", e.getMessage());
         }
     }
 
@@ -95,13 +99,12 @@ public class DataSeeder implements CommandLineRunner {
                         "('items1', 1, 2, (SELECT id FROM persons WHERE email = 'nonee@none.com'), 1, 1, 1, 'Full Address seed', 'seed comment', 'ITEM_item1-3e3ffef9-0754-4926-99f8-eee363b57def-1729650538812-.png')," +
                         "('items2', 3, 4, (SELECT id FROM persons WHERE email = 'nonee@none.com'), 1, 1, 1, 'Full Address seed', 'seed comment', 'ITEM_item1-0669716b-9a26-4348-950b-9d5584b9910d-1729576564685-.png')";
                 jdbcTemplate.update(sql);
-                System.out.println("Development items data has been seeded.");
+                log.info("Development items data has been seeded.");
             } else {
-                System.out.println("Data already exists.");
+                log.info("Development items data already been seeded.");
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+            log.error("Error seeding development items data {}", e.getMessage());        }
     }
 
     /**
@@ -129,12 +132,12 @@ public class DataSeeder implements CommandLineRunner {
                         "'Seed comment', 2.2, 'Dollar')";
 
                 jdbcTemplate.update(sql);
-                System.out.println("Development requests data has been seeded.");
+                log.info("Development requests data has been seeded.");
             } else {
-                System.out.println("Data already exists.");
+                log.info("Development requests data already been seeded.");
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 

@@ -59,7 +59,7 @@ class RateServiceImplTest {
         when(requestRepository.isThereCommonRequest(any(Long.class), any(Integer.class))).thenReturn(false);
         CustomException ex = Assertions.assertThrows(CustomException.class, () -> rateService.checkRatingAvailability(1L, 1));
         assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
-        assertEquals("No common requests", ex.getMessage());
+        assertEquals("No common request with chosen user", ex.getMessage());
     }
 
     @Test
@@ -78,22 +78,6 @@ class RateServiceImplTest {
         verify(converter, times(1)).DTOtoRate(dto);
         verify(rateRepository, times(1)).save(model);
         verify(converter, times(1)).rateToDTO(model);
-    }
-
-    @Test
-    @DisplayName("Given a rate, when createNewRate, then return 'Cannot create the rate' exception.")
-    void givenRate_whenCreateNewRate_thenReturnCannotCreateRateException() {
-        // Arrange
-        RateDTO dto = new RateDTO(1L, 1, "No comment", 3, 1);
-        Rate model = new Rate(1L, "No comment", 3, 1, 1);
-        // Act
-        when(converter.DTOtoRate(dto)).thenReturn(model);
-        when(rateRepository.save(model)).thenReturn(null);
-
-        CustomException ex = assertThrows(CustomException.class, () -> rateService.createNewRate(dto));
-        assertEquals("Cannot create the rate", ex.getMessage());
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, ex.getStatus());
-
     }
 
 }

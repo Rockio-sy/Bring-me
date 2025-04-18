@@ -2,6 +2,8 @@ package org.bringme.service.impl;
 
 import org.bringme.dto.NotificationDTO;
 import org.bringme.exceptions.CustomException;
+import org.bringme.exceptions.NotFoundException;
+import org.bringme.exceptions.OperationDoesntBelongToUser;
 import org.bringme.model.Notification;
 import org.bringme.repository.NotificationRepository;
 import org.bringme.service.NotificationService;
@@ -35,7 +37,8 @@ public class NotificationServiceImpl implements NotificationService {
     public List<NotificationDTO> getAll(int userId) {
         List<Notification> allModel = notificationRepository.getAll(userId);
         if (allModel.isEmpty()) {
-            throw new CustomException("No content", HttpStatus.NO_CONTENT);
+
+            throw new NotFoundException("No content", "NotificationServiceImpl::getAll");
         }
         List<NotificationDTO> response = new ArrayList<>();
         for (Notification model : allModel) {
@@ -57,7 +60,7 @@ public class NotificationServiceImpl implements NotificationService {
     public List<NotificationDTO> getNotMarked(int userId) {
         List<Notification> notMarkedModel = notificationRepository.getNotMarked(userId);
         if (notMarkedModel.isEmpty()) {
-            throw new CustomException("No content", HttpStatus.NO_CONTENT);
+            throw new NotFoundException("No content", "NotificationServiceImpl::getNotMarked");
         }
         List<NotificationDTO> response = new ArrayList<>();
         for (Notification model : notMarkedModel) {
@@ -93,11 +96,13 @@ public class NotificationServiceImpl implements NotificationService {
     public void markOneAsRead(int userId, Long id) {
         Optional<Notification> noty = notificationRepository.getById(id);
         if (noty.isEmpty()) {
-            throw new CustomException("No such notification", HttpStatus.BAD_REQUEST);
+            throw new NotFoundException("No content", "NotificationServiceImpl::markOneAsRead");
         }
+
         if (!(noty.get().getUserId() == userId)) {
-            throw new CustomException("User doesn't belong to this notification", HttpStatus.BAD_REQUEST);
+            throw new OperationDoesntBelongToUser("User doesn't belong to this notification", (long)userId);
         }
+
 
         notificationRepository.markOneAsRead(userId, id);
     }

@@ -204,38 +204,33 @@ public class ItemServiceImpl implements ItemService {
      *
      * @param image The {@link MultipartFile} to check and save.
      * @return {@link String} The file name of the saved temporary file.
-     * @throws MediaFileException If the file is invalid, an exception is thrown with appropriate HTTP status.
+     * @throws ImageException If the file is invalid, an exception is thrown with appropriate HTTP status.
      */
 
     // TODO: Create one MediaFileException that accepts the response message and throwable cause, and use it with every exception handler in this class.
     @Override
     public String checkMediaFile(MultipartFile image) {
         if (image.isEmpty()) {
-            throw new MediaFileException("File is empty", HttpStatus.BAD_REQUEST);
+            throw new ImageException("File is empty", "Image is empty", Level.INFO, HttpStatus.BAD_REQUEST, null);
         }
 
         if (image.getOriginalFilename() == null || image.getContentType() == null) {
-            throw new CustomException("File metadata is invalid", HttpStatus.BAD_REQUEST);
+            throw new ImageException("File metadata is invalid", "Invalid metadata file", Level.INFO, HttpStatus.BAD_REQUEST, null);
         }
 
         // Check file size
         if (image.getSize() > (2 * 1024 * 1024)) {
-            throw new CustomException("File size should be 2MB or less", HttpStatus.PAYLOAD_TOO_LARGE);
+            throw new ImageException("File size should be 2MB or less", "File size is larger than expected", Level.INFO, HttpStatus.BAD_REQUEST, null );
         }
 
         // Check file type
         String contentType = image.getContentType();
         if (!(contentType.startsWith("image/png") || contentType.startsWith("image/jpeg"))) {
-            throw new CustomException("PNG or JPEG only", HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+            throw new ImageException("PNG or JPEG only", "Invalid image format", Level.INFO, HttpStatus.BAD_REQUEST, null);
         }
 
         // Save temp file
-        String tempFileName = saveTempFile(image);
-        if (tempFileName == null) {
-            throw new CustomException("Error uploading file", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        return tempFileName;
+        return saveTempFile(image);
     }
 
     /**
@@ -255,10 +250,10 @@ public class ItemServiceImpl implements ItemService {
             String originalFileName = Objects.requireNonNull(image.getOriginalFilename());
             extension = originalFileName.substring(originalFileName.lastIndexOf("."));
         } catch (StringIndexOutOfBoundsException e) {
-            throw new CustomException("File format error", HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new ImageException("File format error", "Invalid image format", Level.INFO, HttpStatus.BAD_REQUEST, null);
         }
         if (!(extension.equals(".png")) && !(extension.equals(".jpeg")) && !(extension.equals("jpg"))) {
-            throw new CustomException("Image only", HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+            throw new ImageException("File format error", "Invalid image format", Level.INFO, HttpStatus.BAD_REQUEST, null);
         }
         return extension;
     }

@@ -1,6 +1,8 @@
 package org.bringme.service.impl;
 
 import org.bringme.exceptions.CustomException;
+import org.bringme.exceptions.LockedAccountException;
+import org.bringme.exceptions.NotFoundException;
 import org.bringme.model.AuthUserDetails;
 import org.bringme.model.Person;
 import org.bringme.repository.AuthRepository;
@@ -42,11 +44,12 @@ public class MyUserDetailService implements UserDetailsService {
         Optional<Person> user = authRepository.getByEmailOrPhone(emailOrPhone);
 
         if (user.isEmpty()) {
-            throw new CustomException("User not found", HttpStatus.UNAUTHORIZED);
+            throw new NotFoundException("User not found", "LoadUserByUsername");
         }
 
         if (user.get().getAccountStatus() > 1) {
-            throw new CustomException("Account is locked", HttpStatus.LOCKED);
+
+            throw new LockedAccountException(emailOrPhone);
         }
 
         return new AuthUserDetails(user.get());

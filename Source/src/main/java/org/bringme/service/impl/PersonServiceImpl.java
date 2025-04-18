@@ -1,6 +1,9 @@
 package org.bringme.service.impl;
 
 import org.bringme.dto.PersonDTO;
+import org.bringme.exceptions.DataBaseException;
+import org.bringme.exceptions.NotFoundException;
+import org.bringme.exceptions.PasswordSetUpException;
 import org.bringme.model.Person;
 import org.bringme.repository.PersonRepository;
 import org.bringme.repository.ReportRepository;
@@ -8,6 +11,7 @@ import org.bringme.service.PersonService;
 import org.bringme.exceptions.CustomException;
 import org.bringme.utils.Converter;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -76,38 +80,44 @@ public class PersonServiceImpl implements PersonService {
     public PersonDTO getByEmail(String email) {
         Optional<Person> person = personRepository.getByEmail(email);
         if (person.isEmpty()) {
-            throw new CustomException("User not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException("User not found", "PersonService::getByEmail");
         }
         PersonDTO response = converter.personToDTO(person.get());
         response.setPassword(null);
         return response;
     }
+
     /**
      * Updates the password for a person.
      *
-     * @param userId The ID of the user whose password is being updated.
+     * @param userId      The ID of the user whose password is being updated.
      * @param newPassword The new password to set.
      * @param oldPassword The old password to verify.
      * @throws CustomException If the user is not found, if the old password is incorrect,
-     *         or if there is an internal server error when updating the password.
+     *                         or if there is an internal server error when updating the password.
      */
     @Override
     public void updatePassword(Long userId, String newPassword, String oldPassword) {
         Optional<Person> person = personRepository.getById(userId);
         if (person.isEmpty()) {
-            throw new CustomException("User not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException("User not found", "PersonService::updatePassword");
         }
 
         if (!(passwordEncoder.matches(oldPassword, person.get().getPassword()))) {
-            throw new CustomException("Old password is incorrect", HttpStatus.BAD_REQUEST);
+            throw new PasswordSetUpException("Old password is incorrect");
         }
 
         String encodedNewPassword = passwordEncoder.encode(newPassword);
 
-        if (personRepository.updatePassword(userId, encodedNewPassword) <= 0) {
-            throw new CustomException("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+        try {
+            if (personRepository.updatePassword(userId, encodedNewPassword) <= 0) {
+                throw new PasswordSetUpException("Cannot update password");
+            }
+        } catch (EmptyResultDataAccessException e) {
+            throw new DataBaseException(e);
         }
     }
+
     /**
      * Displays the details of a person by their host ID.
      *
@@ -119,10 +129,11 @@ public class PersonServiceImpl implements PersonService {
     public PersonDTO showPersonDetails(int hostId) {
         Optional<Person> data = personRepository.getById(Integer.toUnsignedLong(hostId));
         if (data.isEmpty()) {
-            throw new CustomException("User not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException("User not found", "PersonServiceImp::ShowPersonDetails");
         }
         return converter.personToDetails(data.get());
     }
+
     /**
      * Creates a new user and saves them to the database.
      *
@@ -136,14 +147,16 @@ public class PersonServiceImpl implements PersonService {
         model.setRole(newUser.getRole());
         model.setPassword(passwordEncoder.encode(newUser.getPassword()));
 
-        Long id = personRepository.save(model);
-        if (id == null) {
-            throw new CustomException("Failed creating new user", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        try {
+            Long id = personRepository.save(model);
 
-        newUser.setId(id);
+            newUser.setId(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new DataBaseException(e);
+        }
         return newUser;
     }
+
     /**
      * Bans a user by their ID.
      *
@@ -154,17 +167,18 @@ public class PersonServiceImpl implements PersonService {
     public void bandUser(Long id) {
         int userId = reportRepository.getReportedUserId(id);
         if (userId == -1) {
-            throw new CustomException("User doesn't exist", HttpStatus.NOT_FOUND);
+            throw new NotFoundException("User doesn't exist", "PersonServiceImpl::bandUser");
         }
         personRepository.bandUser(userId);
     }
+
     /**
      * Unbans a user by their ID.
      *
      * @param id The ID of the user to unban.
      */
     @Override
-    public void unBandUser(Long id){
+    public void unBandUser(Long id) {
         // Needs contact with the user to get the ID, so the user always exist
         personRepository.unBandUser(id);
     }

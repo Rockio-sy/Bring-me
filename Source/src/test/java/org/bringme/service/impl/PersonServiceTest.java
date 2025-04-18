@@ -65,7 +65,7 @@ public class PersonServiceTest {
 
         CustomException ex = assertThrows(CustomException.class, () -> personService.updatePassword(userId, "asd", "asd"));
         assertEquals("User not found", ex.getMessage());
-        assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
+        assertEquals(HttpStatus.NO_CONTENT, ex.getStatus());
 
 
     }

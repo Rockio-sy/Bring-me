@@ -65,10 +65,8 @@ public class SecurityConfig {
                         .requestMatchers("/bring-me/p/a/**", "/bring-me/report/a/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .formLogin(form -> form
-                        .loginProcessingUrl("/bring-me/auth/login")
-                        .failureUrl("/login?error=true")
-                )
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -87,7 +85,6 @@ public class SecurityConfig {
      *
      * @return An {@link AuthenticationProvider} configured with user details and password encoding.
      */
-    @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());

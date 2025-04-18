@@ -88,7 +88,7 @@ public class RequestServiceTest {
 
         CustomException ex = assertThrows(CustomException.class, () -> requestService.saveRequest(dto));
         assertEquals("Item or trip are not found", ex.getMessage());
-        assertEquals(HttpStatus.FORBIDDEN, ex.getStatus());
+        assertEquals(HttpStatus.NO_CONTENT, ex.getStatus());
     }
 
     @Test
@@ -108,7 +108,7 @@ public class RequestServiceTest {
 
         CustomException ex = assertThrows(CustomException.class, () -> requestService.saveRequest(dto));
         assertEquals("Directions are incompatible", ex.getMessage());
-        assertEquals(HttpStatus.FORBIDDEN, ex.getStatus());
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
 
     }
 
@@ -129,7 +129,7 @@ public class RequestServiceTest {
 
         CustomException ex = assertThrows(CustomException.class, () -> requestService.saveRequest(dto));
         assertEquals("Directions are incompatible", ex.getMessage());
-        assertEquals(HttpStatus.FORBIDDEN, ex.getStatus());
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
 
     }
 }

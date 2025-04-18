@@ -55,6 +55,19 @@
             <version>2.15.0</version> <!-- Latest version -->
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.11</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.5.11</version>
+        </dependency>
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
@@ -123,14 +136,13 @@
             <artifactId>flyway-database-postgresql</artifactId>
             <version>10.14.0</version>
         </dependency>
+
+
+
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.5.6</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId> <!-- Already includes logging -->
         </dependency>
-
-
-
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

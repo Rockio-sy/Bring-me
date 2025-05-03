@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   app:
     build:
@@ -22,6 +20,7 @@ services:
       DATA_SOURCE_NAME: ${DATA_SOURCE_NAME}
     depends_on:
       - db
+      - redis
     networks:
       - app-network
 
@@ -36,6 +35,12 @@ services:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+  redis:
+    image: redis:7.2
+    ports:
+      - "6379:6379"
     networks:
       - app-network
 

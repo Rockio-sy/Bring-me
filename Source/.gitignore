@@ -2,6 +2,9 @@
 /target/
 /build/
 
+# Mac store files
+*../.DS_Store
+
 # Logs
 *.log
 

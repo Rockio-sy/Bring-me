@@ -1,16 +1,18 @@
 package org.bringme.service.impl;
 
+import io.lettuce.core.RedisException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.validation.constraints.NotNull;
 import org.bringme.exceptions.DataBaseException;
 import org.bringme.exceptions.InvalidVerificationCodeException;
 import org.bringme.exceptions.CannotSendingEmailException;
 import org.bringme.model.Person;
-import org.bringme.repository.EmailRepository;
 import org.bringme.repository.PersonRepository;
 import org.bringme.service.EmailService;
 import org.bringme.exceptions.CustomException;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -18,19 +20,24 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
+import java.time.Duration;
 import java.util.Optional;
 import java.util.Random;
 
 @Service
 public class EmailServiceImpl implements EmailService {
     private final JavaMailSender mailSender;
-    private final EmailRepository emailRepository;
     private final PersonRepository personRepository;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    public EmailServiceImpl(JavaMailSender mailSender, EmailRepository emailRepository, PersonRepository personRepository) {
+    public EmailServiceImpl
+            (JavaMailSender mailSender,
+             PersonRepository personRepository,
+             RedisTemplate<String, String> redisTemplate)
+    {
         this.mailSender = mailSender;
-        this.emailRepository = emailRepository;
         this.personRepository = personRepository;
+        this.redisTemplate = redisTemplate;
     }
 
     /**
@@ -57,7 +64,13 @@ public class EmailServiceImpl implements EmailService {
         } catch (MessagingException | UnsupportedEncodingException e) {
             throw new CannotSendingEmailException(e, email, "verification code");
         }
-        emailRepository.saveCode(email, code);
+        //save the 6-digits code in redis for 30 min
+        try {
+            redisTemplate.opsForValue().set("Verification-code:" +email, code, Duration.ofMinutes(30));
+        } catch (RedisException e){
+            throw new DataBaseException(e);
+        }
+
     }
 
     /**
@@ -65,20 +78,22 @@ public class EmailServiceImpl implements EmailService {
      * If the codes match, the user account is verified.
      *
      * @param userInput The verification code provided by the user.
-     * @param email The email address associated with the verification code.
+     * @param email     The email address associated with the verification code.
      * @throws CustomException If the verification code is invalid, an exception with HTTP status
      *                         {@code 400 BAD_REQUEST} is thrown.
      */
     @Override
     public void validateCode(String userInput, String email) {
-        String originalCode = emailRepository.getCode(email);
-        if (!originalCode.equals(userInput)) {
+        // Get the code from Redis
+        String originalCode =  redisTemplate.opsForValue().get("Verification-code:" +email);
+
+        if (originalCode == null || !originalCode.equals(userInput)) {
             throw new InvalidVerificationCodeException(email);
         }
-        try{
+        try {
             Long userId = personRepository.getIdByEmailOrPhone(email);
             personRepository.verifyAccount(userId);
-        }catch (DataAccessException e){
+        } catch (DataAccessException e) {
             throw new DataBaseException(e);
         }
     }
@@ -87,12 +102,11 @@ public class EmailServiceImpl implements EmailService {
      * Sends a custom email message to the user with the specified subject and message.
      * The email is sent to the user's email address associated with their requester user ID.
      *
-     * @param message The content of the email message.
-     * @param subject The subject of the email.
+     * @param message         The content of the email message.
+     * @param subject         The subject of the email.
      * @param requesterUserId The ID of the user to whom the email will be sent.
      * @throws CustomException If the email cannot be sent, an exception with HTTP status
      *                         {@code 409 CONFLICT} is thrown.
-     *
      */
     @Override
     public void sendEmail(String message, String subject, Long requesterUserId) {

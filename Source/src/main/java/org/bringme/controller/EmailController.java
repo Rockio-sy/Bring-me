@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
+// TODO: Redis in Docker had problem, it doesn't connect to Spring
 @RestController
 @RequestMapping("/bring-me/ver")
 public class EmailController {

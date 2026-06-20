@@ -65,8 +65,6 @@ public class JwtFilter extends OncePerRequestFilter {
         String emailOrPhone = null;
 
         try {
-            // TODO Save the logs in file for production, show them in the console for dev profiles
-            // TODO: Check the authentication process, it doesn't read the user after login from Browser and Postman
             if (request.getServletPath().equals("/bring-me/auth/login") ||
                     request.getServletPath().equals("/bring-me/auth/signup")) {
                 logger.info("Skipping token validation for public endpoint: " + request.getServletPath());
@@ -101,7 +99,8 @@ public class JwtFilter extends OncePerRequestFilter {
             // If any other exception occurs, handle it here
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setContentType("application/json");
-            response.getWriter().write("{\"message\":" + ex.getMessage() + "}");
+            String message = ex.getMessage() == null ? "Internal server error" : ex.getMessage().replace("\"", "\\\"");
+            response.getWriter().write("{\"message\":\"" + message + "\"}");
         }
     }
 }

@@ -1,83 +1,97 @@
+# Bring-Me
 
-# Bring-Me: A Spring Web Application
+Bring-Me is a Spring Boot web application for matching people who need to send items with people who are already traveling that route.
 
-**Bring-Me** is a Spring-based web application designed to connect people who need to send items with those willing to carry them. Whether you're sending a package or going on a trip, Bring-Me helps make the process easier and more efficient.
+![Bring-Me logo](Docs/Logo/png/logo-no-background.png)
 
-![Bring-me_exp.jpg](Docs%2FWireframes%2FBring-me_exp.jpg)
-# Get started
-```
+![Bring-Me preview](Docs/Wireframes/Bring-me_exp.jpg)
+
+## What It Uses
+
+- Java 21
+- Spring Boot
+- Spring Security and JWT
+- PostgreSQL
+- Flyway
+- Redis
+- Maven
+- Docker and Docker Compose
+
+## Project Layout
+
+- `Source/` contains the application code and build files.
+- `Docs/` contains diagrams, wireframes, and reference material.
+- `Postman_Collections/` contains API request collections.
+
+## Quick Start
+
+```bash
 git clone https://github.com/Rockio-sy/Bring-me.git
+cd Bring-me/Source
+cp .env.example .env
 ```
-### Rename .env.example to .env with valid values
-````shell
-cd Source
-nano .env.example
-mv .env.example .env
-````
 
-### Docker 
-```shell
-cd Source
-sudo docker-compose up --build
-```
-**Note**: Docker will run the application in dev profile, you can change it in the Dockerfile
+Edit `.env` with your local values, then run:
 
-### Try
-```shell
-curl -X 'GET'   'http://localhost:8080/bring-me/trips/all'   -H 'accept: application/json' | json_pp
+```bash
+docker compose up --build
 ```
-## Swagger UI
-Check [Swagger UI](http://localhost:8080/swagger-ui/index.html#/)
-to check all endpoints (make sure the application is running), <br>**NOTE** It asks for http authentication.<br>
-**email**: none@none.com<br>
-**Password**: 12345678s
-## Locally
-#### 1. Development Profile
-```sh
+
+The app runs at `http://localhost:8080`.
+
+## Local Development
+
+```bash
+cd Source
 mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
-#### 2. Production
 
-```sh
+For the default profile:
+
+```bash
 mvn spring-boot:run
 ```
-## Endpoints examples
-Check Postman endpoints collection in [Postman Collections](https://github.com/Rockio-sy/Bring-me/tree/main/Postman_Collections)
 
-# Arch
-Check more about the application architecture in [Readme.md](https://github.com/Rockio-sy/Bring-me/blob/67b4e756089f592af2cfea4e19449d3d71292204/Docs/README.md)
+## Required Environment Variables
 
-## Stack
+Use `.env.example` as the source of truth.
 
-- **openjdk 21.0.5 2024-10-15** –Java version
-- **Spring Boot 3.3.5** – Main framework for application development  
-- **PostgreSQL 42.7.3** – Relational database   
-- **Flyway 10.14.0** – Database migration tool   
-- **Maven** – Build automation and dependency management  
+- `SPRING_DATASOURCE_URL`
+- `SPRING_DATASOURCE_USERNAME`
+- `SPRING_DATASOURCE_PASSWORD`
+- `SPRING_DATASOURCE_DB`
+- `SPRING_FLYWAY_LOCATIONS`
+- `FILE_UPLOAD_DIR`
+- `FILE_UPLOAD_TEMP_DIR`
+- `JWT_SECRET`
+- `EMAIL_HOST`
+- `EMAIL_PORT`
+- `EMAIL_USERNAME`
+- `EMAIL_PASSWORD`
+- `SPRING_DATA_REDIS_HOST`
+- `SPRING_DATA_REDIS_PORT`
 
+## API Docs
 
-## How It Works
+- Swagger UI: `http://localhost:8080/swagger-ui/index.html`
+- Main endpoints: see the Postman collections in [`Postman_Collections/`](Postman_Collections)
 
-1. **Post an Item**  
-   A person (Person 1) can post an item they need to send. The listing includes details such as:  
-   - **Origin**  
-   - **Destination**  
-   - **Size (Width, Length, Height)**  
-   - **Photo**  
-   And other relevant information about the item.
+## Documentation
 
-2. **Search for Items**  
-   A second person (Person 2) can search for items that are along their route and that they are able to carry.
+- Architecture and diagrams: [`Docs/README.md`](Docs/README.md)
+- Wireframe preview: [`Docs/Wireframes/Bring-me_exp.jpg`](Docs/Wireframes/Bring-me_exp.jpg)
+- Logo asset: [`Docs/Logo/png/logo-no-background.png`](Docs/Logo/png/logo-no-background.png)
 
-3. **Request to Carry**  
-   Person 2 can send a request to Person 1, indicating their willingness to transport the item on their way.
+## Demo Data
 
-4. **Review and Approve**  
-   Person 1 can review Person 2’s account, including ratings and comments from other users, before approving the request.
+The `dev` profile seeds sample users, trips, items, and requests so the app is easier to inspect after startup.
 
-5. **Contact Exchange**  
-   If Person 1 approves the request, both parties will be able to exchange contact information to finalize the details of the exchange.
+## Notes For Contributors
 
----
+- Run the test suite before opening a pull request.
+- Keep secrets out of the repository.
+- Keep the README and environment sample in sync when you add a new config value.
 
-**Note:** This process is reciprocal. If Person 2 wishes to post a trip instead, Person 1 can search for compatible trips to find something to send along the way.
+## Status
+
+This repository is now structured to be easier to understand on GitHub, but it still benefits from more screenshots, CI checks, and release packaging.

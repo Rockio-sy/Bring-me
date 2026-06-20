@@ -31,4 +31,3 @@
 
 # Sensitive data
 .env
-src/main/resources/application.properties
